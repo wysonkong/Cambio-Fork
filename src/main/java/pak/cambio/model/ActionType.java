@@ -1,13 +1,9 @@
 package pak.cambio.model;
 
 public enum ActionType {
-    DRAW,
-    PLAY,
-    SWAP,
-    LOOKIN,
-    LOOKOUT,
-    BLINDSWAP,
-    LOOKSWAP,
-    STICK,
-    CAMBIO
+    DRAW_DECK,      // take from deck
+    DRAW_DISCARD,   // take from discard
+    SWAP,           // swap drawn card with one in hand
+    DISCARD,        // discard drawn card
+    CALL_CAMBIO     // end game call
 }

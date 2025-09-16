@@ -1,13 +1,9 @@
 package pak.cambio.model;
 import jakarta.persistence.*;
 
-@Entity
 public class Card {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private int value;
-    private int suit;
+    private String rank;
+    private String suit;
     private boolean hiddenToMe;
     private boolean hiddenToYou;
 
@@ -15,42 +11,45 @@ public class Card {
 
     }
 
-    public Card(int value, int suit, boolean hiddenToMe, boolean hiddenToYou) {
-        this.value = value;
+    public Card(String rank, String suit) {
+        this.rank = rank;
         this.suit = suit;
-        this.hiddenToMe = hiddenToMe;
-        this.hiddenToYou = hiddenToYou;
-    }
-
-    public boolean isHiddenToMe() {
-        return hiddenToMe;
-    }
-
-    public void setHiddenToMe(boolean hiddenToMe) {
-        this.hiddenToMe = hiddenToMe;
-    }
-
-    public boolean isHiddenToYou() {
-        return hiddenToYou;
-    }
-
-    public void setHiddenToYou(boolean hiddenToYou) {
-        this.hiddenToYou = hiddenToYou;
     }
 
     public int getValue() {
-        return value;
+        int value = 0;
+       switch(rank) {
+           case "A" -> value = 1;
+           case "J", "Q", "K" -> value = 10;
+           case "Joker" -> value = 0;
+           default -> value = Integer.parseInt(rank);
+       };
+       if(rank.equals("K") && (suit.equals("♦") || suit.equals("♥"))) {
+           value = -1;
+       }
+       return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public static java.util.List<Card> standard() {
+        String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+        String[] suits = {"♠","♥","♦","♣"};
+        java.util.List<Card> deck = new java.util.ArrayList<>();
+        for (String r : ranks) {
+            for (String s : suits) {
+                deck.add(new Card(r, s));
+            }
+        }
+        deck.add(new Card("Joker", "Little"));
+        deck.add(new Card("Jocker", "Big"));
+        return deck;
     }
 
-    public int getSuit() {
+
+    public String getSuit() {
         return suit;
     }
 
-    public void setSuit(int suit) {
-        this.suit = suit;
+    public String getRank() {
+        return rank;
     }
 }

@@ -1,4 +1,4 @@
-package pak.cambio.game;
+package pak.cambio.model;
 
 import jakarta.persistence.*;
 

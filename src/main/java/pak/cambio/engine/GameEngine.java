@@ -55,7 +55,7 @@ public class GameEngine {
                     List<Card> hand = p.getId() == (requestUserId) ? p.getHand() : List.of();
                     return new GameState.PlayerView(
                             p.getId(),
-                            p.getUser().getUsername(),
+                            p.getUser(),
                             p.getIndex(),
                             hand
                     );

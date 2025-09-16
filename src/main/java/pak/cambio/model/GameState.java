@@ -8,13 +8,19 @@ public class GameState {
     private final Deque<Card> deck;
     private final Card prevCard;
     private final int currentTurn;
+    private final boolean cambioCalled;
 
-    public GameState(List<PlayerView> players, Deque<Card> deck, Card prevCard, int currentTurn) {
+    public GameState(List<PlayerView> players, Deque<Card> deck, Card prevCard, int currentTurn, boolean cambioCalled) {
         this.players = players;
         this.deck = deck;
         this.prevCard = prevCard;
         this.currentTurn = currentTurn;
+        this.cambioCalled = cambioCalled;
 
+    }
+
+    public boolean isCambioCalled() {
+        return cambioCalled;
     }
 
     public List<PlayerView> getPlayers() {

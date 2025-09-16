@@ -24,7 +24,7 @@ public class Card {
            case "Joker" -> value = 0;
            default -> value = Integer.parseInt(rank);
        };
-       if(rank.equals("K") && (suit.equals("♦") || suit.equals("♥"))) {
+       if(rank.equals("K") && (suit.equals("Diamond") || suit.equals("Heart"))) {
            value = -1;
        }
        return value;
@@ -32,7 +32,7 @@ public class Card {
 
     public static java.util.List<Card> standard() {
         String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
-        String[] suits = {"♠","♥","♦","♣"};
+        String[] suits = {"Spade","Heart","Diamond","Club"};
         java.util.List<Card> deck = new java.util.ArrayList<>();
         for (String r : ranks) {
             for (String s : suits) {

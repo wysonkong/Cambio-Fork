@@ -8,76 +8,64 @@
 </head>
 <body>
 
-<header class="absolute inset-x-0 top-0 z-50">
-    <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
-        <div class="flex">
-            <a href="../index.html" class="-m-1.5 p-1.5">
-                <img src="../img/playing-card.jpg" alt="card" class="h-8 w-auto"/>
-            </a>
-        </div>
-        <div class="flex lg:hidden">
-            <button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-200">
-                <span class="sr-only">Open main menu</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
-                    <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-            </button>
-        </div>
-        <div class="hidden lg:flex lg:justify-center lg:gap-x-12">
-            <a href="rules.html" class="text-sm/6 font-semibold text-white">Rules</a>
-            <a href="game.html" class="text-sm/6 font-semibold text-white">Game</a>
-            <a href="playerStanding.html" class="text-sm/6 font-semibold text-white">Player Standing</a>
-        </div>
-    </nav>
-    <el-dialog>
-        <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden">
-            <div tabindex="0" class="fixed inset-0 focus:outline-none">
-                <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
-                    <div class="flex items-center justify-between">
-                        <a href="#" class="-m-1.5 p-1.5">
-                            <span class="sr-only">Cambio</span>
-                            <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="" class="h-8 w-auto" />
-                        </a>
-                        <button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-200">
-                            <span class="sr-only">Close menu</span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
-                                <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="mt-6 flow-root">
-                        <div class="-my-6 divide-y divide-white/10">
-                            <div class="space-y-2 py-6">
-                                <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Product</a>
-                                <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Features</a>
-                                <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Marketplace</a>
-                                <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Company</a>
-                            </div>
-                            <div class="py-6">
-                                <a href="#" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Log in</a>
-                            </div>
-                        </div>
-                    </div>
-                </el-dialog-panel>
-            </div>
-        </dialog>
-    </el-dialog>
-</header>
+
 
 <div class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:overflow-visible lg:px-0">
-    <div class="absolute inset-0 -z-10 overflow-hidden">
-        <svg aria-hidden="true" class="absolute top-0 left-[max(50%,25rem)] h-256 w-512 -translate-x-1/2 mask-[radial-gradient(64rem_64rem_at_top,white,transparent)] stroke-gray-800">
-            <defs>
-                <pattern id="e813992c-7d03-4cc4-a2bd-151760b470a0" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
-                    <path d="M100 200V.5M.5 .5H200" fill="none" />
-                </pattern>
-            </defs>
-            <svg x="50%" y="-1" class="overflow-visible fill-gray-800/50">
-                <path d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z" stroke-width="0" />
-            </svg>
-            <rect width="100%" height="100%" fill="url(#e813992c-7d03-4cc4-a2bd-151760b470a0)" stroke-width="0" />
-        </svg>
-    </div>
+    <header class="absolute inset-x-0 top-0 z-50">
+        <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+            <div class="flex">
+                <a href="../index.html" class="-m-1.5 p-1.5">
+                    <img src="../img/playing-card.jpg" alt="card" class="h-8 w-auto"/>
+                </a>
+            </div>
+            <div class="flex lg:hidden">
+                <button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-200">
+                    <span class="sr-only">Open main menu</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                        <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="hidden lg:flex lg:justify-center lg:gap-x-12">
+                <a href="rules.html" class="text-sm/6 font-semibold text-white">Rules</a>
+                <a href="game.html" class="text-sm/6 font-semibold text-white">Game</a>
+                <a href="playerStanding.html" class="text-sm/6 font-semibold text-white">Player Standing</a>
+            </div>
+        </nav>
+        <el-dialog>
+            <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden">
+                <div tabindex="0" class="fixed inset-0 focus:outline-none">
+                    <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
+                        <div class="flex items-center justify-between">
+                            <a href="#" class="-m-1.5 p-1.5">
+                                <span class="sr-only">Cambio</span>
+                                <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="" class="h-8 w-auto" />
+                            </a>
+                            <button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-200">
+                                <span class="sr-only">Close menu</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                                    <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="mt-6 flow-root">
+                            <div class="-my-6 divide-y divide-white/10">
+                                <div class="space-y-2 py-6">
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Product</a>
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Features</a>
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Marketplace</a>
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Company</a>
+                                </div>
+                                <div class="py-6">
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Log in</a>
+                                </div>
+                            </div>
+                        </div>
+                    </el-dialog-panel>
+                </div>
+            </dialog>
+        </el-dialog>
+    </header>
 
     <div class="mx-auto grid max-w-2xl gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-1 lg:gap-y-10">
 
@@ -108,7 +96,7 @@
         <!-- Swapping Cards Section -->
         <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
             <div class="lg:w-1/2">
-                <p class="mt-6 text-xl/8 font-semibold text-white">Swapping Cards</p>
+                <p class="mt-6 text-xl/8 font-semibold text-white">Swapping Cards, lemme get that</p>
                 <p class="mt-2 text-xl/6 text-gray-300">Player one takes the 6 and places it face down under one of their four cards. The card above the 6 is then turned face up and placed on the pile e.g. 4. Players must turn it away from them so opponents see it first. The next player(s) then follow the same process.</p>
             </div>
             <div class="lg:w-1/4">
@@ -119,7 +107,7 @@
         <!-- Trump Cards Section -->
         <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
             <div class="lg:w-1/2">
-                <p class="mt-6 text-xl/8 font-semibold text-white">Trump Cards</p>
+                <p class="mt-6 text-xl/8 font-semibold text-white">Trump Cards, MAGA</p>
                 <p class="mt-2 text-xl/6 text-gray-300">When a trump card is picked up from the deck it can be played straight onto the pile without swapping it. The player then completes the action for that card, see to the right. Cards not picked up from the deck do not have a trump action.</p>
             </div>
             <div class="lg:w-1/4">
@@ -133,7 +121,7 @@
                 <img class="lg:w-1/2 w-auto object-contain" src="../img/pairs.jpeg" alt="Pair cards">
             </div>
             <div class="lg:w-1/2">
-                <p class="mt-6 text-xl/8 font-semibold text-white">Matching Pairs</p>
+                <p class="mt-6 text-xl/8 font-semibold text-white">Matching Pairs, oh the same?</p>
                 <p class="mt-2 text-xl/6 text-gray-300">If players have memorized a face down card that matches the top card in the pile e.g. 4 and 4, they can pick up the card and put it onto the pile. The card can be from their cards or an opponents'. If it’s from their cards they play with one less card.</p>
             </div>
         </div>
@@ -144,7 +132,7 @@
 
             </div>
             <div class="lg:w-1/2">
-                <p class="mt-6 text-xl/8 font-semibold text-white">Penalties</p>
+                <p class="mt-6 text-xl/8 font-semibold text-white">Penalties, you messed up!</p>
                 <p class="mt-2 text-xl/6 text-gray-300">If two players match a card, the second player to match the card must take theirs back. If a player attempts to match a card, but they are not a match, they get a one card penalty. The card is placed face down to the side of their other cards.</p>
             </div>
         </div>
@@ -155,7 +143,7 @@
 
             </div>
             <div class="lg:w-1/2">
-                <p class="mt-6 text-xl/8 font-semibold text-white">Cambio</p>
+                <p class="mt-6 text-xl/8 font-semibold text-white">Yell Cambio!</p>
                 <p class="mt-2 text-xl/6 text-gray-300">If a player thinks they have the lowest points score they can call “cambio” on their turn. They do not get to take another card. All other players then get one more turn. The color of the king defines the points, for all other cards both colors have the same value.</p>
             </div>
         </div>

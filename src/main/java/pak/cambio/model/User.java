@@ -1,4 +1,4 @@
-package pak.cambio.user;
+package pak.cambio.model;
 
 import jakarta.persistence.*;
 

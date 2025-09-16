@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  postgres-db:
+    container_name: cambio
+    image: postgres # use latest official postgres version
+    restart: always
+    environment:
+      POSTGRES_USER: acc_dev
+      POSTGRES_PASSWORD: acc_dev12
+      POSTGRES_DB: cambio_db
+      POSTGRES_HOST_AUTH_METHOD: password
+    ports:
+      - "5428:5432"
+
+volumes:
+  postgresql_data:
+    driver: local

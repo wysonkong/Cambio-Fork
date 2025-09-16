@@ -9,6 +9,7 @@ public class User {
     private long id;
     @Column(unique = true, nullable = false)
     private String username;
+    private String password;
     int wins;
     int loses;
 
@@ -16,10 +17,22 @@ public class User {
 
     }
 
-    public User(String username, int wins, int loses) {
+    public User(String username, String password, int wins, int loses) {
         this.username = username;
         this.wins = wins;
         this.loses = loses;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getUsername() {

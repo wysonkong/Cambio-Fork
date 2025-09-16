@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: cambio
+
+  datasource:
+    url: jdbc:postgresql://localhost:5428/aircraft
+    driver-class-name: org.postgresql.Driver
+    username: acc_dev
+    password: acc_dev12
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+
+

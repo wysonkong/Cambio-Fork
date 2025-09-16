@@ -5,14 +5,12 @@ import java.util.List;
 
 public class GameState {
     private final List<PlayerView> players;
-    private final Deque<Card> deck;
     private final Card prevCard;
     private final int currentTurn;
     private final boolean cambioCalled;
 
-    public GameState(List<PlayerView> players, Deque<Card> deck, Card prevCard, int currentTurn, boolean cambioCalled) {
+    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled) {
         this.players = players;
-        this.deck = deck;
         this.prevCard = prevCard;
         this.currentTurn = currentTurn;
         this.cambioCalled = cambioCalled;
@@ -27,9 +25,6 @@ public class GameState {
         return players;
     }
 
-    public Deque<Card> getDeck() {
-        return deck;
-    }
 
     public Card getPrevCard() {
         return prevCard;
@@ -43,13 +38,15 @@ public class GameState {
         private final Long userId;
         private final String userName;
         private final int index;
-        private final List<Card> hand;
+        private final List<String> hand;
+        private final int score;
 
-        public PlayerView(Long userId, String userName, int index, List<Card> hand) {
+        public PlayerView(Long userId, String userName, int index, List<String> hand, int score) {
             this.userId = userId;
             this.userName = userName;
             this.index = index;
             this.hand = hand;
+            this.score = score;
         }
 
         public Long getUserId() {
@@ -64,8 +61,10 @@ public class GameState {
             return index;
         }
 
-        public List<Card> getHand() {
+        public List<String> getHand() {
             return hand;
         }
+
+        public int getScore() { return score; }
     }
 }

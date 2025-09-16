@@ -1,6 +1,7 @@
 package pak.cambio.engine;
 
 import pak.cambio.model.Card;
+import pak.cambio.model.GameAction;
 import pak.cambio.model.GameState;
 import pak.cambio.model.Player;
 
@@ -8,59 +9,112 @@ import java.util.*;
 
 public class GameEngine {
     private final Deque<Card> deck = new ArrayDeque<Card>();
+    private final Deque<Card> discard = new ArrayDeque<Card>();
     private final List<Player> players = new ArrayList<Player>();
-    private int currentTurn;
-    private Card prevCard;
+    private boolean cambioCalled = false;
+    private int currentTurn = 0;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
+        startNewGame();
+    }
+
+    public void startNewGame() {
         shuffleAndDeal();
     }
 
     private void shuffleAndDeal() {
         List<Card> fullDeck = new LinkedList<Card>();
-        for(int i = 1; i < 14; i++) {
-            for(int j = 1; j < 5; j++) {
-                fullDeck.add(new Card(i,j,true, true));
-            }
-        }
-        fullDeck.add(new Card(-1, 0, true, true));
-        fullDeck.add(new Card(-2, 0, true, true));
+        fullDeck = Card.standard();
 
         Collections.shuffle(fullDeck);
         deck.clear();
         fullDeck.forEach(deck::addLast);
-        for(int i = 0; i < 4; i++) {
-            for (Player p : players) {
-                p.addCard(deck.getFirst());
+        for(Player p : players) {
+            List<Card> hand = new ArrayList<Card>();
+            List<Boolean> visible = new ArrayList<Boolean>();
+            for(int i =0; i < 4; i++) {
+                hand.add(deck.removeFirst());
+                visible.add(i < 2);
+            }
+            p.setHand(hand);
+            p.setVisible(visible);
+        }
+        discard.clear();
+        discard.add(deck.removeLast());
+        cambioCalled = false;
+    }
+
+    public GameState applyAction(GameAction action) {
+        Player player = findPlayer(action.getUserId());
+
+        switch (action.getType()) {
+            case DRAW_DECK -> {
+                action = new GameAction(player.getId(), action.getType(), null, deck.removeFirst());
+            }
+            case DRAW_DISCARD -> {
+                action = new GameAction(player.getId(), action.getType(), null, discard.removeFirst());
+            }
+            case SWAP -> {
+                Card newCard = action.getCard();
+                int idx = action.getHandIndex();
+                Card old = player.getHand().get(idx);
+                player.getHand().set(idx, newCard);
+                player.getVisible().set(idx, true);
+                discard.addFirst(old);
+            }
+            case DISCARD -> {
+                discard.addFirst(action.getCard());
+            }
+            case CALL_CAMBIO -> {
+                cambioCalled = true;
             }
         }
 
+        advanceTurn();
+        return snapshotState(action.getUserId());
     }
 
-
     //To do
-    public void drawCard(Player player) {
-        Card stage = deck.getFirst();
-        stage.setHiddenToMe(false);
+    public Player findPlayer(long id) {
+        Player result = null;
+        for(Player p : players) {
+            if(p.getId() == id) {
+                result = p;
+            }
+        }
+        return result;
+    }
 
+    public void advanceTurn() {
+        currentTurn = (currentTurn + 1) % players.size();
     }
 
 
 
     //GAME STATE
-    public GameState snapshotState(Long requestUserId) {
-        List<GameState.PlayerView> views = players.stream()
-                .map(p-> {
-                    List<Card> hand = p.getId() == (requestUserId) ? p.getHand() : List.of();
-                    return new GameState.PlayerView(
-                            p.getId(),
-                            p.getUser(),
-                            p.getIndex(),
-                            hand
-                    );
-                }).toList();
-        return new GameState(views, deck, prevCard, currentTurn);
+    public GameState snapshotState(Long requestingUserId) {
+        List<GameState.PlayerView> views = new ArrayList<>();
+        for (Player p : players) {
+            List<String> handView = new ArrayList<>();
+            for (int i = 0; i < p.getHand().size(); i++) {
+                if (p.getId() == requestingUserId || p.getVisible().get(i) || cambioCalled) {
+                    handView.add(p.getHand().get(i).getRank() + p.getHand().get(i).getSuit());
+                } else {
+                    handView.add("??");
+                }
+            }
+            int score = cambioCalled ? p.getScore() : -1;
+            views.add(new GameState.PlayerView(
+                    p.getId(),
+                    p.getUser(),
+                    p.getIndex(),
+                    handView,
+                    score
+            ));
+        }
+
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled);
     }
 
 }

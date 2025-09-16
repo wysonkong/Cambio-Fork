@@ -17,11 +17,31 @@ public class Card {
     }
 
     public int getValue() {
-       return switch(rank) {
-           case "A" -> 1;
-           case "J", "Q", "K" -> 10;
-           default -> Integer.parseInt(rank);
+        int value = 0;
+       switch(rank) {
+           case "A" -> value = 1;
+           case "J", "Q", "K" -> value = 10;
+           case "Joker" -> value = 0;
+           default -> value = Integer.parseInt(rank);
        };
+       if(rank.equals("K") && (suit.equals("♦") || suit.equals("♥"))) {
+           value = -1;
+       }
+       return value;
+    }
+
+    public static java.util.List<Card> standard() {
+        String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+        String[] suits = {"♠","♥","♦","♣"};
+        java.util.List<Card> deck = new java.util.ArrayList<>();
+        for (String r : ranks) {
+            for (String s : suits) {
+                deck.add(new Card(r, s));
+            }
+        }
+        deck.add(new Card("Joker", "Little"));
+        deck.add(new Card("Jocker", "Big"));
+        return deck;
     }
 
 

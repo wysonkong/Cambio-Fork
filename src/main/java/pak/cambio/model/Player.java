@@ -21,7 +21,8 @@ public class Player {
 
 
 
-    public Player(String user, int score, int index) {
+    public Player(long id, String user, int score, int index) {
+        this.id = id;
         this.user = user;
         this.score = score;
         this.hand = new ArrayList<Card>();

@@ -25,6 +25,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User findUserByName(String username) {
+        return userRepository.findUserByUsername(username);
+    }
+
     public void updateScores(List<Long> winnerIds, List<Long> loserIds) {
         if(winnerIds != null && !winnerIds.isEmpty()) {
             List<User> winners = new ArrayList<User>();

@@ -71,12 +71,12 @@
             </div>
             <div class="h-3/4 bg-gray-700 p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
                 <h2 class="text-xl text-white font-semibold mb-4">Chat</h2>
-                <div id="chat-messages" class="overflow-y-auto h-[200px] space-y-2">
+                <div id="chat-messages" class="flex-1 overflow-y-auto space-y-2">
 
                 </div>
-                <div class="flex items-center space-x-2 mt-auto">
-                    <textarea id="message-input" class="flex-1 p-3 bg-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type Here..."></textarea>
-                    <button id="send" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Send</button>
+                <div class="flex items-center space-x-2 mt-2">
+                    <textarea id="chat-input" class="flex-1 p-3 bg-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" placeholder="Type Here..."></textarea>
+                    <button id="send-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Send</button>
                 </div>
             </div>
         </div>
@@ -102,5 +102,7 @@
         </div>
     </div>
 </div>
+
+<script src="../Scripts/game.js"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<div class="relative isolate overflow-hidden bg-gray-900 px-0 py-0 sm:py-0 lg:overflow-visible lg:px-0">
+<div class="relative isolate h-screen overflow-hidden bg-gray-900 px-0 py-0 sm:py-0 lg:overflow-visible lg:px-0">
     <header class="sticky top-0 z-50">
         <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
             <div class="flex">
@@ -76,10 +76,27 @@
                 </div>
             </div>
         </div>
-        <div class="lg:w-2/3 bg-gray-800 p-4 rounded-lg shadow-lg min-h-[300px]">
+        <div class="lg:w-2/3 bg-gray-800 p-4 rounded-lg shadow-lg min-h-[300px] flex flex-col">
             <h2 class="text-xl text-white font-semibold mb-4">Game</h2>
+
+            <!-- Game grid fills remaining space -->
+            <div class="grid grid-rows-[1fr_auto] flex-1">
+                <!-- Quadrants -->
+                <div class="grid grid-cols-2 grid-rows-2">
+                    <div id="player1View" class="bg-red-300 flex items-center justify-center">Player 1</div>
+                    <div id="player2View" class="bg-blue-300 flex items-center justify-center">Player 2</div>
+                    <div id="player3View" class="bg-green-300 flex items-center justify-center">Player 3</div>
+                    <div id="player4View" class="bg-yellow-300 flex items-center justify-center">Player 4</div>
+                </div>
+                <!-- Bottom bar -->
+                <div class="bg-gray-900 text-white text-center h-16 flex items-center justify-center">
+                    <button id="slick" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Slick
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-
+</div>
 </body>
 </html>

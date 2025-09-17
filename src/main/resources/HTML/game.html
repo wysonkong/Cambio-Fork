@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<div class="relative isolate h-screen overflow-hidden bg-gray-900 px-0 py-0 sm:py-0 lg:overflow-visible lg:px-0">
+<div class="min-h-screen bg-gray-900 px-0 py-0">
     <header class="sticky top-0 z-50">
         <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
             <div class="flex">
@@ -27,6 +27,8 @@
                 <a href="rules.html" class="text-sm/6 font-semibold text-white">Rules</a>
                 <a href="game.html" class="text-sm/6 font-semibold text-white">Game</a>
                 <a href="playerStanding.html" class="text-sm/6 font-semibold text-white">Player Standing</a>
+                <a href="login.html" class="text-sm/6 font-semibold text-white">Login</a>
+                <a href="signUp.html" class="text-sm/6 font-semibold text-white">Sign Up</a>
             </div>
         </nav>
         <el-dialog>
@@ -51,6 +53,8 @@
                                     <a href="rules.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Rules</a>
                                     <a href="game.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Game</a>
                                     <a href="playerStanding.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Player Standing</a>
+                                    <a href="login.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Login</a>
+                                    <a href="signUp.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Sign Up</a>
                                 </div>
                             </div>
                         </div>
@@ -60,12 +64,12 @@
         </el-dialog>
     </header>
     <div class="flex flex-col lg:flex-row w-full h-screen bg-gray-900 p-6">
-        <div class="lg:w-1/3 bg-gray-800">
-            <div class="h-1/4 bg-gray-700 p-4 rounded-2xl shadow-lg">
+        <div class="lg:w-1/3 bg-gray-800 flex flex-col space-y-4 overflow-y-auto">
+            <div class="h-1/4 bg-gray-700 p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
                 <h2 class="text-xl text-white font-semibold mb-4">Action Log</h2>
                 <div id="action-log" class="overflow-y-auto h-[200px] space-y-2"></div>
             </div>
-            <div class="h-3/4 bg-gray-700 p-4 rounded-2xl shadow-lg flex flex-col">
+            <div class="h-3/4 bg-gray-700 p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
                 <h2 class="text-xl text-white font-semibold mb-4">Chat</h2>
                 <div id="chat-messages" class="overflow-y-auto h-[200px] space-y-2">
 

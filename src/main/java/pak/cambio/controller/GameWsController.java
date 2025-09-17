@@ -5,11 +5,13 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import pak.cambio.model.GameAction;
-import pak.cambio.model.GameState;
+import pak.cambio.dto.ChatDTO;
+import pak.cambio.dto.ChatMessageDTO;
+import pak.cambio.model.*;
 import pak.cambio.repository.ChatRepository;
+import pak.cambio.repository.GameRepository;
+import pak.cambio.repository.UserRepository;
 import pak.cambio.service.GameService;
-import pak.cambio.model.Chat;
 
 @Controller
 public class GameWsController {
@@ -20,10 +22,16 @@ public class GameWsController {
 
     private ChatRepository chatRepository;
 
-    public GameWsController(GameService gameService, SimpMessagingTemplate messaging, ChatRepository chatRepository) {
+    private UserRepository userRepository;
+
+    private GameRepository gameRepository;
+
+    public GameWsController(GameService gameService, SimpMessagingTemplate messaging, ChatRepository chatRepository, GameRepository gameRepository, UserRepository userRepository) {
         this.gameService = gameService;
         this.messaging = messaging;
         this.chatRepository = chatRepository;
+        this.gameRepository = gameRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -43,10 +51,18 @@ public class GameWsController {
     }
 
     @MessageMapping("/game/{gameId}/chat")
-    public void handleChatMessage(@DestinationVariable Long gameId, Chat message) {
-        // Optional: persist the chat message to DB here if you want history
-        chatRepository.save(message);
-        messaging.convertAndSend("/topic/game." + gameId + ".chat", message);
+    public void handleChatMessage(@DestinationVariable Long gameId, ChatMessageDTO dto) {
+        User user = userRepository.findById(dto.userId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
+
+        Chat chat = new Chat(dto.message(), game, user);
+        chatRepository.save(chat);
+
+        // Broadcast to all clients
+        messaging.convertAndSend("/topic/game." + gameId + ".chat",
+                new ChatDTO(user.getUsername(), chat.getMessage(), chat.getCreatedAt()));
     }
 }
 

@@ -2,9 +2,11 @@ package pak.cambio.service;
 
 import org.springframework.stereotype.Service;
 import pak.cambio.engine.GameEngine;
+import pak.cambio.model.Game;
 import pak.cambio.model.GameAction;
 import pak.cambio.model.GameState;
 import pak.cambio.model.Player;
+import pak.cambio.repository.GameRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,14 +22,20 @@ public class GameService {
     private final ConcurrentHashMap<Long, List<Player>> playersByGame = new ConcurrentHashMap<>();
 
     private final AtomicLong gameIdCounter = new AtomicLong(1);
+    private final GameRepository gameRepository;
+
+    public GameService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
 
     /**
      * Creates a new game and returns its id.
      */
-    public Long createGame() {
+    public Long createGame(Game game) {
         Long id = gameIdCounter.getAndIncrement();
         // start with empty player list, GameEngine created when first player joins (or created here with placeholders)
         playersByGame.put(id, Collections.synchronizedList(new ArrayList<>()));
+        gameRepository.save(game);
         return id;
     }
 

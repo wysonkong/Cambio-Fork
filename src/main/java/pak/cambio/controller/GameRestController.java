@@ -1,6 +1,7 @@
 package pak.cambio.controller;
 
 
+import pak.cambio.model.Game;
 import pak.cambio.model.GameState;
 import pak.cambio.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,8 @@ public class GameRestController {
     private GameService gameService;
 
     @PostMapping("/create")
-    public Long createGame() {
-        return gameService.createGame();
+    public Long createGame(@RequestBody Game game) {
+        return gameService.createGame(game);
     }
 
     @PostMapping("/{gameId}/join")

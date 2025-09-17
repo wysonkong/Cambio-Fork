@@ -3,6 +3,7 @@ package pak.cambio.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +20,7 @@ public class User {
 
     public User(String username, String password, int wins, int loses) {
         this.username = username;
+        this.password = password;
         this.wins = wins;
         this.loses = loses;
     }

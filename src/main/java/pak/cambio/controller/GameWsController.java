@@ -7,17 +7,24 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import pak.cambio.model.GameAction;
 import pak.cambio.model.GameState;
+import pak.cambio.repository.ChatRepository;
 import pak.cambio.service.GameService;
 import pak.cambio.model.Chat;
 
 @Controller
 public class GameWsController {
 
-    @Autowired
     private GameService gameService;
 
-    @Autowired
     private SimpMessagingTemplate messaging;
+
+    private ChatRepository chatRepository;
+
+    public GameWsController(GameService gameService, SimpMessagingTemplate messaging, ChatRepository chatRepository) {
+        this.gameService = gameService;
+        this.messaging = messaging;
+        this.chatRepository = chatRepository;
+    }
 
     /**
      * Client sends to /app/game/{gameId}/action
@@ -38,6 +45,7 @@ public class GameWsController {
     @MessageMapping("/game/{gameId}/chat")
     public void handleChatMessage(@DestinationVariable Long gameId, Chat message) {
         // Optional: persist the chat message to DB here if you want history
+        chatRepository.save(message);
         messaging.convertAndSend("/topic/game." + gameId + ".chat", message);
     }
 }

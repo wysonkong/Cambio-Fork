@@ -5,10 +5,10 @@ const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 
 // Subscribe to chat topic
-// stompClient.subscribe(`/topic/game.${gameId}.chat`, msg => {
-//     const chatMsg = JSON.parse(msg.body);
-//     appendMessage(chatMsg);
-// });
+stompClient.subscribe(`/topic/game.${gameId}.chat`, msg => {
+    const chatMsg = JSON.parse(msg.body);
+    appendMessage(chatMsg);
+});
 
 // Append a new message to the chat box
 function appendMessage(msg) {
@@ -42,6 +42,6 @@ function sendMessage() {
         timestamp: Date.now()
     };
 
-    //stompClient.send(`/app/game/${gameId}/chat`, {}, JSON.stringify(message));
+    stompClient.send(`/app/game/${gameId}/chat`, {}, JSON.stringify(message));
     chatInput.value = '';
 }

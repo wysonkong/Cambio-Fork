@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import pak.cambio.model.GameAction;
 import pak.cambio.model.GameState;
 import pak.cambio.service.GameService;
+import pak.cambio.model.Chat;
 
 @Controller
 public class GameWsController {
@@ -32,6 +33,12 @@ public class GameWsController {
         // If you prefer to broadcast individualized states (hiding certain cards per player),
         // you can iterate all players and messaging.convertAndSendToUser(...) accordingly.
         messaging.convertAndSend("/topic/game." + gameId + ".state", updatedForRequester);
+    }
+
+    @MessageMapping("/game/{gameId}/chat")
+    public void handleChatMessage(@DestinationVariable Long gameId, Chat message) {
+        // Optional: persist the chat message to DB here if you want history
+        messaging.convertAndSend("/topic/game." + gameId + ".chat", message);
     }
 }
 

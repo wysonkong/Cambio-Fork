@@ -20,6 +20,11 @@ public class MainRestController {
         return userService.findAllUsers();
     }
 
+    @GetMapping("/user/{username}")
+    public User findUserByName(@PathVariable String username) {
+        return userService.findUserByName(username);
+    }
+
     @PostMapping("/new_user")
     public void saveNewUser(@RequestBody User user) {
         userService.saveNewUser(user);

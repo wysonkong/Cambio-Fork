@@ -22,5 +22,5 @@ submit.addEventListener("click", async(e) => {
     console.log("Logged in as " + currentUser.username + "with id of " + currentUser.userId);
     sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
     sessionStorage.setItem("sessionId", sessionId);
-    // window.location.href="../index.html";
+    window.location.href="../index.html";
 })

@@ -21,7 +21,7 @@ public class GameService {
     // map gameId -> list of players (useful to create PlayerState objects)
     private final ConcurrentHashMap<Long, List<Player>> playersByGame = new ConcurrentHashMap<>();
 
-    private final AtomicLong gameIdCounter = new AtomicLong(1);
+//    private final AtomicLong gameIdCounter = new AtomicLong(1);
     private final GameRepository gameRepository;
 
     public GameService(GameRepository gameRepository) {
@@ -32,11 +32,11 @@ public class GameService {
      * Creates a new game and returns its id.
      */
     public Long createGame(Game game) {
-        Long id = gameIdCounter.getAndIncrement();
+//        Long id = gameIdCounter.getAndIncrement();
         // start with empty player list, GameEngine created when first player joins (or created here with placeholders)
-        playersByGame.put(id, Collections.synchronizedList(new ArrayList<>()));
         gameRepository.save(game);
-        return id;
+        playersByGame.put(game.getId(), Collections.synchronizedList(new ArrayList<>()));
+        return game.getId();
     }
 
     /**
@@ -44,6 +44,11 @@ public class GameService {
      * In a real app, prevent duplicate seats and apply auth checks.
      */
     public GameState joinGame(Long gameId, Long userId, String displayName) {
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found: " + gameId));
+        playersByGame.computeIfAbsent(gameId, k -> Collections.synchronizedList(new ArrayList<>()));
+
         List<Player> players = playersByGame.get(gameId);
         if (players == null) throw new IllegalArgumentException("Game not found: " + gameId);
 

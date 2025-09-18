@@ -8,7 +8,9 @@ import pak.cambio.service.UserService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import pak.cambio.dto.LoginDTO;
 
 @RestController
 @RequestMapping("/api")
@@ -26,9 +28,19 @@ public class MainRestController {
         return userService.findAllUsers();
     }
 
-    @GetMapping("/user/{username}")
-    public User findUserByName(@PathVariable String username) {
-        return userService.findUserByName(username);
+    @PostMapping("/user")
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDTO login) {
+        User user =  userService.findUserByName(login.username());
+
+        if (user == null || !login.password().equals(user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Create a simple session ID
+        String sessionId = UUID.randomUUID().toString();
+        sessions.put(sessionId, user);
+
+        return ResponseEntity.ok(Map.of("sessionId", sessionId, "username", user.getUsername()));
     }
 
     @PostMapping("/new_user")

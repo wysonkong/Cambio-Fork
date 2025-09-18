@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public User findUserByName(String username) {
-        return userRepository.findUserByUsername(username);
+        return userRepository.findUserByUsername(username).orElse(null);
     }
 
     public void updateScores(List<Long> winnerIds, List<Long> loserIds) {

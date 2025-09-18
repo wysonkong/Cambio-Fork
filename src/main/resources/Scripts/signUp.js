@@ -21,10 +21,14 @@ userName.addEventListener("input", async () => {
 
             if(data.exists) {
                 //edit output to html to tell user that username is taken
+                feedback.textContent = "Username is taken";
+                feedback.style.color = "red";
 
             }
             else {
                 // edit output to html
+                feedback.textContent = "Username is valid";
+                feedback.style.color = "green";
             }
 
         } catch (err) {

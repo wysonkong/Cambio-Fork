@@ -31,7 +31,7 @@ joinSubmit.addEventListener("click", async (e) => {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            userId: currentUser.id,
+            userId: currentUser.userId,
             username: currentUser.username,
             gameId: gameId
         })

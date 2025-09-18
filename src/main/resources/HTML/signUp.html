@@ -67,22 +67,10 @@
         <h2 class="text-2xl font-bold text-center mb-6">Create Your Account</h2>
         <form class="space-y-5">
             <div>
-                <label for="email" class="block text-sm font-medium">Email Address</label>
-                <div class="mt-2 flex rounded-md shadow-sm bg-gray-700">
-                    <input id="email" type="email" name="email" placeholder="example@domain.com"
-                           class="w-full rounded-l-md border-0 bg-gray-700 p-2.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500" />
-                    <select id="domain" name="domain"
-                            class="rounded-r-md border-0 bg-gray-700 px-3 text-gray-300 focus:ring-2 focus:ring-indigo-500">
-                        <option>@gmail.com</option>
-                        <option>@yahoo.com</option>
-                        <option>@outlook.com</option>
-                    </select>
-                </div>
-            </div>
-            <div>
                 <label for="user" class="block text-sm font-medium">Username</label>
                 <input id="user" type="text" name="user" placeholder="Enter your username"
                        class="mt-2 w-full rounded-md border-0 bg-gray-700 p-2.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500" />
+                <div id="username-feedback"></div>
             </div>
             <div>
                 <label for="password" class="block text-sm font-medium">Password</label>
@@ -100,6 +88,7 @@
         </form>
     </div>
 </div>
+<script src="../Scripts/signUp.js"></script>
 </body>
 
 </html>

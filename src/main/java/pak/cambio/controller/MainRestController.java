@@ -12,6 +12,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import pak.cambio.dto.LoginDTO;
 
+import static io.micrometer.common.KeyValues.of;
+
 @RestController
 @RequestMapping("/api")
 public class MainRestController {
@@ -26,6 +28,12 @@ public class MainRestController {
     @GetMapping("/standings")
     public List<User> findAllUsers() {
         return userService.findAllUsers();
+    }
+
+    @GetMapping("/findUser")
+    public Map<String, Boolean> findUser(@RequestParam String username) {
+        Boolean exists = userService.existsByUsername(username);
+        return Map.of("exists", exists);
     }
 
     @PostMapping("/user")

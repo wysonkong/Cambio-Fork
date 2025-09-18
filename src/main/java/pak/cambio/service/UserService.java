@@ -29,6 +29,10 @@ public class UserService {
         return userRepository.findUserByUsername(username).orElse(null);
     }
 
+    public Boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
     public void updateScores(List<Long> winnerIds, List<Long> loserIds) {
         if(winnerIds != null && !winnerIds.isEmpty()) {
             List<User> winners = new ArrayList<User>();

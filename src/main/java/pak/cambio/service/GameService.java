@@ -60,12 +60,17 @@ public class GameService {
         // If we have enough players to start now (you can choose threshold), create engine:
         if (players.size() >= 2 && !activeEngines.containsKey(gameId)) {
             // initialize GameEngine with copies of player states
-            List<Player> enginePlayers = new ArrayList<>();
-            for (Player orig : players) {
-                enginePlayers.add(new Player(orig.getId(), orig.getUser(), orig.getScore(), orig.getIndex()));
+            try {
+                List<Player> enginePlayers = new ArrayList<>();
+                for (Player orig : players) {
+                    enginePlayers.add(new Player(orig.getId(), orig.getUser(), orig.getScore(), orig.getIndex()));
+                }
+                GameEngine engine = new GameEngine(enginePlayers);
+                activeEngines.put(gameId, engine);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
             }
-            GameEngine engine = new GameEngine(enginePlayers);
-            activeEngines.put(gameId, engine);
         }
 
         // If engine exists, return snapshot; otherwise return minimal state with waiting players

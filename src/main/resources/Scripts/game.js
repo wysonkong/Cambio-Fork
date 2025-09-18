@@ -1,4 +1,6 @@
 let stompClient = null;
+const urlParams = new URLSearchParams(window.location.search);
+const gameId = urlParams.get("gameId");
 
 function connectWebSocket(gameId) {
     // 1. Create SockJS connection to your Spring Boot endpoint
@@ -32,11 +34,13 @@ function connectWebSocket(gameId) {
 
 
 // Assume stompClient is already connected
-const gameId = 1; // your game id
+
 const chatBox = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
+const joinCode = document.getElementById("join-code");
 
+joinCode.innerText = "Join Code: " + gameId;
 connectWebSocket(gameId);
 // Append a new message to the chat box
 function appendMessage(msg) {

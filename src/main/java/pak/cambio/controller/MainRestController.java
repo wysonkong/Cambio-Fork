@@ -40,7 +40,7 @@ public class MainRestController {
         String sessionId = UUID.randomUUID().toString();
         sessions.put(sessionId, user);
 
-        return ResponseEntity.ok(Map.of("sessionId", sessionId, "username", user.getUsername()));
+        return ResponseEntity.ok(Map.of("sessionId", sessionId, "username", user.getUsername(), "userId", Long.toString(user.getId())));
     }
 
     @PostMapping("/new_user")

@@ -63,14 +63,16 @@ chatInput.addEventListener('keypress', e => {
 function sendMessage() {
     const content = chatInput.value.trim();
     if (!content) return;
+    const user = JSON.parse(sessionStorage.getItem("currentUser"));
 
     const message = {
-        userId: "1",
+        userId: user.userId,
         gameId: gameId,// set this from your logged-in user
         message: content,
         timestamp: Date.now()
     };
 
+    console.log("sending message " + JSON.stringify(message));
     stompClient.send(`/app/game/${gameId}/chat`, {}, JSON.stringify(message));
     chatInput.value = '';
 }

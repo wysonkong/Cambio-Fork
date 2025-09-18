@@ -6,17 +6,21 @@ let currentUser = null;
 
 submit.addEventListener("click", async(e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8080/api/user/", {
+    const response = await fetch("http://localhost:8080/api/user", {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
         body : JSON.stringify({username : userName.value, password : password.value})
     });
     if(!response.ok) {
         console.log("log in failed")
+        return;
     }
 
     const user = await response.json();
     sessionId = user.sessionId;
-    currentUser = {username : user.username};
-    console.log("Logged in as " + currentUser.username);
+    currentUser = {userId : Number(user.userId), username : user.username};
+    console.log("Logged in as " + currentUser.username + "with id of " + currentUser.userId);
+    sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+    sessionStorage.setItem("sessionId", sessionId);
+    // window.location.href="../index.html";
 })

@@ -82,7 +82,6 @@ let buttons = {
     play : document.getElementById("play-btn"),
     end : document.getElementById("end-turn-btn"),
     cambio : document.getElementById("cambio-btn"),
-    slick : document.getElementById("slick"),
 }
 
 function setButtonsEnabled(isPlayerTurn) {

@@ -74,3 +74,31 @@ function sendMessage() {
     stompClient.send(`/app/game/${gameId}/chat`, {}, JSON.stringify(message));
     chatInput.value = '';
 }
+
+// Button functions
+
+let buttons = {
+    draw : document.getElementById("draw-btn"),
+    play : document.getElementById("play-btn"),
+    end : document.getElementById("end-turn-btn"),
+    cambio : document.getElementById("cambio-btn"),
+    slick : document.getElementById("slick"),
+}
+
+function setButtonsEnabled(isPlayerTurn) {
+    Object.values(buttons).forEach(btn => {
+        if(isPlayerTurn) {
+            btn.disabled = false;
+            btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+            // Restore original color based on button type
+            if (btn.id === "draw-btn") btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
+            if (btn.id === "play-btn") btn.classList.add("bg-blue-600", "text-white", "hover:bg-blue-700");
+            if (btn.id === "end-turn-btn") btn.classList.add("bg-indigo-600", "text-white", "hover:bg-indigo-700");
+            if (btn.id === "cambio-btn") btn.classList.add("bg-red-600", "text-white", "hover:bg-red-700");
+        } else {
+            btn.disabled = true;
+            btn.classList.remove("bg-green-600", "bg-blue-600", "bg-indigo-600", "bg-red-600", "hover:bg-green-700", "hover:bg-blue-700", "hover:bg-indigo-700", "hover:bg-red-700", "text-white");
+            btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+        }
+    })
+}

@@ -4,6 +4,8 @@ const gameId = urlParams.get("gameId");
 const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
 
+//In prototyping, set all buttons enabled
+
 function connectWebSocket(gameId) {
     // 1. Create SockJS connection to your Spring Boot endpoint
     const socket = new SockJS('http://localhost:8080/ws'); // '/ws' is your WebSocket endpoint in Spring Boot
@@ -21,9 +23,17 @@ function connectWebSocket(gameId) {
         // Subscribe to game state updates
         stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
             const state = JSON.parse(msg.body);
-            renderGameState(state);
-            appendAction(msg)
+            // console.log(state);
+            //renderGameState(state);
+            // appendAction(state);
         });
+
+        //subscribe to actions
+        stompClient.subscribe(`/topic/game.${gameId}.action`, msg => {
+            const action = JSON.parse(msg.body);
+            console.log(action);
+            appendAction(action);
+        })
 
         // Subscribe to chat messages
         stompClient.subscribe(`/topic/game.${gameId}.chat`, msg => {
@@ -63,7 +73,7 @@ function appendMessage(msg) {
 function appendAction(msg) {
     const messageEl = document.createElement('div');
     messageEl.classList.add('message');
-    messageEl.innerText = '${msg.username}: ${msg.type}: ${msg.payload}';
+    messageEl.innerText = `${msg.username}: ${msg.type}: ${msg.payload}`;
     actionLog.appendChild(messageEl);
 
     actionLog.scrollTop = actionLog.scrollHeight;
@@ -130,14 +140,16 @@ function sendAction(gameId,userId, username, actionType, payload) {
         type : actionType,
         payload : payload
     };
-
-    stompClient.send('app/game/{gameId}/action', {}, JSON.stringify(action));
+    console.log(action);
+    stompClient.send(`/app/game/${gameId}/action`, {}, JSON.stringify(action));
 }
 
 cambioBtn.addEventListener("click", () => {
-    sendAction(gameId, currentUser.userId, "CALL_CAMBIO", {});
+    console.log("Button pressed");
+    sendAction(gameId, currentUser.userId, currentUser.username,"CALL_CAMBIO", {});
 })
 
 
+setButtonsEnabled(true);
 
 

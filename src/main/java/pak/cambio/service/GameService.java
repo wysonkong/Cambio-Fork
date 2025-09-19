@@ -76,6 +76,11 @@ public class GameService {
         // If engine exists, return snapshot; otherwise return minimal state with waiting players
         GameEngine engine = activeEngines.get(gameId);
         if (engine != null) {
+            System.out.println("Engine exists for game " + gameId);
+        } else {
+            System.out.println("No engine yet for game " + gameId);
+        }
+        if (engine != null) {
             return engine.snapshotState(userId);
         } else {
             // build simple waiting GameState: no discard, currentIndex = 0
@@ -93,6 +98,7 @@ public class GameService {
         GameEngine engine = activeEngines.get(gameId);
         if (engine == null) throw new IllegalStateException("Game not running: " + gameId);
         // engine.applyAction will mutate engine and return snapshot for the requesting player
+        System.out.println("Applying action " + action.getType() + " for game " + gameId);
         return engine.applyAction(action);
     }
 

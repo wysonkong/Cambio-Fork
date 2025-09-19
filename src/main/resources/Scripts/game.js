@@ -1,6 +1,8 @@
 let stompClient = null;
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
+const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
 
 function connectWebSocket(gameId) {
     // 1. Create SockJS connection to your Spring Boot endpoint
@@ -20,6 +22,7 @@ function connectWebSocket(gameId) {
         stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
             const state = JSON.parse(msg.body);
             renderGameState(state);
+            appendAction(msg)
         });
 
         // Subscribe to chat messages
@@ -35,10 +38,13 @@ function connectWebSocket(gameId) {
 
 // Assume stompClient is already connected
 
+const actionLog = document.getElementById("action-log");
 const chatBox = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 const joinCode = document.getElementById("join-code");
+const stickBtn = document.getElementById("stick-btn");
+const cambioBtn = document.getElementById("cambio-btn");
 
 joinCode.innerText = "Join Code: " + gameId;
 connectWebSocket(gameId);
@@ -52,6 +58,15 @@ function appendMessage(msg) {
 
     // Scroll to bottom
     chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function appendAction(msg) {
+    const messageEl = document.createElement('div');
+    messageEl.classList.add('message');
+    messageEl.innerText = '${msg.username}: ${msg.type}: ${msg.payload}';
+    actionLog.appendChild(messageEl);
+
+    actionLog.scrollTop = actionLog.scrollHeight;
 }
 
 // Send message when button clicked
@@ -107,5 +122,22 @@ function setButtonsEnabled(isPlayerTurn) {
         }
     })
 }
+
+function sendAction(gameId,userId, username, actionType, payload) {
+    const action = {
+        userId : userId,
+        username : username,
+        type : actionType,
+        payload : payload
+    };
+
+    stompClient.send('app/game/{gameId}/action', {}, JSON.stringify(action));
+}
+
+cambioBtn.addEventListener("click", () => {
+    sendAction(gameId, currentUser.userId, "CALL_CAMBIO", {});
+})
+
+
 
 

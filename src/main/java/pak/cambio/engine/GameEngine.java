@@ -50,10 +50,10 @@ public class GameEngine {
 
         switch (action.getType()) {
             case DRAW_DECK -> {
-                action = new GameAction(player.getId(), action.getType(), null, deck.removeFirst());
+                action = new GameAction(player.getId(), player.getUser(), action.getType(), null, deck.removeFirst());
             }
             case DRAW_DISCARD -> {
-                action = new GameAction(player.getId(), action.getType(), null, discard.removeFirst());
+                action = new GameAction(player.getId(), player.getUser(), action.getType(), null, discard.removeFirst());
             }
             case SWAP -> {
                 Card newCard = action.getCard();

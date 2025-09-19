@@ -21,6 +21,16 @@ createBtn.addEventListener("click", async() => {
     const gameId = data.gameId;
     console.log("created game with id of: " + gameId);
     sessionStorage.setItem("currentGame", gameId);
+
+    await fetch("http://localhost:8080/api/games/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: currentUser.userId,
+            username: currentUser.username,
+            gameId: gameId
+        })
+    });
     window.location.href = `game.html?gameId=${gameId}`;
 });
 

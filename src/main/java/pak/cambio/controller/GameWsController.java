@@ -48,6 +48,7 @@ public class GameWsController {
         // If you prefer to broadcast individualized states (hiding certain cards per player),
         // you can iterate all players and messaging.convertAndSendToUser(...) accordingly.
         messaging.convertAndSend("/topic/game." + gameId + ".state", updatedForRequester);
+        messaging.convertAndSend("/topic/game." + gameId + ".action", action);
     }
 
     @MessageMapping("/game/{gameId}/chat")

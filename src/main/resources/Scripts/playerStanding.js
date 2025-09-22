@@ -94,3 +94,4 @@ function filterBy(criteria, order) {
     rows.forEach(row => tbody.appendChild(row));
 }
 
+

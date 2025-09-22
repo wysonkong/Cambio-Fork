@@ -164,13 +164,26 @@ function renderHands(state) {
     state.players.forEach((player, index)=> {
         const playerDiv = document.getElementById(`player${index + 1}cards`);
         playerDiv.innerHTML = "";
-        player.hand.forEach(card => {
-            const img = document.createElement("img");
-            img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
-            img.alt = "card";
-            img.classList.add("w-full", "h-auto", "m-1", "card");
-            playerDiv.appendChild(img);
-        })
+
+        if (!player.hand) {
+            // Hand hasn't been dealt yet
+            const placeholder = document.createElement("p");
+            placeholder.textContent = "Waiting for game to start...";
+            playerDiv.appendChild(placeholder);
+            return;
+        }
+
+            player.hand.forEach(card => {
+                if(!card) {
+                    return;
+                }
+                const img = document.createElement("img");
+                img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
+                img.alt = "card";
+                img.classList.add("w-full", "h-auto", "m-1", "card");
+                playerDiv.appendChild(img);
+            })
+
     });
     // hands.forEach((hand, index) => {
     //

@@ -16,7 +16,6 @@ public class GameEngine {
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
-        startNewGame();
     }
 
     public void startNewGame() {
@@ -68,6 +67,9 @@ public class GameEngine {
             }
             case CALL_CAMBIO -> {
                 cambioCalled = true;
+            }
+            case START -> {
+                startNewGame();
             }
         }
 

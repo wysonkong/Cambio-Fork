@@ -23,6 +23,7 @@ function connectWebSocket(gameId) {
         // Subscribe to game state updates
         stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
             const state = JSON.parse(msg.body);
+            renderHands(state)
             // console.log(state);
             //renderGameState(state);
             // appendAction(state);
@@ -153,21 +154,26 @@ let start = document.getElementById('start-btn');
 
 start.addEventListener('click', () => {
     start.hidden = true;
-    const numPlayers = 2; // remove for it to be dynamic from backend
-    const hands = Array.from({ length: numPlayers }, () => Array(4).fill({}));
-    renderHands(hands);
+    // const numPlayers = 2; // remove for it to be dynamic from backend
+    // const hands = Array.from({ length: numPlayers }, () => Array(4).fill({}));
+    sendAction(gameId, currentUser.userId, currentUser.username, "START", {});
 })
 
-function renderHands(hands) {
-    hands.forEach((hand, index) => {
+function renderHands(state) {
+    state.players.forEach(player => {
         const playerDiv = document.getElementById(`player${index + 1}cards`);
         playerDiv.innerHTML = "";
-
-        hand.forEach((card, cardIndex) => {
+        player.hand.forEach(card => {
             const img = document.createElement("img");
-            img.src = "../images/cards/card-back.png";
+            img.src = "../images/cards/" + card;
             img.alt = "card";
             img.classList.add("w-full", "h-auto", "m-1", "card");
+
+        })
+    })
+    hands.forEach((hand, index) => {
+
+        hand.forEach((card, cardIndex) => {
 
             // Add click listener to flip card
             if(index === 0) {

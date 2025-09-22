@@ -5,6 +5,9 @@ Frontend
    - ~~Logged in users should not see log in or sign up tab~~
    - ~~Sign up logs user in immediately~~
    - ~~Logout created~~
+  
+ - TODO: Cover non visible cards
+    - Non visible cards should be rendered face down in the frontend when rendering a gamestate
 
 Backend
 - TODO: Render initial gamestate

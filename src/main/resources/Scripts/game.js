@@ -179,7 +179,7 @@ function renderHands(hands) {
                             img.classList.remove("flipped");
                         } else {
                             // Show the actual card
-                            img.src = "../img/playing-card.png"; // replace with card.face image if available
+                            img.src = "../img/playing-card.png"; // replace with actual card from backend
                             img.classList.add("flipped");
                         }
                     }

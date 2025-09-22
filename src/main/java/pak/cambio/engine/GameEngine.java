@@ -101,9 +101,11 @@ public class GameEngine {
             List<Card> handView = new ArrayList<>();
             for (int i = 0; i < p.getHand().size(); i++) {
                 if (p.getId() == requestingUserId || p.getVisible().get(i) || cambioCalled) {
+                    p.getHand().get(i).setVisible(true);
                     handView.add(p.getHand().get(i));
                 } else {
-                    handView.add(null);
+                    p.getHand().get(i).setVisible(false);
+                    handView.add(p.getHand().get(i));
                 }
             }
             int score = cambioCalled ? p.getScore() : -1;

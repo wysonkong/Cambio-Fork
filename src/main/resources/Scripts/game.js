@@ -23,6 +23,7 @@ function connectWebSocket(gameId) {
         // Subscribe to game state updates
         stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
             const state = JSON.parse(msg.body);
+            console.log(state);
             renderHands(state)
             // console.log(state);
             //renderGameState(state);
@@ -160,41 +161,41 @@ start.addEventListener('click', () => {
 })
 
 function renderHands(state) {
-    state.players.forEach(player => {
+    state.players.forEach((player, index)=> {
         const playerDiv = document.getElementById(`player${index + 1}cards`);
         playerDiv.innerHTML = "";
         player.hand.forEach(card => {
             const img = document.createElement("img");
-            img.src = "../images/cards/" + card;
+            img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
             img.alt = "card";
             img.classList.add("w-full", "h-auto", "m-1", "card");
-
-        })
-    })
-    hands.forEach((hand, index) => {
-
-        hand.forEach((card, cardIndex) => {
-
-            // Add click listener to flip card
-            if(index === 0) {
-                img.addEventListener("click", () => {
-                    if(cardIndex >= 2) { //player can only see the bottom 2 cards
-                        if (img.classList.contains("flipped")) {
-                            // Flip back to back
-                            img.src = "../images/cards/card-back.png";
-                            img.classList.remove("flipped");
-                        } else {
-                            // Show the actual card
-                            img.src = "../img/playing-card.png"; // replace with actual card from backend
-                            img.classList.add("flipped");
-                        }
-                    }
-                })
-            }
-
             playerDiv.appendChild(img);
-        });
+        })
     });
+    // hands.forEach((hand, index) => {
+    //
+    //     hand.forEach((card, cardIndex) => {
+    //
+    //         // Add click listener to flip card
+    //         // if(index === 0) {
+    //         //     img.addEventListener("click", () => {
+    //         //         if(cardIndex >= 2) { //player can only see the bottom 2 cards
+    //         //             if (img.classList.contains("flipped")) {
+    //         //                 // Flip back to back
+    //         //                 img.src = "../images/cards/card-back.png";
+    //         //                 img.classList.remove("flipped");
+    //         //             } else {
+    //         //                 // Show the actual card
+    //         //                 img.src = "../img/playing-card.png"; // replace with actual card from backend
+    //         //                 img.classList.add("flipped");
+    //         //             }
+    //         //         }
+    //         //     })
+    //         // }
+    //
+    //         playerDiv.appendChild(img);
+    //     });
+    // });
 
 }
 

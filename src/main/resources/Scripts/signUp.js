@@ -44,17 +44,55 @@ userName.addEventListener("input", async () => {
 
 submit.addEventListener("click", async (e) => {
     e.preventDefault();
+
+    // --- Sign Up ---
     const response = await fetch("http://localhost:8080/api/new_user", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({username: userName.value, password: password.value})
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: userName.value,
+            password: password.value
+        })
     });
+
     if (!response.ok) {
-        console.log("log in failed")
+        console.log("Sign up failed");
         return;
     }
 
     console.log("Successfully signed up");
-    window.location.href="login.html";
 
-})
+    // --- Log In Immediately After ---
+    const loginResponse = await fetch("http://localhost:8080/api/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: userName.value,
+            password: password.value
+        })
+    });
+
+    if (!loginResponse.ok) {
+        console.log("Login failed");
+        return;
+    }
+
+    const user = await loginResponse.json();
+
+    // --- Store Session Info ---
+    const sessionId = user.sessionId;
+    const currentUser = {
+        userId: Number(user.userId),
+        username: user.username
+    };
+
+    console.log(`Logged in as ${currentUser.username} with id of ${currentUser.userId}`);
+
+    sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+    sessionStorage.setItem("sessionId", sessionId);
+
+    // --- Redirect ---
+    window.location.href = "../index.html";
+});
+
+

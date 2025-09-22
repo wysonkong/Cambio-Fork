@@ -67,7 +67,7 @@
         </el-dialog>
     </header>
     <div class="flex flex-col lg:flex-row w-full h-screen bg-gray-900 p-6">
-        <div class="lg:w-1/3 bg-gray-800 flex flex-col space-y-4 overflow-y-auto">
+        <div class="lg:w-1/8 bg-gray-800 flex flex-col space-y-4 overflow-y-auto">
             <div class="h-1/4 bg-gray-700 p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
                 <h2 class="text-xl text-white font-semibold mb-4">Action Log</h2>
                 <div id="action-log" class="overflow-y-auto h-[200px] space-y-2"></div>
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class="lg:w-2/3 bg-gray-800 p-4 rounded-lg shadow-lg min-h-[300px] flex flex-col">
+        <div class="lg:w-7/8 bg-gray-800 p-4 rounded-lg shadow-lg w-full min-h-[300px] flex flex-col">
             <h2 class="text-xl text-white font-semibold mb-4">Game</h2>
 
             <!-- Game area fills the right panel -->
@@ -92,27 +92,46 @@
                 <div class="grid grid-rows-[auto_auto_auto] gap-4 w-full h-full max-w-full max-h-full place-items-center">
 
                     <!-- Top row: 3 players -->
-                    <div class="grid grid-cols-3 gap-4 w-full max-w-[600px]">
-                        <div id="player2View" class="bg-blue-300 flex items-center justify-center aspect-square w-full">P2</div>
-                        <div id="player3View" class="bg-green-300 flex items-center justify-center aspect-square w-full">P3</div>
-                        <div id="player4View" class="bg-yellow-300 flex items-center justify-center aspect-square w-full">P4</div>
+                    <div class="flex justify-center w-full max-w-[200px]">
+                        <div id="player2View" class="bg-yellow-300 flex items-center justify-center aspect-square w-full">
+                            <div id="player2cards" class="grid grid-cols-2 gap-2">
+
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Middle row: deck -->
-                    <div class="flex justify-center w-full max-w-[200px]">
+                    <div class="grid grid-cols-3 gap-4 w-full max-w-[600px]">
+                        <div id="player3View" class="bg-blue-300 flex items-center justify-center aspect-square w-full">
+                            <div id="player3cards" class="grid grid-cols-2 gap-2">
+
+                            </div>
+                        </div>
                         <div id="card-deck" class="flex items-center justify-center aspect-square w-full">
                             <img src="../images/cards/card-back.png" alt="card deck" class="w-full h-full object-contain" />
+                        </div>
+                        <div id="player4View" class="bg-green-300 flex items-center justify-center aspect-square w-full">
+                            <div id="player4cards" class="grid grid-cols-2 gap-2">
+
+                            </div>
                         </div>
                     </div>
 
                     <!-- Bottom row: player 1 -->
                     <div class="flex justify-center w-full max-w-[200px]">
-                        <div id="player1View" class="bg-red-300 flex items-center justify-center aspect-square w-full">P1</div>
+                        <div id="player1View" class="bg-red-300 flex items-center justify-center aspect-square w-full">
+                            <div id="player1cards" class="grid grid-cols-2 gap-2">
+
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Bottom bar -->
                 <div class="mt-4 gap-4 bg-gray-900 text-white text-center h-16 flex items-center justify-center w-full mt-4 shrink-0">
+                    <button id="start-btn" class="px-4 py-2 bg-green-900 text-white rounded-lg hover:bg-green-700 focus:outline-none">
+                        Start Game
+                    </button>
                     <button id="draw-btn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none">
                         Draw
                     </button>

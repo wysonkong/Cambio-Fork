@@ -138,6 +138,37 @@ cambioBtn.addEventListener("click", () => {
     sendAction(gameId, currentUser.userId, "CALL_CAMBIO", {});
 })
 
+let start = document.getElementById('start-btn');
+
+start.addEventListener('click', () => {
+    start.hidden = true;
+    const numPlayers = 2; // remove for it to be dynamic from backend
+    const hands = Array.from({ length: numPlayers }, () => Array(4).fill({}));
+    renderHands(hands);
+})
+
+function renderHands(hands) {
+    hands.forEach((hand, index) => {
+        const playerDiv = document.getElementById(`player${index + 1}cards`);
+        playerDiv.innerHTML = ""; // clear previous cards
+
+        hand.forEach(() => {
+            const img = document.createElement("img");
+
+            if (index === 0) {
+                img.src = "../images/cards/card-back.png";
+            } else {
+                // Show back of card for other players
+                img.src = "../images/cards/card-back.png";
+            }
+
+            img.alt = "card";
+            img.classList.add("w-12", "h-auto", "m-1"); // styling
+            playerDiv.appendChild(img);
+        });
+    });
+}
+
 
 
 

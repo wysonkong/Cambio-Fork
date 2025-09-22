@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 public class Card {
     private String rank;
     private String suit;
-    private boolean hiddenToMe;
-    private boolean hiddenToYou;
+    private boolean visible;
 
     public Card() {
 
@@ -14,6 +13,7 @@ public class Card {
     public Card(String rank, String suit) {
         this.rank = rank;
         this.suit = suit;
+        visible = false;
     }
 
     public int getValue() {
@@ -51,5 +51,13 @@ public class Card {
 
     public String getRank() {
         return rank;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

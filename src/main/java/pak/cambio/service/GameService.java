@@ -86,7 +86,7 @@ public class GameService {
             // build simple waiting GameState: no discard, currentIndex = 0
             return new GameState(players.stream()
                     .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
-                            List.of("??","??","??","??"), -1)).toList(),
+                            List.of(null, null, null, null), -1)).toList(),
                     null, 0, false);
         }
     }

@@ -38,10 +38,10 @@ public class GameState {
         private final Long userId;
         private final String userName;
         private final int index;
-        private final List<String> hand;
+        private final List<Card> hand;
         private final int score;
 
-        public PlayerView(Long userId, String userName, int index, List<String> hand, int score) {
+        public PlayerView(Long userId, String userName, int index, List<Card> hand, int score) {
             this.userId = userId;
             this.userName = userName;
             this.index = index;
@@ -61,7 +61,7 @@ public class GameState {
             return index;
         }
 
-        public List<String> getHand() {
+        public List<Card> getHand() {
             return hand;
         }
 

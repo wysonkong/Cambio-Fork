@@ -98,12 +98,12 @@ public class GameEngine {
     public GameState snapshotState(Long requestingUserId) {
         List<GameState.PlayerView> views = new ArrayList<>();
         for (Player p : players) {
-            List<String> handView = new ArrayList<>();
+            List<Card> handView = new ArrayList<>();
             for (int i = 0; i < p.getHand().size(); i++) {
                 if (p.getId() == requestingUserId || p.getVisible().get(i) || cambioCalled) {
-                    handView.add(p.getHand().get(i).getRank() + p.getHand().get(i).getSuit());
+                    handView.add(p.getHand().get(i));
                 } else {
-                    handView.add("??");
+                    handView.add(null);
                 }
             }
             int score = cambioCalled ? p.getScore() : -1;

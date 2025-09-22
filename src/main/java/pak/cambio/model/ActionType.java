@@ -5,5 +5,6 @@ public enum ActionType {
     DRAW_DISCARD,   // take from discard
     SWAP,           // swap drawn card with one in hand
     DISCARD,        // discard drawn card
-    CALL_CAMBIO     // end game call
+    CALL_CAMBIO,     // end game call
+    START //start game
 }

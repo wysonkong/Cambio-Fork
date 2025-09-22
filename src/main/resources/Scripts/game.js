@@ -161,23 +161,35 @@ start.addEventListener('click', () => {
 function renderHands(hands) {
     hands.forEach((hand, index) => {
         const playerDiv = document.getElementById(`player${index + 1}cards`);
-        playerDiv.innerHTML = ""; // clear previous cards
+        playerDiv.innerHTML = "";
 
-        hand.forEach(() => {
+        hand.forEach((card, cardIndex) => {
             const img = document.createElement("img");
+            img.src = "../images/cards/card-back.png";
+            img.alt = "card";
+            img.classList.add("w-full", "h-auto", "m-1", "card");
 
-            if (index === 0) {
-                img.src = "../images/cards/card-back.png";
-            } else {
-                // Show back of card for other players
-                img.src = "../images/cards/card-back.png";
+            // Add click listener to flip card
+            if(index === 0) {
+                img.addEventListener("click", () => {
+                    if(cardIndex >= 2) { //player can only see the bottom 2 cards
+                        if (img.classList.contains("flipped")) {
+                            // Flip back to back
+                            img.src = "../images/cards/card-back.png";
+                            img.classList.remove("flipped");
+                        } else {
+                            // Show the actual card
+                            img.src = "../img/playing-card.png"; // replace with card.face image if available
+                            img.classList.add("flipped");
+                        }
+                    }
+                })
             }
 
-            img.alt = "card";
-            img.classList.add("w-12", "h-auto", "m-1"); // styling
             playerDiv.appendChild(img);
         });
     });
+
 }
 
 

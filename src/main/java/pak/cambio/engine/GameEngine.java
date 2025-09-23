@@ -104,7 +104,7 @@ public class GameEngine {
                     p.getHand().get(i).setVisible(true);
                     handView.add(p.getHand().get(i));
                 } else {
-                    p.getHand().get(i).setVisible(false);
+                    p.getHand().get(i).setVisible(true);
                     handView.add(p.getHand().get(i));
                 }
             }

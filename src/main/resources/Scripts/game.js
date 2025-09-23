@@ -2,7 +2,9 @@ let stompClient = null;
 const urlParams = new URLSearchParams(window.location.search);
 const gameId = urlParams.get("gameId");
 const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let myTurn = null;
 
+const displayMyTurn = document.getElementById("display-turn");
 
 //In prototyping, set all buttons enabled
 
@@ -24,7 +26,8 @@ function connectWebSocket(gameId) {
         stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
             const state = JSON.parse(msg.body);
             console.log(state);
-            renderHands(state)
+            renderHands(state);
+            displayTurn(state);
             // console.log(state);
             //renderGameState(state);
             // appendAction(state);
@@ -160,7 +163,26 @@ start.addEventListener('click', () => {
     sendAction(gameId, currentUser.userId, currentUser.username, "START", {});
 })
 
+
+function displayTurn(state) {
+    if(state.currentTurn === myTurn) {
+        displayMyTurn.innerText = "Your Turn!";
+    }
+    else {
+        displayMyTurn.innerText = "";
+    }
+}
+
 function renderHands(state) {
+    //get user's turn index from the backend and save it locally
+    if(myTurn == null) {
+        state.players.forEach(player => {
+            if(player.userId === currentUser.userId) {
+                myTurn = player.index;
+            }
+        })
+    }
+    console.log("Your turn is: " + myTurn);
     state.players.forEach((player, index)=> {
         const playerDiv = document.getElementById(`player${index + 1}cards`);
         playerDiv.innerHTML = "";

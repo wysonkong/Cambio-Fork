@@ -1,4 +1,4 @@
-Backlog (updated 22 SEP 2025)
+Backlog
 
 Frontend
  - ~~TODO: Dynamic navbar~~

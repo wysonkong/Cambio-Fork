@@ -19,4 +19,4 @@ Frontend
 
 Backend
 ~~- TODO: Render initial gamestate
-  - Cards should appear according to player's hand when a player clicks start game~~
+   - Cards should appear according to player's hand when a player clicks start game~~

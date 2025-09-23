@@ -28,6 +28,7 @@ function connectWebSocket(gameId) {
             console.log(state);
             renderHands(state);
             displayTurn(state);
+            setButtonsEnabled(state);
             // console.log(state);
             //renderGameState(state);
             // appendAction(state);
@@ -120,9 +121,9 @@ let buttons = {
     cambio : document.getElementById("cambio-btn"),
 }
 
-function setButtonsEnabled(isPlayerTurn) {
+function setButtonsEnabled(state) {
     Object.values(buttons).forEach(btn => {
-        if(isPlayerTurn) {
+        if(state.currentTurn === myTurn) {
             btn.disabled = false;
             btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
             // Restore original color based on button type
@@ -174,6 +175,7 @@ function displayTurn(state) {
 }
 
 function renderHands(state) {
+    start.hidden = true;
     //get user's turn index from the backend and save it locally
     if(myTurn == null) {
         state.players.forEach(player => {
@@ -186,6 +188,8 @@ function renderHands(state) {
     state.players.forEach((player, index)=> {
         const playerDiv = document.getElementById(`player${index + 1}cards`);
         playerDiv.innerHTML = "";
+
+        setButtonsEnabled(state);
 
         if (!player.hand) {
             // Hand hasn't been dealt yet
@@ -222,34 +226,9 @@ function renderHands(state) {
             })
 
     });
-    // hands.forEach((hand, index) => {
-    //
-    //     hand.forEach((card, cardIndex) => {
-    //
-    //         // Add click listener to flip card
-    //         // if(index === 0) {
-    //         //     img.addEventListener("click", () => {
-    //         //         if(cardIndex >= 2) { //player can only see the bottom 2 cards
-    //         //             if (img.classList.contains("flipped")) {
-    //         //                 // Flip back to back
-    //         //                 img.src = "../images/cards/card-back.png";
-    //         //                 img.classList.remove("flipped");
-    //         //             } else {
-    //         //                 // Show the actual card
-    //         //                 img.src = "../img/playing-card.png"; // replace with actual card from backend
-    //         //                 img.classList.add("flipped");
-    //         //             }
-    //         //         }
-    //         //     })
-    //         // }
-    //
-    //         playerDiv.appendChild(img);
-    //     });
-    // });
-
 }
 
 
-setButtonsEnabled(true);
+
 
 

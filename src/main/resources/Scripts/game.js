@@ -174,14 +174,21 @@ function renderHands(state) {
         }
 
             player.hand.forEach(card => {
-                if(!card) {
+                if (!card) {
                     return;
                 }
-                const img = document.createElement("img");
-                img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
-                img.alt = "card";
-                img.classList.add("w-full", "h-auto", "m-1", "card");
-                playerDiv.appendChild(img);
+                if (card.visible) {
+                    const img = document.createElement("img");
+                    img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
+                    img.alt = "card";
+                    img.classList.add("max-w-xs","max-h-xs", "m-1", "card");
+                    playerDiv.appendChild(img);
+                } else {
+                    const img = document.createElement("img")
+                    img.src = "../images/cards/card-back.png";
+                    img.classList.add("max-w-xs", "max-h-xs", "m-1", "card");
+                    playerDiv.appendChild(img);
+                }
             })
 
     });

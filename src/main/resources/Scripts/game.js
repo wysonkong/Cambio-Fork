@@ -181,12 +181,20 @@ function renderHands(state) {
                     const img = document.createElement("img");
                     img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
                     img.alt = "card";
-                    img.classList.add("max-w-xs","max-h-xs", "m-1", "card");
+                    img.classList.add("w-28",
+                        "h-24",// or w-24, w-28 for size control
+                        "object-contain",      // scale without stretching
+                        "m-1",
+                        "card");
                     playerDiv.appendChild(img);
                 } else {
                     const img = document.createElement("img")
                     img.src = "../images/cards/card-back.png";
-                    img.classList.add("max-w-xs", "max-h-xs", "m-1", "card");
+                    img.classList.add("w-28",
+                        "h-28",// or w-24, w-28 for size control
+                        "object-contain",      // scale without stretching
+                        "m-1",
+                        "card");
                     playerDiv.appendChild(img);
                 }
             })

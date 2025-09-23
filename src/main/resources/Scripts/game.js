@@ -253,7 +253,8 @@ function renderHands(state) {
                     img.alt = "card";
                     img.classList.add("w-28",
                         "h-24",// or w-24, w-28 for size control
-                        "object-contain",      // scale without stretching
+                        "object-contain",
+                        "hover:bg-blue-700",// scale without stretching
                         "m-1",
                         "card");
                     playerDiv.appendChild(img);
@@ -261,13 +262,27 @@ function renderHands(state) {
                     const img = document.createElement("img")
                     img.src = "../images/cards/card-back.png";
                     img.classList.add("w-28",
-                        "h-28",// or w-24, w-28 for size control
+                        "h-28", // size control
                         "object-contain",      // scale without stretching
                         "m-1",
                         "card");
                     playerDiv.appendChild(img);
                 }
             })
+
+        const discardDiv = document.getElementById("card-discard");
+        discardDiv.innerHTML = "";
+        if (state.prevCard) {
+            const img = document.createElement("img");
+            img.src = "../images/cards/" + state.prevCard.rank + "-" + state.prevCard.suit + ".png";
+            img.alt = "prevCard";
+            img.classList.add("w-28",
+                "h-24", // size control
+                "object-contain",
+                "m-1",
+                "card");
+            discardDiv.appendChild(img);
+        }
 
     });
 }

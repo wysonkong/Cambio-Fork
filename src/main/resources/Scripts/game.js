@@ -218,9 +218,20 @@ function renderHands(state) {
         })
     }
     console.log("Your turn is: " + myTurn);
-    state.players.forEach((player, index)=> {
-        const playerDiv = document.getElementById(`player${index + 1}cards`);
+    let index = 1;
+    state.players.forEach((player)=> {
+        let playerName = document.getElementById(`player${index + 1}Username`);
+        let playerDiv = document.getElementById(`player${index + 1}cards`);
+        if(player.userId === currentUser.userId) {
+            playerName = document.getElementById("player1Username");
+            playerDiv = document.getElementById("player1cards");
+        }
+        else {
+            index++;
+        }
         playerDiv.innerHTML = "";
+        playerName.innerHTML ="";
+        playerName.innerHTML = player.userName;
 
         setButtonsEnabled(state);
 

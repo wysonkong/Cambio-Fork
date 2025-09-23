@@ -65,5 +65,6 @@ public class GameWsController {
         messaging.convertAndSend("/topic/game." + gameId + ".chat",
                 new ChatDTO(user.getUsername(), chat.getMessage(), chat.getCreatedAt()));
     }
+
 }
 

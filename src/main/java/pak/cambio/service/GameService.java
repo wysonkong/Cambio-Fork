@@ -2,10 +2,7 @@ package pak.cambio.service;
 
 import org.springframework.stereotype.Service;
 import pak.cambio.engine.GameEngine;
-import pak.cambio.model.Game;
-import pak.cambio.model.GameAction;
-import pak.cambio.model.GameState;
-import pak.cambio.model.Player;
+import pak.cambio.model.*;
 import pak.cambio.repository.GameRepository;
 
 import java.util.ArrayList;
@@ -49,14 +46,23 @@ public class GameService {
                 .orElseThrow(() -> new IllegalArgumentException("Game not found: " + gameId));
         playersByGame.computeIfAbsent(gameId, k -> Collections.synchronizedList(new ArrayList<>()));
 
-        List<Player> players = playersByGame.get(gameId);
-        if (players == null) throw new IllegalArgumentException("Game not found: " + gameId);
 
         // assign seat = next free index
-        int seat = players.size();
+        int seat = playersByGame.get(gameId).size();
         Player p = new Player(userId, displayName, 0, seat);
-        players.add(p);
+        playersByGame.get(gameId).add(p);
 
+
+
+        return new GameState(playersByGame.get(gameId).stream()
+                .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
+                        List.of(), -1)).toList(),
+                null, 0, false);
+    }
+
+
+    public GameState startGame(long gameId, long userId) {
+        List<Player> players = playersByGame.get(gameId);
         // If we have enough players to start now (you can choose threshold), create engine:
         if (players.size() >= 2 && !activeEngines.containsKey(gameId)) {
             // initialize GameEngine with copies of player states
@@ -67,28 +73,13 @@ public class GameService {
                 }
                 GameEngine engine = new GameEngine(enginePlayers);
                 activeEngines.put(gameId, engine);
+                return engine.snapshotState(userId);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
             }
         }
-
-        // If engine exists, return snapshot; otherwise return minimal state with waiting players
-        GameEngine engine = activeEngines.get(gameId);
-        if (engine != null) {
-            System.out.println("Engine exists for game " + gameId);
-        } else {
-            System.out.println("No engine yet for game " + gameId);
-        }
-        if (engine != null) {
-            return engine.snapshotState(userId);
-        } else {
-            // build simple waiting GameState: no discard, currentIndex = 0
-            return new GameState(players.stream()
-                    .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
-                            List.of(), -1)).toList(),
-                    null, 0, false);
-        }
+        throw new RuntimeException("Cannot initialize game engine");
     }
 
 
@@ -97,7 +88,13 @@ public class GameService {
      */
     public GameState applyAction(Long gameId, GameAction action) {
         GameEngine engine = activeEngines.get(gameId);
-        if (engine == null) throw new IllegalStateException("Game not running: " + gameId);
+        if (engine == null && action.getType() == ActionType.START) {
+            startGame(gameId, action.getUserId());
+            engine = activeEngines.get(gameId);
+        }
+        else if(engine == null && !(action.getType() == ActionType.START)) {
+            throw new IllegalStateException("Game not running: " + gameId);
+        }
         // engine.applyAction will mutate engine and return snapshot for the requesting player
         System.out.println("Applying action " + action.getType() + " for game " + gameId);
         return engine.applyAction(action);

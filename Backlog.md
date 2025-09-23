@@ -15,6 +15,10 @@ Frontend
 
  - TODO: Create discard element
 
+ - TODO: Buttons don't update with gamestate
+     - Buttons should disable if not your turn
+     - Start game should disappear for all players once game is started
+
 
 
 Backend

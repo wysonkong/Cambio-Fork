@@ -11,13 +11,13 @@ Frontend
   
  - ~~TODO: Create bttn listeners for each game action type and have them properly send message to web socket~~
    
- - TODO: Fix action log so that it accurately display's username, action
+<s> - TODO: Fix action log so that it accurately display's username, action </s>
 
  - TODO: Create discard element
 
- - TODO: Buttons don't update with gamestate
+<s> - TODO: Buttons don't update with gamestate
      - Buttons should disable if not your turn
-     - Start game should disappear for all players once game is started
+     - Start game should disappear for all players once game is started </s>
 
 
 
@@ -25,3 +25,5 @@ Backend
 
  <s>- TODO: Render initial gamestate
    - Cards should appear according to player's hand when a player clicks start game </s>
+
+   - TODO: Implement DRAW action and render

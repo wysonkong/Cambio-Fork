@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (logoutDrop) logoutDrop.classList.remove("hidden");
 
 
-        display("Welcome" + currentUser.username);
+        console.log("Welcome" + currentUser.username);
     } else {
         // User not logged in → show login/signup, hide logout
         if (login) login.classList.remove("hidden");

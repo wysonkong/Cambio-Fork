@@ -40,7 +40,7 @@ public class Card {
             }
         }
         deck.add(new Card("Joker", "Little"));
-        deck.add(new Card("Jocker", "Big"));
+        deck.add(new Card("Joker", "Big"));
         return deck;
     }
 

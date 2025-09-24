@@ -5,6 +5,7 @@ const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 let myTurn = null;
 
 const displayMyTurn = document.getElementById("display-turn");
+let players = [];
 
 //In prototyping, set all buttons enabled
 
@@ -216,19 +217,16 @@ function renderHands(state) {
                 myTurn = player.index;
             }
         })
+        players.push(state.players[myTurn])
+        players.push(...state.players.slice(myTurn + 1));
+        players.push(...state.players.slice(0, myTurn));
     }
     console.log("Your turn is: " + myTurn);
-    let index = 1;
-    state.players.forEach((player)=> {
+    let index = 0;
+    players.forEach((player)=> {
         let playerName = document.getElementById(`player${index + 1}Username`);
         let playerDiv = document.getElementById(`player${index + 1}cards`);
-        if(player.userId === currentUser.userId) {
-            playerName = document.getElementById("player1Username");
-            playerDiv = document.getElementById("player1cards");
-        }
-        else {
-            index++;
-        }
+        index++;
         playerDiv.innerHTML = "";
         playerName.innerHTML ="";
         playerName.innerHTML = player.userName;

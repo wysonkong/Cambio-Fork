@@ -6,6 +6,8 @@ let myTurn = null;
 
 const displayMyTurn = document.getElementById("display-turn");
 let players = [];
+const playersMap = {};
+
 
 //In prototyping, set all buttons enabled
 
@@ -27,13 +29,16 @@ function connectWebSocket(gameId) {
         stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
             const state = JSON.parse(msg.body);
             console.log(state);
+
             renderHands(state);
             displayTurn(state);
             setButtonsEnabled(state);
-            // console.log(state);
-            //renderGameState(state);
-            // appendAction(state);
+
+            players.forEach(p => {
+                playersMap[p.userId] = p.userName; // note: userName with capital N
+            });
         });
+
 
         //subscribe to actions
         stompClient.subscribe(`/topic/game.${gameId}.action`, msg => {
@@ -80,10 +85,13 @@ function appendMessage(msg) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+
 function appendAction(msg) {
     const messageEl = document.createElement('div');
+    const cardText = msg.card ? `${msg.card.rank} of ${msg.card.suit}` : '';
+    const username = msg.userName || playersMap[msg.userId] || 'Unknown';
     messageEl.classList.add('message');
-    messageEl.innerText = `${msg.username}: ${msg.type}: ${msg.payload}`;
+    messageEl.innerText = `${username}: ${msg.type}: ${cardText}`;
     actionLog.appendChild(messageEl);
 
     actionLog.scrollTop = actionLog.scrollHeight;

@@ -133,19 +133,7 @@ let buttons = {
     cambio : document.getElementById("cambio-btn"),
 }
 
-let hasDrawn = false;
 
-buttons.draw.addEventListener("click", () => {
-    hasDrawn = true;
-})
-
-function endTurn(){
-    hasDrawn = false;
-}
-
-buttons.cambio.addEventListener("click", endTurn);
-buttons.play.addEventListener("click", endTurn);
-buttons.discard.addEventListener("click", endTurn);
 
 function setButtonsEnabled(state) {
     const isMyTurn = state.currentTurn === myTurn
@@ -192,19 +180,32 @@ function sendAction(gameId,userId, username, actionType, payload) {
     stompClient.send(`/app/game/${gameId}/action`, {}, JSON.stringify(action));
 }
 
-cambioBtn.addEventListener("click", () => {
-    console.log("Called Cambio!");
-    sendAction(gameId, currentUser.userId, currentUser.username,"CALL_CAMBIO", {});
-})
+
+
+let hasDrawn = false;
+
+function endTurn(){
+    hasDrawn = false;
+}
+
+buttons.cambio.addEventListener("click", endTurn);
+buttons.play.addEventListener("click", endTurn);
+buttons.discard.addEventListener("click", endTurn);
 
 drawBtn.addEventListener("click", () => {
     console.log("Drew a card");
     sendAction(gameId, currentUser.userId, currentUser.username,"DRAW_DECK", {});
+    hasDrawn = true;
 })
 
 playBtn.addEventListener("click", () => {
     console.log("Played a card");
     sendAction(gameId, currentUser.userId, currentUser.username,"SWAP", {});
+})
+
+cambioBtn.addEventListener("click", () => {
+    console.log("Called Cambio!");
+    sendAction(gameId, currentUser.userId, currentUser.username,"CALL_CAMBIO", {});
 })
 
 // stickBtn.addEventListener("click", () => {

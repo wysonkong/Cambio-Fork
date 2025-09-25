@@ -19,12 +19,12 @@ Frontend
      - Buttons should disable if not your turn
      - Start game should disappear for all players once game is started </s>
 
-    -TODO: Buttons should behave in the following way:
+   -TODO: Buttons should behave in the following way:
       - On player's turn -> Draw, Call cambio should be active
       - On draw -> swap, discard should be active
       - All times -> stick should be active
 
-    -TODO: Get card sizes to be more playable
+   -TODO: Get card sizes to be more playable
 
 
 

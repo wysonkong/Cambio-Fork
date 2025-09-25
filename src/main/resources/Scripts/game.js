@@ -133,16 +133,39 @@ let buttons = {
     cambio : document.getElementById("cambio-btn"),
 }
 
+let hasDrawn = false;
+
+buttons.draw.addEventListener("click", () => {
+    hasDrawn = true;
+    setButtonsEnabled(state);
+})
+
 function setButtonsEnabled(state) {
+    const isMyTurn = state.currentTurn === myTurn
     Object.values(buttons).forEach(btn => {
-        if(state.currentTurn === myTurn) {
-            btn.disabled = false;
-            btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
-            // Restore original color based on button type
-            if (btn.id === "draw-btn") btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
-            if (btn.id === "play-btn") {btn.disabled = true; btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");}
-            if (btn.id === "discard-btn") {btn.disabled = true; btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");}
-            if (btn.id === "cambio-btn") {btn.disabled = true; btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");}
+        if(isMyTurn) {
+            if(!hasDrawn) {
+                if (btn.id === "draw-btn") {
+                    btn.disabled = false;
+                    btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                    btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
+                } else {
+                    btn.disabled = true;
+                    btn.classList.remove("bg-blue-600", "bg-indigo-600", "bg-red-600", "hover:bg-blue-700", "hover:bg-indigo-700", "hover:bg-red-700", "text-white");
+                    btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                }
+            } else {
+                btn.disabled = false;
+                btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                if (btn.id === "play-btn") btn.classList.add("bg-blue-600", "text-white", "hover:bg-blue-700")
+                if (btn.id === "discard-btn") btn.classList.add("bg-indigo-600", "text-white", "hover:bg-indigo-700")
+                if (btn.id === "cambio-btn") btn.classList.add("bg-red-600", "text-white", "hover:bg-red-700")
+                if (btn.id === "draw-btn") {
+                    btn.disabled = true;
+                    btn.classList.remove("bg-green-600", "text-white", "hover:bg-green-700");
+                    btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                }
+            }
         } else {
             btn.disabled = true;
             btn.classList.remove("bg-green-600", "bg-blue-600", "bg-indigo-600", "bg-red-600", "hover:bg-green-700", "hover:bg-blue-700", "hover:bg-indigo-700", "hover:bg-red-700", "text-white");

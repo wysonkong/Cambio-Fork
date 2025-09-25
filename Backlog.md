@@ -19,6 +19,13 @@ Frontend
      - Buttons should disable if not your turn
      - Start game should disappear for all players once game is started </s>
 
+    -TODO: Buttons should behave in the following way:
+      - On player's turn -> Draw, Call cambio should be active
+      - On draw -> swap, discard should be active
+      - All times -> stick should be active
+
+    -TODO: Get card sizes to be more playable
+
 
 
 Backend
@@ -26,4 +33,8 @@ Backend
  <s>- TODO: Render initial gamestate
    - Cards should appear according to player's hand when a player clicks start game </s>
 
-   - TODO: Implement DRAW action and render
+   <s> - TODO: Implement DRAW action and render </s>
+
+   -TODO: Implement special move functions for special cards
+
+   

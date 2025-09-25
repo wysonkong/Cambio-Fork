@@ -14,7 +14,6 @@ public class GameState {
         this.prevCard = prevCard;
         this.currentTurn = currentTurn;
         this.cambioCalled = cambioCalled;
-
     }
 
     public boolean isCambioCalled() {
@@ -40,13 +39,15 @@ public class GameState {
         private final int index;
         private final List<Card> hand;
         private final int score;
+        private final Card pending;
 
-        public PlayerView(Long userId, String userName, int index, List<Card> hand, int score) {
+        public PlayerView(Long userId, String userName, int index, List<Card> hand, int score, Card pending) {
             this.userId = userId;
             this.userName = userName;
             this.index = index;
             this.hand = hand;
             this.score = score;
+            this.pending = pending;
         }
 
         public Long getUserId() {
@@ -66,5 +67,9 @@ public class GameState {
         }
 
         public int getScore() { return score; }
+
+        public Card getPending() {
+            return pending;
+        }
     }
 }

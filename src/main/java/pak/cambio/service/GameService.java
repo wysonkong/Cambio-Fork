@@ -56,7 +56,7 @@ public class GameService {
 
         return new GameState(playersByGame.get(gameId).stream()
                 .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
-                        List.of(), -1)).toList(),
+                        List.of(), -1, null)).toList(),
                 null, 0, false);
     }
 

@@ -14,6 +14,7 @@ public class Player {
     private List<Card> hand;
     private List<Boolean> visible;
     private int index;
+    private Card pending;
 
     public Player() {
 
@@ -28,6 +29,14 @@ public class Player {
         this.hand = new ArrayList<Card>();
         this.visible = new ArrayList<Boolean>();
         this.index = index;
+    }
+
+    public Card getPending() {
+        return pending;
+    }
+
+    public void setPending(Card pending) {
+        this.pending = pending;
     }
 
     public int getIndex() {

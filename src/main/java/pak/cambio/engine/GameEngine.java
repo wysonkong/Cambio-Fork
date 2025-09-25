@@ -1,9 +1,6 @@
 package pak.cambio.engine;
 
-import pak.cambio.model.Card;
-import pak.cambio.model.GameAction;
-import pak.cambio.model.GameState;
-import pak.cambio.model.Player;
+import pak.cambio.model.*;
 
 import java.util.*;
 
@@ -46,13 +43,32 @@ public class GameEngine {
 
     public GameState applyAction(GameAction action) {
         Player player = findPlayer(action.getUserId());
+        boolean pending = false;
 
         switch (action.getType()) {
             case DRAW_DECK -> {
-                action = new GameAction(player.getId(), player.getUser(), action.getType(), null, deck.removeFirst());
+                Card drawn = deck.removeFirst();
+                action = new GameAction(player.getId(), player.getUser(), action.getType(), null, drawn);
+                player.setPending(drawn);
+                pending = true;
             }
             case DRAW_DISCARD -> {
                 action = new GameAction(player.getId(), player.getUser(), action.getType(), null, discard.removeFirst());
+            }
+            case SWAP_PENDING -> {
+                Card newCard = player.getPending();
+                int idx = action.getHandIndex();
+                Card old = player.getHand().get(idx);
+                player.getHand().set(idx, newCard);
+                player.getVisible().set(idx, true);
+                discard.addFirst(old);
+                action = new GameAction(player.getId(), player.getUser(), ActionType.SWAP, idx, newCard);
+                player.setPending(null);
+            }
+            case DISCARD_PENDING -> {
+                discard.addFirst(player.getPending());
+                action = new GameAction(player.getId(), player.getUser(), ActionType.DISCARD, null, player.getPending());
+                player.setPending(null);
             }
             case SWAP -> {
                 Card newCard = action.getCard();
@@ -72,8 +88,9 @@ public class GameEngine {
                 startNewGame();
             }
         }
-
-        advanceTurn();
+        if(!pending) {
+            advanceTurn();
+        }
         return snapshotState(action.getUserId());
     }
 
@@ -114,7 +131,8 @@ public class GameEngine {
                     p.getUser(),
                     p.getIndex(),
                     handView,
-                    score
+                    score,
+                    p.getPending()
             ));
         }
 

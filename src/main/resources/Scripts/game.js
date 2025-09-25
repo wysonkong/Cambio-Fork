@@ -200,21 +200,6 @@ cambioBtn.addEventListener("click", () => {
 drawBtn.addEventListener("click", () => {
     console.log("Drew a card");
     sendAction(gameId, currentUser.userId, currentUser.username,"DRAW_DECK", {});
-    if (buttons.id === "play-btn") {
-        buttons.disabled = false;
-        buttons.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
-        buttons.classList.add("bg-blue-600", "text-white", "hover:bg-blue-700");
-    }
-    if (buttons.id === "discard-btn") {
-        buttons.disabled = false;
-        buttons.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
-        buttons.classList.add("bg-indigo-600", "text-white", "hover:bg-indigo-700");
-    }
-    if (buttons.id === "cambio-btn") {
-        buttons.disabled = false;
-        buttons.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
-        buttons.classList.add("bg-red-600", "text-white", "hover:bg-red-700");
-    }
 })
 
 playBtn.addEventListener("click", () => {

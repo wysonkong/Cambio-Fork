@@ -13,7 +13,7 @@ Frontend
    
 <s> - TODO: Fix action log so that it accurately display's username, action </s>
 
- - TODO: Create discard element
+<s> - TODO: Create discard element</s>
 
 <s> - TODO: Buttons don't update with gamestate
      - Buttons should disable if not your turn

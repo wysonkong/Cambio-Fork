@@ -140,6 +140,12 @@ buttons.draw.addEventListener("click", () => {
     setButtonsEnabled(state);
 })
 
+function endTurn(){
+    hasDrawn = false;
+}
+
+buttons.addEventListener("click", endTurn);
+
 function setButtonsEnabled(state) {
     const isMyTurn = state.currentTurn === myTurn
     Object.values(buttons).forEach(btn => {

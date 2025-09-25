@@ -278,9 +278,14 @@ function renderHands(state) {
             img.classList.add("w-28",
                 "h-24",// or w-24, w-28 for size control
                 "object-contain",
-                "hover:bg-blue-700",// scale without stretching
                 "m-1",
-                "card"
+                "card",
+                "transition-transform",
+                "transition-shadow",
+                "duration-300",
+                "hover:-translate-y-2",
+                "hover:[transform:rotateY(10deg)]",
+                "hover:shadow-2xl"
             )
             playerPending.appendChild(img);
         }
@@ -296,9 +301,15 @@ function renderHands(state) {
                 img.classList.add("w-28",
                     "h-24",// or w-24, w-28 for size control
                     "object-contain",
-                    "hover:bg-blue-700",// scale without stretching
                     "m-1",
-                    "card");
+                    "card",
+                    "transition-transform",
+                    "transition-shadow",
+                    "duration-300",
+                    "hover:-translate-y-4",
+                    "hover:[transform:rotateY(10deg)]",
+                    "hover:shadow-2xl"
+                );
                 playerDiv.appendChild(img);
             } else {
                 const img = document.createElement("img")

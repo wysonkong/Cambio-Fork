@@ -180,8 +180,6 @@ function sendAction(gameId,userId, username, actionType, payload) {
     stompClient.send(`/app/game/${gameId}/action`, {}, JSON.stringify(action));
 }
 
-
-
 let hasDrawn = false;
 
 function endTurn(){

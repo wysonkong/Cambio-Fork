@@ -219,27 +219,35 @@ function displayTurn(state) {
 function renderHands(state) {
     start.hidden = true;
     //get user's turn index from the backend and save it locally
-    if(myTurn == null) {
+    if (myTurn == null) {
         state.players.forEach(player => {
-            if(player.userId === currentUser.userId) {
+            if (player.userId === currentUser.userId) {
                 myTurn = player.index;
             }
         })
-        players.push(state.players[myTurn])
-        players.push(...state.players.slice(myTurn + 1));
-        players.push(...state.players.slice(0, myTurn));
+    players.push(state.players[myTurn])
+    players.push(...state.players.slice(myTurn + 1));
+    players.push(...state.players.slice(0, myTurn));
     }
     console.log("Your turn is: " + myTurn);
-    let index = 0;
-    players.forEach((player)=> {
+    state.players.forEach((player) => {
+        let index;
+        players.forEach(p => {
+            if(player.userId === p.userId) {
+                index = players.indexOf(p);
+            }
+        })
         let playerName = document.getElementById(`player${index + 1}Username`);
         let playerDiv = document.getElementById(`player${index + 1}cards`);
+        let playerPending = document.getElementById(`player${index + 1}draw`);
         index++;
         playerDiv.innerHTML = "";
-        playerName.innerHTML ="";
+        playerName.innerHTML = "";
+        playerPending.innerHTML = "";
         playerName.innerHTML = player.userName;
 
         setButtonsEnabled(state);
+        //render pending card for player
 
         if (!player.hand) {
             // Hand hasn't been dealt yet
@@ -248,33 +256,47 @@ function renderHands(state) {
             playerDiv.appendChild(placeholder);
             return;
         }
+        if(player.pending) {
+            console.log("should print pending")
+            const img = document.createElement("img");
+            img.src="../images/cards/" + player.pending.rank + "-" + player.pending.suit + ".png";
+            img.alt = "card";
+            img.classList.add("w-28",
+                "h-24",// or w-24, w-28 for size control
+                "object-contain",
+                "hover:bg-blue-700",// scale without stretching
+                "m-1",
+                "card"
+            )
+            playerPending.appendChild(img);
+        }
 
-            player.hand.forEach(card => {
-                if (!card) {
-                    return;
-                }
-                if (card.visible) {
-                    const img = document.createElement("img");
-                    img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
-                    img.alt = "card";
-                    img.classList.add("w-28",
-                        "h-24",// or w-24, w-28 for size control
-                        "object-contain",
-                        "hover:bg-blue-700",// scale without stretching
-                        "m-1",
-                        "card");
-                    playerDiv.appendChild(img);
-                } else {
-                    const img = document.createElement("img")
-                    img.src = "../images/cards/card-back.png";
-                    img.classList.add("w-28",
-                        "h-28", // size control
-                        "object-contain",      // scale without stretching
-                        "m-1",
-                        "card");
-                    playerDiv.appendChild(img);
-                }
-            })
+        player.hand.forEach(card => {
+            if (!card) {
+                return;
+            }
+            if (card.visible) {
+                const img = document.createElement("img");
+                img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
+                img.alt = "card";
+                img.classList.add("w-28",
+                    "h-24",// or w-24, w-28 for size control
+                    "object-contain",
+                    "hover:bg-blue-700",// scale without stretching
+                    "m-1",
+                    "card");
+                playerDiv.appendChild(img);
+            } else {
+                const img = document.createElement("img")
+                img.src = "../images/cards/card-back.png";
+                img.classList.add("w-28",
+                    "h-28", // size control
+                    "object-contain",      // scale without stretching
+                    "m-1",
+                    "card");
+                playerDiv.appendChild(img);
+            }
+        })
 
         const discardDiv = document.getElementById("card-discard");
         discardDiv.innerHTML = "";
@@ -292,6 +314,7 @@ function renderHands(state) {
 
     });
 }
+
 
 
 

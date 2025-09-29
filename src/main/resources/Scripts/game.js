@@ -299,7 +299,7 @@ function renderHands(state) {
                 const img = document.createElement("img");
                 img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
                 img.alt = "card";
-                img.id=`player${index + 1}card${cardIndex}`
+                img.id=`player${index}card${cardIndex}`
                 img.classList.add("w-28",
                     "h-24",// or w-24, w-28 for size control
                     "object-contain",

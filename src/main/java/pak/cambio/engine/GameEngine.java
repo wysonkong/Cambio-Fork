@@ -48,38 +48,39 @@ public class GameEngine {
         switch (action.getType()) {
             case DRAW_DECK -> {
                 Card drawn = deck.removeFirst();
-                action = new GameAction(player.getId(), player.getUser(), action.getType(), null, drawn);
                 player.setPending(drawn);
                 pending = true;
             }
             case DRAW_DISCARD -> {
-                action = new GameAction(player.getId(), player.getUser(), action.getType(), null, discard.removeFirst());
+                player.getHand().add(discard.removeFirst());
             }
             case SWAP_PENDING -> {
                 Card newCard = player.getPending();
-                int idx = action.getHandIndex();
+                int idx = action.getInt("destination");
                 Card old = player.getHand().get(idx);
                 player.getHand().set(idx, newCard);
                 player.getVisible().set(idx, true);
                 discard.addFirst(old);
-                action = new GameAction(player.getId(), player.getUser(), ActionType.SWAP, idx, newCard);
                 player.setPending(null);
             }
             case DISCARD_PENDING -> {
                 discard.addFirst(player.getPending());
-                action = new GameAction(player.getId(), player.getUser(), ActionType.DISCARD, null, player.getPending());
                 player.setPending(null);
             }
             case SWAP -> {
-                Card newCard = action.getCard();
-                int idx = action.getHandIndex();
-                Card old = player.getHand().get(idx);
-                player.getHand().set(idx, newCard);
-                player.getVisible().set(idx, true);
-                discard.addFirst(old);
+                long destinationUserId = action.getLong("userId");
+                Player destinationPlayer = findPlayer(destinationUserId);
+                int origin = action.getInt("origin");
+                int destination = action.getInt("destination");
+                Card newCard = destinationPlayer.getHand().get(destination);
+                Card old = player.getHand().get(origin);
+                player.getHand().set(origin, newCard);
+                player.getVisible().set(origin, true);
+                destinationPlayer.getHand().set(destination, old);
+                destinationPlayer.getVisible().set(destination, false);
             }
             case DISCARD -> {
-                discard.addFirst(action.getCard());
+
             }
             case CALL_CAMBIO -> {
                 cambioCalled = true;

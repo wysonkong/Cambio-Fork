@@ -291,6 +291,7 @@ function renderHands(state) {
         }
 
         player.hand.forEach(card => {
+            let cardIndex = 0
             if (!card) {
                 return;
             }
@@ -298,6 +299,7 @@ function renderHands(state) {
                 const img = document.createElement("img");
                 img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
                 img.alt = "card";
+                img.id=`player${index + 1}card${cardIndex}`
                 img.classList.add("w-28",
                     "h-24",// or w-24, w-28 for size control
                     "object-contain",
@@ -310,15 +312,18 @@ function renderHands(state) {
                     "hover:[transform:rotateY(10deg)]",
                     "hover:shadow-2xl"
                 );
+                cardIndex++;
                 playerDiv.appendChild(img);
             } else {
                 const img = document.createElement("img")
                 img.src = "../images/cards/card-back.png";
+                img.id=`player${index + 1}card${cardIndex}`
                 img.classList.add("w-28",
                     "h-28", // size control
                     "object-contain",      // scale without stretching
                     "m-1",
                     "card");
+                cardIndex++;
                 playerDiv.appendChild(img);
             }
         })
@@ -339,6 +344,16 @@ function renderHands(state) {
 
     });
 }
+
+document.body.addEventListener("click", (card) => {
+    if(card.target.matches("img.card")) {
+        let rank = card.target.dataset.rank;
+        let suit = card.target.dataset.suit;
+
+        console.log(`Selected ${rank} ${suit}`)
+    }
+})
+
 
 
 

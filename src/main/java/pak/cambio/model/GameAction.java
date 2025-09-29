@@ -31,7 +31,11 @@ public class GameAction {
     }
 
     public Integer getInt(String key) {
-        return payload.containsKey(key) ? (Integer) payload.get(key) : null;
+        Object val = payload.get(key);
+        if(val instanceof Number) {
+            return ((Number) val).intValue();
+        }
+        return null;
     }
 
     public String getString(String key) {
@@ -39,7 +43,11 @@ public class GameAction {
     }
 
     public Long getLong(String key) {
-        return payload.containsKey(key) ? (Long) payload.get(key) : null;
+        Object val = payload.get(key);
+        if(val instanceof Number) {
+            return ((Number) val).longValue();
+        }
+        return null;
     }
 
 

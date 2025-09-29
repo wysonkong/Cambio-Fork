@@ -68,14 +68,16 @@ public class GameEngine {
                 player.setPending(null);
             }
             case SWAP -> {
-                long destinationUserId = action.getLong("userId");
+                long originUserId = action.getLong("originUserId");
+                Player originPlayer = findPlayer(originUserId);
+                long destinationUserId = action.getLong("destinationUserId");
                 Player destinationPlayer = findPlayer(destinationUserId);
                 int origin = action.getInt("origin");
                 int destination = action.getInt("destination");
                 Card newCard = destinationPlayer.getHand().get(destination);
-                Card old = player.getHand().get(origin);
-                player.getHand().set(origin, newCard);
-                player.getVisible().set(origin, true);
+                Card old = originPlayer.getHand().get(origin);
+                originPlayer.getHand().set(origin, newCard);
+                originPlayer.getVisible().set(origin, true);
                 destinationPlayer.getHand().set(destination, old);
                 destinationPlayer.getVisible().set(destination, false);
             }

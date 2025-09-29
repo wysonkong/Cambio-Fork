@@ -8,6 +8,15 @@ const displayMyTurn = document.getElementById("display-turn");
 let players = [];
 const playersMap = {};
 
+let swapState = {
+    originIndex: null,
+    originUserId : null,
+    destinationIndex: null,
+    destinationUserId : null
+}
+
+let swapModeActive = false;
+
 
 //In prototyping, set all buttons enabled
 
@@ -197,8 +206,8 @@ drawBtn.addEventListener("click", () => {
 })
 
 playBtn.addEventListener("click", () => {
-    console.log("Played a card");
-    sendAction(gameId, currentUser.userId, currentUser.username,"SWAP", {});
+    swapModeActive = true;
+    console.log("Swapping mode activated, select origin and destination cards");
 })
 
 cambioBtn.addEventListener("click", () => {
@@ -299,7 +308,7 @@ function renderHands(state) {
                 const img = document.createElement("img");
                 img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
                 img.alt = "card";
-                img.id=`player${index}card${cardIndex}`
+                img.id=`${player.userId}-${cardIndex}`
                 img.classList.add("w-28",
                     "h-24",// or w-24, w-28 for size control
                     "object-contain",
@@ -347,9 +356,27 @@ function renderHands(state) {
 
 document.body.addEventListener("click", (card) => {
     if(card.target.matches("img.card")) {
-        let index = card.target.id
-
-        console.log(`Selected ${index}`)
+        let raw = card.target.id.split("-")
+        if(swapState.originIndex === null) {
+            swapState.originUserId = parseInt(raw[0], 10);
+            swapState.originIndex = parseInt(raw[1], 10)
+            console.log("Origin card is " + swapState.originIndex + "and user Id is " + swapState.originUserId);
+        }
+        else if(swapState.destinationIndex === null) {
+            swapState.destinationIndex = parseInt(raw[1], 10);
+            swapState.destinationUserId = parseInt(raw[0], 10);
+            console.log("Destination card is " + swapState.destinationIndex + "and user Id is" + swapState.destinationUserId);
+            sendAction(gameId, currentUser.userId, currentUser.username, "SWAP", {
+                origin: swapState.originIndex,
+                originUserId: swapState.originUserId,
+                destination: swapState.destinationIndex,
+                destinationUserId: swapState.destinationUserId
+            })
+            swapState.destinationUserId = null;
+            swapState.destinationIndex = null;
+            swapState.originUserId = null;
+            swapState.originIndex = null;
+        }
     }
 })
 

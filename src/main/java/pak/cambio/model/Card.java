@@ -24,7 +24,7 @@ public class Card {
            case "Joker" -> value = 0;
            default -> value = Integer.parseInt(rank);
        };
-       if(rank.equals("K") && (suit.equals("Diamond") || suit.equals("Heart"))) {
+       if(rank.equals("K") && (suit.equals("Diamond") || suit.equals("heart"))) {
            value = -1;
        }
        return value;

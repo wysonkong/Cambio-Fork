@@ -290,8 +290,8 @@ function renderHands(state) {
             playerPending.appendChild(img);
         }
 
+        let cardIndex = 0
         player.hand.forEach(card => {
-            let cardIndex = 0
             if (!card) {
                 return;
             }
@@ -347,10 +347,9 @@ function renderHands(state) {
 
 document.body.addEventListener("click", (card) => {
     if(card.target.matches("img.card")) {
-        let rank = card.target.dataset.rank;
-        let suit = card.target.dataset.suit;
+        let index = card.target.id
 
-        console.log(`Selected ${rank} ${suit}`)
+        console.log(`Selected ${index}`)
     }
 })
 

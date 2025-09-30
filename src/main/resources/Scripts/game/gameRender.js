@@ -6,6 +6,7 @@ function subscribeGameState(gameId) {
         const state = JSON.parse(msg.body);
         console.log(state);
 
+        renderPlayerGrid(state.players.length);
         renderHands(state);
         displayTurn(state);
         setButtonsEnabled(state);
@@ -172,3 +173,40 @@ function renderHands(state) {
         }
     });
 }
+
+const playerGrid = document.getElementById("players");
+
+function renderPlayerGrid(playerCount) {
+    playerGrid.innerHTML = "";
+
+    // Grid: 2 cols top row (deck + discard), rest players
+    playerGrid.style.gridTemplateColumns = `repeat(4, 1fr)`;
+    playerGrid.style.gridTemplateRows = `auto auto`;
+
+    // Player slots
+    for (let i = 0; i < playerCount; i++) {
+        const playerZone = document.createElement("div");
+        playerZone.className = "rounded-lg p-2 bg-white border shadow flex flex-col items-center";
+
+        // Username
+        const username = document.createElement("div");
+        username.id = `player${i + 1}Username`;
+        username.className = "font-bold mb-1";
+        playerZone.appendChild(username);
+
+        // Hand cards
+        const cards = document.createElement("div");
+        cards.id = `player${i + 1}cards`;
+        cards.className = "flex flex-wrap justify-center";
+        playerZone.appendChild(cards);
+
+        // Pending card slot
+        const pending = document.createElement("div");
+        pending.id = `player${i + 1}draw`;
+        pending.className = "flex justify-center mt-1";
+        playerZone.appendChild(pending);
+
+        playerGrid.appendChild(playerZone);
+    }
+}
+

@@ -44,7 +44,7 @@ function appendMessage(msg) {
 function appendAction(msg) {
     const messageEl = document.createElement('div');
     const cardText = msg.card ? `${msg.card.rank} of ${msg.card.suit}` : '';
-    const username = msg.userName || playersMap[msg.userId] || 'Unknown';
+    const username = msg.username || playersMap[msg.userId] || 'Unknown';
     messageEl.classList.add('message');
     messageEl.innerText = `${username}: ${msg.type}: ${cardText}`;
     actionLog.appendChild(messageEl);

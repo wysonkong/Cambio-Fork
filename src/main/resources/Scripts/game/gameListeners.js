@@ -26,7 +26,11 @@ function sendMessage() {
 // ===== Buttons =====
 buttons.cambio.addEventListener("click", endTurn);
 buttons.play.addEventListener("click", endTurn);
-buttons.discard.addEventListener("click", endTurn);
+buttons.discard.addEventListener("click", () => {
+    console.log("Discarded pending draw");
+    sendAction(gameId, currentUser.userId, currentUser.username, "DISCARD_PENDING",{});
+    endTurn();
+});
 
 drawBtn.addEventListener("click", () => {
     console.log("Drew a card");

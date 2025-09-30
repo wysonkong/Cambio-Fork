@@ -25,16 +25,16 @@ function sendMessage() {
 
 // ===== Buttons =====
 buttons.cambio.addEventListener("click", endTurn);
-buttons.play.addEventListener("click", endTurn);
 buttons.discard.addEventListener("click", () => {
     console.log("Discarded pending draw");
     sendAction(gameId, currentUser.userId, currentUser.username, "DISCARD_PENDING",{});
-    endTurn();
+    specialMoves();
 });
 
 drawBtn.addEventListener("click", () => {
     console.log("Drew a card");
     sendAction(gameId, currentUser.userId, currentUser.username, "DRAW_DECK", {});
+    cardPending = true;
     hasDrawn = true;
 });
 
@@ -80,6 +80,12 @@ document.body.addEventListener("click", (card) => {
 
             // Reset swap state
             swapState = { originIndex: null, originUserId: null, destinationIndex: null, destinationUserId: null };
+            swapModeActive = false;
         }
     }
 });
+
+// Special move function for draw card
+function specialMoves() {
+
+}

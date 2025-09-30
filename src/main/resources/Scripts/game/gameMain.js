@@ -8,6 +8,7 @@ const gameId = urlParams.get("gameId");
 const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 let myTurn = null;
 let hasDrawn = false;
+let cardPending = false;
 let swapModeActive = false;
 
 const displayMyTurn = document.getElementById("display-turn");

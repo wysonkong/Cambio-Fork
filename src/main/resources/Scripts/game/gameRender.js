@@ -6,7 +6,6 @@ function subscribeGameState(gameId) {
         const state = JSON.parse(msg.body);
         console.log(state);
 
-        renderPlayerGrid(state.players.length);
         renderHands(state);
         displayTurn(state);
         setButtonsEnabled(state);
@@ -93,120 +92,139 @@ function displayTurn(state) {
 function renderHands(state) {
     start.hidden = true;
 
+    // Find your index
     if (myTurn == null) {
-        state.players.forEach(player => {
-            if (player.userId === currentUser.userId) {
-                myTurn = player.index;
-            }
-        });
-        players.push(state.players[myTurn]);
-        players.push(...state.players.slice(myTurn + 1));
-        players.push(...state.players.slice(0, myTurn));
+        myTurn = state.players.findIndex(p => p.userId === currentUser.userId);
     }
 
-    console.log("Your turn is: " + myTurn);
+    // Split you vs. others
+    const me = state.players[myTurn];
+    const others = state.players.filter(p => p.userId !== currentUser.userId);
 
-    state.players.forEach((player) => {
-        let index;
-        players.forEach(p => {
-            if (player.userId === p.userId) {
-                index = players.indexOf(p);
-            }
-        });
+    // Order others around the board
+    // top → left → right (expandable up to 5 others)
+    const playerSlots = [
+        "player-top",   // 1st opponent
+        "player-left",  // 2nd
+        "player-right", // 3rd
+        "player-top-left",  // 4th (optional)
+        "player-top-right"  // 5th (optional)
+    ];
 
-        let playerName = document.getElementById(`player${index + 1}Username`);
-        let playerDiv = document.getElementById(`player${index + 1}cards`);
-        let playerPending = document.getElementById(`player${index + 1}draw`);
-        index++;
+    // Render me (always bottom)
+    renderPlayer(me, "player-bottom");
 
-        playerDiv.innerHTML = "";
-        playerName.innerHTML = player.userName;
-        playerPending.innerHTML = "";
-
-        setButtonsEnabled(state);
-
-        if (!player.hand) {
-            const placeholder = document.createElement("p");
-            placeholder.textContent = "Waiting for game to start...";
-            playerDiv.appendChild(placeholder);
-            return;
+    // Render opponents
+    others.forEach((player, index) => {
+        if (playerSlots[index]) {
+            renderPlayer(player, playerSlots[index]);
         }
+    });
 
-        if (player.pending) {
-            const img = document.createElement("img");
-            img.src = "../images/cards/" + player.pending.rank + "-" + player.pending.suit + ".png";
-            img.alt = "card";
-            img.classList.add("w-28", "h-24", "object-contain", "m-1", "card",
-                "transition-transform", "transition-shadow", "duration-300",
-                "hover:-translate-y-2", "hover:[transform:rotateY(10deg)]", "hover:shadow-2xl");
-            playerPending.appendChild(img);
-        }
+    // Update discard pile
+    const discardDiv = document.getElementById("card-discard");
+    discardDiv.innerHTML = "";
+    if (state.prevCard) {
+        const img = document.createElement("img");
+        img.src = `../images/cards/${state.prevCard.rank}-${state.prevCard.suit}.png`;
+        img.alt = "prevCard";
+        img.classList.add("w-24", "h-30", "object-contain", "m-1", "card");
+        discardDiv.appendChild(img);
+    }
+}
 
-        let cardIndex = 0;
-        player.hand.forEach(card => {
-            if (!card) return;
-            const img = document.createElement("img");
-            if (card.visible) {
-                img.src = "../images/cards/" + card.rank + "-" + card.suit + ".png";
-                img.alt = "card";
-                img.id = `${player.userId}-${cardIndex}`;
-                img.classList.add("w-28", "h-24", "object-contain", "m-1", "card",
-                    "transition-transform", "transition-shadow", "duration-300",
-                    "hover:-translate-y-4", "hover:[transform:rotateY(10deg)]", "hover:shadow-2xl");
-            } else {
-                img.src = "../images/cards/card-back.png";
-                img.id = `player${index + 1}card${cardIndex}`;
-                img.classList.add("w-28", "h-28", "object-contain", "m-1", "card");
-            }
-            cardIndex++;
-            playerDiv.appendChild(img);
-        });
+function renderPlayer(player, slotId) {
+    const container = document.getElementById(slotId);
+    container.classList.add("rounded-lg", "p-2", "bg-white", "border", "shadow", "flex", "flex-col", "items-center");
+    if (!container) return;
 
-        const discardDiv = document.getElementById("card-discard");
-        discardDiv.innerHTML = "";
-        if (state.prevCard) {
-            const img = document.createElement("img");
-            img.src = "../images/cards/" + state.prevCard.rank + "-" + state.prevCard.suit + ".png";
-            img.alt = "prevCard";
-            img.classList.add("w-28", "h-24", "object-contain", "m-1", "card");
-            discardDiv.appendChild(img);
-        }
+    container.innerHTML = `
+    <div id="${slotId}-username" class="text-center font-bold mb-2">${player.userName}</div>
+    <div id="${slotId}-cards" class="flex justify-center flex-wrap"></div>
+    <div id="${slotId}-draw" class="flex justify-center"></div>
+  `;
+
+    const cardContainer = document.getElementById(`${slotId}-cards`);
+    const pendingContainer = document.getElementById(`${slotId}-draw`);
+
+    if (!player.hand) {
+        cardContainer.textContent = "Waiting for game to start...";
+        return;
+    }
+
+    if (player.pending) {
+        const img = document.createElement("img");
+        img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.png`;
+        img.alt = "card";
+        img.classList.add("w-24", "h-30", "m-1", "card");
+        pendingContainer.appendChild(img);
+    }
+
+    player.hand.forEach((card, i) => {
+        if (!card) return;
+        const img = document.createElement("img");
+        img.src = card.visible
+            ? `../images/cards/${card.rank}-${card.suit}.png`
+            : "../images/cards/card-back.png";
+        img.alt = "card";
+        img.id = `${player.userId}-${i}`;
+        img.classList.add("w-24", "h-30", "object-contain", "m-1", "card");
+        cardContainer.appendChild(img);
     });
 }
 
-const playerGrid = document.getElementById("players");
 
-function renderPlayerGrid(playerCount) {
-    playerGrid.innerHTML = "";
 
-    // Grid: 2 cols top row (deck + discard), rest players
-    playerGrid.style.gridTemplateColumns = `repeat(4, 1fr)`;
-    playerGrid.style.gridTemplateRows = `auto auto`;
+// function getPlayerSlots(count) {
+//     switch (count) {
+//         case 2:
+//             return ["player-bottom", "player-top"];
+//         case 3:
+//             return ["player-bottom", "player-left", "player-right"];
+//         case 4:
+//             return ["player-bottom", "player-top", "player-left", "player-right"];
+//         case 5:
+//             return ["player-bottom", "player-top", "player-left", "player-right", "player-top-left"];
+//         case 6:
+//             return ["player-bottom", "player-top", "player-left", "player-right", "player-top-left", "player-top-right"];
+//         default:
+//             return ["player-bottom"]; // fallback
+//     }
+// }
 
-    // Player slots
-    for (let i = 0; i < playerCount; i++) {
-        const playerZone = document.createElement("div");
-        playerZone.className = "rounded-lg p-2 bg-white border shadow flex flex-col items-center";
-
-        // Username
-        const username = document.createElement("div");
-        username.id = `player${i + 1}Username`;
-        username.className = "font-bold mb-1";
-        playerZone.appendChild(username);
-
-        // Hand cards
-        const cards = document.createElement("div");
-        cards.id = `player${i + 1}cards`;
-        cards.className = "flex flex-wrap justify-center";
-        playerZone.appendChild(cards);
-
-        // Pending card slot
-        const pending = document.createElement("div");
-        pending.id = `player${i + 1}draw`;
-        pending.className = "flex justify-center mt-1";
-        playerZone.appendChild(pending);
-
-        playerGrid.appendChild(playerZone);
-    }
-}
+// const playerGrid = document.getElementById("players");
+//
+// function renderPlayerGrid(playerCount) {
+//     playerGrid.innerHTML = "";
+//
+//     // Grid: 2 cols top row (deck + discard), rest players
+//     playerGrid.style.gridTemplateColumns = `repeat(4, 1fr)`;
+//     playerGrid.style.gridTemplateRows = `auto auto`;
+//
+//     // Player slots
+//     for (let i = 0; i < playerCount; i++) {
+//         const playerZone = document.createElement("div");
+//         playerZone.className = "rounded-lg p-2 bg-white border shadow flex flex-col items-center";
+//
+//         // Username
+//         const username = document.createElement("div");
+//         username.id = `player${i + 1}Username`;
+//         username.className = "font-bold mb-1";
+//         playerZone.appendChild(username);
+//
+//         // Hand cards
+//         const cards = document.createElement("div");
+//         cards.id = `player${i + 1}cards`;
+//         cards.className = "flex flex-wrap justify-center";
+//         playerZone.appendChild(cards);
+//
+//         // Pending card slot
+//         const pending = document.createElement("div");
+//         pending.id = `player${i + 1}draw`;
+//         pending.className = "flex justify-center mt-1";
+//         playerZone.appendChild(pending);
+//
+//         playerGrid.appendChild(playerZone);
+//     }
+// }
 

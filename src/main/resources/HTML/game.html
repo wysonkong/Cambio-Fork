@@ -91,19 +91,28 @@
             <!-- Game area fills the right panel -->
             <div class="flex-1 flex flex-col items-center justify-center overflow-hidden overflow-y-auto">
                 <!-- Board wrapper scales to fit -->
-                <div id="game-board" class="grid gap-4 p-4"
-                     style="grid-template-columns: repeat(4, 1fr); grid-template-rows: auto auto;">
+                <div id="game-board" class="grid grid-cols-3 grid-rows-3 gap-4 p-4">
 
-                    <!-- Static Piles -->
-                    <div id="card-deck" class="p-4 bg-blue-200 rounded flex items-center justify-center w-28 h-30">
-                        <img src="../images/cards/card-back.png" alt="card deck" class="w-full h-full object-contain">
+                    <!-- Top -->
+                    <div id="player-top-left" class="flex justify-center items-center col-start-1 row-start-1"></div>
+                    <div id="player-top" class="flex justify-center items-center col-start-2 row-start-1"></div>
+                    <div id="player-top-right" class="flex justify-center items-center col-start-3 row-start-1"></div>
+
+                    <!-- Middle Row -->
+                    <div id="player-left" class="flex justify-center items-center col-start-1 row-start-2"></div>
+
+                    <!-- Center (Deck + Discard) -->
+                    <div class="grid grid-cols-2 items-center justify-center col-start-2 row-start-2">
+                        <div id="card-deck" class="p-2 bg-blue-200 rounded mb-2 w-28 h-30">
+                            <img src="../images/cards/card-back.png" alt="card deck">
+                        </div>
+                        <div id="card-discard" class="p-2 bg-red-200 rounded w-28 h-30"></div>
                     </div>
-                    <div id="card-discard" class="p-4 bg-red-200 rounded flex items-center justify-center">
 
-                    </div>
+                    <div id="player-right" class="flex justify-center items-center col-start-3 row-start-2"></div>
 
-                    <!-- Player area grid -->
-                    <div id="players" class="col-span-4 grid gap-4 mt-4"></div>
+                    <!-- Bottom Row (YOU) -->
+                    <div id="player-bottom" class="flex justify-center items-center col-start-2 row-start-3"></div>
                 </div>
 
 

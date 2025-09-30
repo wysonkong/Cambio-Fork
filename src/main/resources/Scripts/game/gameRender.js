@@ -140,7 +140,7 @@ function renderPlayer(player, slotId) {
 
     container.innerHTML = `
     <div id="${slotId}-username" class="text-center font-bold mb-2">${player.userName}</div>
-    <div id="${slotId}-cards" class="flex justify-center flex-wrap"></div>
+    <div id="${slotId}-cards" class="flex justify-center grid grid-flow-col grid-rows-2"></div>
     <div id="${slotId}-draw" class="flex justify-center"></div>
   `;
 
@@ -156,7 +156,7 @@ function renderPlayer(player, slotId) {
         const img = document.createElement("img");
         img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.png`;
         img.alt = "card";
-        img.classList.add("w-24", "h-30", "m-1", "card");
+        img.classList.add("w-20", "h-28", "m-1", "card");
         pendingContainer.appendChild(img);
     }
 
@@ -168,7 +168,7 @@ function renderPlayer(player, slotId) {
             : "../images/cards/card-back.png";
         img.alt = "card";
         img.id = `${player.userId}-${i}`;
-        img.classList.add("w-24", "h-30", "object-contain", "m-1", "card");
+        img.classList.add("w-20", "h-28", "object-contain", "m-1", "card");
         cardContainer.appendChild(img);
     });
 }

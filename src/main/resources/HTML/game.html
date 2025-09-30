@@ -91,58 +91,21 @@
             <!-- Game area fills the right panel -->
             <div class="flex-1 flex flex-col items-center justify-center overflow-hidden overflow-y-auto">
                 <!-- Board wrapper scales to fit -->
-                <div class="grid grid-rows-[auto_auto_auto] gap-4 w-full h-full max-w-full max-h-full place-items-center">
+                <div id="game-board" class="grid gap-4 p-4"
+                     style="grid-template-columns: repeat(4, 1fr); grid-template-rows: auto auto;">
 
-                    <!-- Top row -->
-                    <div class="flex justify-center w-full max-w-[200px]">
-                        <div id="player3View" class="bg-yellow-300 flex items-center justify-center aspect-square w-full">
-                            <span id="player3Username"></span>
-                            <div id="player3cards" class="grid grid-cols-2 gap-2">
-
-                            </div>
-                            <div id="player3draw">
-                            </div>
-                        </div>
+                    <!-- Static Piles -->
+                    <div id="card-deck" class="p-4 bg-blue-200 rounded flex items-center justify-center">
+                        Deck
+                    </div>
+                    <div id="card-discard" class="p-4 bg-red-200 rounded flex items-center justify-center">
+                        Discard
                     </div>
 
-                    <!-- Middle row: deck -->
-                    <div class="grid grid-cols-4 gap-4 w-full max-w-[600px]">
-                        <div id="player4View" class="bg-blue-300 flex items-center justify-center aspect-square w-full">
-                            <span id="player4Username"></span>
-                            <div id="player4cards" class="grid grid-cols-2 gap-2">
-
-                            </div>
-                            <div id="player4draw">
-                            </div>
-                        </div>
-                        <div id="card-deck" class="flex items-center justify-center aspect-square w-full">
-                            <img src="../images/cards/card-back.png" alt="card deck" class="w-full h-full object-contain" />
-                        </div>
-                        <div id="card-discard" class="flex items-center justify-center aspect-square w-full">
-
-                        </div>
-                        <div id="player2View" class="bg-green-300 flex items-center justify-center aspect-square w-full">
-                            <span id="player2Username"></span>
-                            <div id="player2cards" class="grid grid-cols-2 gap-2">
-
-                            </div>
-                            <div id="player2draw">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom row: player 1 -->
-                    <div class="flex justify-center w-full max-w-[200px]">
-                        <div id="player1View" class="bg-red-300 flex items-center justify-center aspect-square w-full">
-                            <span id="player1Username"></span>
-                            <div id="player1cards" class="grid grid-cols-2 gap-2">
-
-                            </div>
-                            <div id="player1draw">
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Player area grid -->
+                    <div id="players" class="col-span-4 grid gap-4 mt-4"></div>
                 </div>
+
 
                 <!-- Bottom bar -->
                 <div id="bottom" class="mt-4 gap-4 bg-gray-900 text-white text-center h-16 flex items-center justify-center w-full mt-4 shrink-0">

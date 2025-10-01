@@ -10,6 +10,7 @@ let myTurn = null;
 let hasDrawn = false;
 let cardPending = false;
 let swapModeActive = false;
+let swapPendingModeActive = false;
 
 const displayMyTurn = document.getElementById("display-turn");
 const actionLog = document.getElementById("action-log");
@@ -23,6 +24,8 @@ const drawBtn = document.getElementById("draw-btn");
 const playBtn = document.getElementById("play-btn");
 const discardBtn = document.getElementById("discard-btn");
 const start = document.getElementById('start-btn');
+const swapPendingBtn = document.getElementById("swap-pending-btn");
+swapPendingBtn.hidden = true;
 
 joinCode.innerText = "Join Code: " + gameId;
 
@@ -43,6 +46,7 @@ let buttons = {
     play: playBtn,
     discard: discardBtn,
     cambio: cambioBtn,
+    swapPending: swapPendingBtn
 };
 
 // ===== Utility Functions =====

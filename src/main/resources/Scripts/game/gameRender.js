@@ -65,7 +65,25 @@ function setButtonsEnabled(state) {
                     btn.classList.remove("bg-blue-600", "bg-indigo-600", "bg-red-600", "hover:bg-blue-700", "hover:bg-indigo-700", "hover:bg-red-700", "text-white");
                     btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
                 }
-            } else {
+            }
+            else if (cardPending) {
+                if(btn.id === "swap-pending-btn")    {
+                    btn.hidden = false;
+                    btn.disabled = false;
+                    btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                    btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
+                }
+                if(btn.id === "discard-btn") {
+                    btn.disabled = false;
+                    btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                    btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
+                }
+            }
+            else {
+                if(btn.id === "swap-pending-btn") {
+                    btn.hidden = true;
+                    btn.disabled = true;
+                }
                 btn.disabled = false;
                 btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
                 if (btn.id === "play-btn") btn.classList.add("bg-blue-600", "text-white", "hover:bg-blue-700");
@@ -157,6 +175,7 @@ function renderPlayer(player, slotId) {
         img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.png`;
         img.alt = "card";
         img.classList.add("w-20", "h-28", "m-1", "card");
+        img.id=`${player.userId}-pending`;
         pendingContainer.appendChild(img);
     }
 

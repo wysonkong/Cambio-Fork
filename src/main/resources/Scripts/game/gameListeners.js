@@ -28,7 +28,6 @@ buttons.cambio.addEventListener("click", endTurn);
 buttons.discard.addEventListener("click", () => {
     console.log("Discarded pending draw");
     sendAction(gameId, currentUser.userId, currentUser.username, "DISCARD_PENDING",{});
-    specialMoves();
 });
 
 drawBtn.addEventListener("click", () => {
@@ -48,6 +47,12 @@ cambioBtn.addEventListener("click", () => {
     sendAction(gameId, currentUser.userId, currentUser.username, "CALL_CAMBIO", {});
 });
 
+swapPendingBtn.addEventListener("click", () => {
+    console.log("Select one of your cards to swap with the drawn card");
+    swapPendingModeActive = true;
+    swapModeActive = true;
+});
+
 // stickBtn.addEventListener("click", () => {
 //     console.log("Stick");
 //     sendAction(gameId, currentUser.userId, currentUser.username,"CALL_STICK", {});
@@ -62,30 +67,44 @@ start.addEventListener('click', () => {
 document.body.addEventListener("click", (card) => {
     if (card.target.matches("img.card")) {
         let raw = card.target.id.split("-");
-        if (swapState.originIndex === null) {
-            swapState.originUserId = parseInt(raw[0], 10);
-            swapState.originIndex = parseInt(raw[1], 10);
-            console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
-        } else if (swapState.destinationIndex === null) {
-            swapState.destinationIndex = parseInt(raw[1], 10);
-            swapState.destinationUserId = parseInt(raw[0], 10);
-            console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
+        if (!swapPendingModeActive) {
+            if (swapState.originIndex === null) {
+                swapState.originUserId = parseInt(raw[0], 10);
+                swapState.originIndex = parseInt(raw[1], 10);
+                console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
+            } else if (swapState.destinationIndex === null) {
+                swapState.destinationIndex = parseInt(raw[1], 10);
+                swapState.destinationUserId = parseInt(raw[0], 10);
+                console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
 
-            sendAction(gameId, currentUser.userId, currentUser.username, "SWAP", {
-                origin: swapState.originIndex,
-                originUserId: swapState.originUserId,
-                destination: swapState.destinationIndex,
-                destinationUserId: swapState.destinationUserId
-            });
-
-            // Reset swap state
-            swapState = { originIndex: null, originUserId: null, destinationIndex: null, destinationUserId: null };
-            swapModeActive = false;
+                sendAction(gameId, currentUser.userId, currentUser.username, "SWAP", {
+                    origin: swapState.originIndex,
+                    originUserId: swapState.originUserId,
+                    destination: swapState.destinationIndex,
+                    destinationUserId: swapState.destinationUserId
+                });
+            }
         }
+        else {
+            if(swapState.destinationIndex === null) {
+                swapState.destinationIndex = parseInt(raw[1], 10);
+                swapState.destinationUserId = parseInt(raw[0], 10);
+                console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
+                sendAction(gameId, currentUser.userId, currentUser.username, "SWAP_PENDING", {
+                    destination: swapState.destinationIndex,
+                    destinationUserId: swapState.destinationUserId
+                })
+            }
+        }
+
+        swapState = {
+            originIndex: null,
+            originUserId: null,
+            destinationIndex: null,
+            destinationUserId: null
+        };
+        swapModeActive = false;
+        endTurn();
     }
 });
 
-// Special move function for draw card
-function specialMoves() {
-
-}

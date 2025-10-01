@@ -119,6 +119,7 @@ public class GameEngine {
         List<GameState.PlayerView> views = new ArrayList<>();
         for (Player p : players) {
             List<Card> handView = new ArrayList<>();
+            System.out.println(p.getHand().toString());
             for (int i = 0; i < p.getHand().size(); i++) {
                 if (p.getId() == requestingUserId || p.getVisible().get(i) || cambioCalled) {
                     p.getHand().get(i).setVisible(true);

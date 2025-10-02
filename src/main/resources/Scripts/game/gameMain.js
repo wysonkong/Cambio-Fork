@@ -27,6 +27,7 @@ const start = document.getElementById('start-btn');
 const swapPendingBtn = document.getElementById("swap-pending-btn");
 swapPendingBtn.hidden = true;
 
+
 joinCode.innerText = "Join Code: " + gameId;
 
 // ===== Player State =====

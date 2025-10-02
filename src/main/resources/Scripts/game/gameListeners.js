@@ -28,6 +28,7 @@ buttons.cambio.addEventListener("click", endTurn);
 buttons.discard.addEventListener("click", () => {
     console.log("Discarded pending draw");
     sendAction(gameId, currentUser.userId, currentUser.username, "DISCARD_PENDING",{});
+    endTurn();
 });
 
 drawBtn.addEventListener("click", () => {

@@ -21,6 +21,7 @@ function subscribeActions(gameId) {
         const action = JSON.parse(msg.body);
         console.log(action);
         appendAction(action);
+        animationHandler(action);
     });
 }
 
@@ -67,6 +68,11 @@ function setButtonsEnabled(state) {
                 }
             }
             else if (cardPending) {
+                if (btn.id === "draw-btn") {
+                    btn.disabled = true;
+                    btn.classList.remove("bg-green-600", "text-white", "hover:bg-green-700");
+                    btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                }
                 if(btn.id === "swap-pending-btn")    {
                     btn.hidden = false;
                     btn.disabled = false;
@@ -174,9 +180,13 @@ function renderPlayer(player, slotId) {
         const img = document.createElement("img");
         img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.png`;
         img.alt = "card";
-        img.classList.add("w-20", "h-20", "m-1", "card");
+        img.classList.add("w-20", "h-20", "m-1", "object-contain", "card");
         img.id=`${player.userId}-pending`;
         pendingContainer.appendChild(img);
+        img.style.visibility = 'hidden';
+        setTimeout(() => {
+            img.style.visibility = 'visible';
+        }, 600);
     }
 
     player.hand.forEach((card, i) => {
@@ -190,6 +200,50 @@ function renderPlayer(player, slotId) {
         img.classList.add("w-20", "h-20", "object-contain", "m-1", "card");
         cardContainer.appendChild(img);
     });
+}
+
+
+
+function animationHandler(action) {
+    switch(action.type) {
+        case "DRAW_DECK":
+            drawAnimation(action)
+            break;
+        case "SWAP":
+            swapAnimation(action)
+            break;
+        case "DISCARD":
+            discardAnimation(action)
+            break;
+
+    }
+}
+
+function drawAnimation(action) {
+    const origin = document.getElementById("card-deck-img");
+    const destination = document.getElementById(`${action.userId}-pending`);
+    if(!origin || !destination) {
+        console.log("Animation failed, origin or destination does not exist");
+    }
+
+    const originRect = origin.getBoundingClientRect();
+    const destRect = destination.getBoundingClientRect();
+
+    const xDiff = destRect.left - originRect.left;
+    const yDiff = destRect.top - originRect.top;
+
+    // origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
+    origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
+    origin.classList.add("swap");
+
+    // destination.classList.add("swap");
+
+    setTimeout(() => {
+        origin.style.transform = "";
+        destination.style.transform = "";
+        origin.classList.remove("swap");
+        destination.classList.remove("swap");
+    }, 600);
 }
 
 

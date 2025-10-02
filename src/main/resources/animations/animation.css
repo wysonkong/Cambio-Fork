@@ -1,4 +1,4 @@
-.card.swap {
-    transition: transform 3s ease-in-out;
+.swap {
+    transition: transform 0.3s ease-in-out;
     z-index: 10
 }

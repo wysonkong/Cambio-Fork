@@ -146,7 +146,7 @@ function renderHands(state) {
         const img = document.createElement("img");
         img.src = `../images/cards/${state.prevCard.rank}-${state.prevCard.suit}.png`;
         img.alt = "prevCard";
-        img.classList.add("w-24", "h-30", "object-contain", "m-1", "card");
+        img.classList.add("w-24", "h-24", "object-contain", "m-1", "card");
         discardDiv.appendChild(img);
     }
 }
@@ -174,7 +174,7 @@ function renderPlayer(player, slotId) {
         const img = document.createElement("img");
         img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.png`;
         img.alt = "card";
-        img.classList.add("w-20", "h-28", "m-1", "card");
+        img.classList.add("w-20", "h-20", "m-1", "card");
         img.id=`${player.userId}-pending`;
         pendingContainer.appendChild(img);
     }
@@ -187,7 +187,7 @@ function renderPlayer(player, slotId) {
             : "../images/cards/card-back.png";
         img.alt = "card";
         img.id = `${player.userId}-${i}`;
-        img.classList.add("w-20", "h-28", "object-contain", "m-1", "card");
+        img.classList.add("w-20", "h-20", "object-contain", "m-1", "card");
         cardContainer.appendChild(img);
     });
 }

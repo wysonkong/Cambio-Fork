@@ -41,6 +41,7 @@ public class GameWsController {
     @MessageMapping("/game/{gameId}/action")
     public void handleAction(@DestinationVariable Long gameId, GameAction action) {
         // NOTE: In production, verify the principal (Principal) to ensure action.userId matches the authenticated user
+        messaging.convertAndSend("/topic/game." + gameId + ".action", action);
         GameState updatedForRequester = gameService.applyAction(gameId, action);
 
         // Broadcast full state to all players
@@ -48,7 +49,6 @@ public class GameWsController {
         // If you prefer to broadcast individualized states (hiding certain cards per player),
         // you can iterate all players and messaging.convertAndSendToUser(...) accordingly.
         messaging.convertAndSend("/topic/game." + gameId + ".state", updatedForRequester);
-        messaging.convertAndSend("/topic/game." + gameId + ".action", action);
     }
 
     @MessageMapping("/game/{gameId}/chat")

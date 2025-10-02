@@ -12,6 +12,7 @@ let cardPending = false;
 let swapModeActive = false;
 let swapPendingModeActive = false;
 
+
 const displayMyTurn = document.getElementById("display-turn");
 const actionLog = document.getElementById("action-log");
 const chatBox = document.getElementById('chat-messages');

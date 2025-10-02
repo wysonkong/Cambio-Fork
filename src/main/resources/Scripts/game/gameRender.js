@@ -1,15 +1,21 @@
 // This file handles everything required to render the game based on game state/actions
+//gamestate / action websocket flow varaibles
+let pendingState = null;
+let animationInProgress = false;
+
 
 // ===== Subscriptions =====
 function subscribeGameState(gameId) {
     stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
         const state = JSON.parse(msg.body);
         console.log(state);
-
-        renderHands(state);
-        displayTurn(state);
-        setButtonsEnabled(state);
-
+        if(animationInProgress) {
+            pendingState = state;
+        } else {
+            renderHands(state);
+            displayTurn(state);
+            setButtonsEnabled(state);
+        }
         players.forEach(p => {
             playersMap[p.userId] = p.userName;
         });
@@ -21,7 +27,15 @@ function subscribeActions(gameId) {
         const action = JSON.parse(msg.body);
         console.log(action);
         appendAction(action);
+        animationInProgress = true;
         animationHandler(action);
+        animationInProgress = false;
+        if(pendingState) {
+            renderHands(pendingState);
+            displayTurn(pendingState);
+            setButtonsEnabled(pendingState);
+            pendingState = null;
+        }
     });
 }
 
@@ -151,6 +165,7 @@ function renderHands(state) {
     if (state.prevCard) {
         const img = document.createElement("img");
         img.src = `../images/cards/${state.prevCard.rank}-${state.prevCard.suit}.png`;
+        img.id = "card-discard-img"
         img.alt = "prevCard";
         img.classList.add("w-24", "h-24", "object-contain", "m-1", "card");
         discardDiv.appendChild(img);
@@ -212,8 +227,8 @@ function animationHandler(action) {
         case "SWAP":
             swapAnimation(action)
             break;
-        case "DISCARD":
-            discardAnimation(action)
+        case "DISCARD_PENDING":
+            discardPendingAnimation(action);
             break;
 
     }
@@ -222,6 +237,33 @@ function animationHandler(action) {
 function drawAnimation(action) {
     const origin = document.getElementById("card-deck-img");
     const destination = document.getElementById(`${action.userId}-pending`);
+    if(!origin || !destination) {
+        console.log("Animation failed, origin or destination does not exist");
+    }
+
+    const originRect = origin.getBoundingClientRect();
+    const destRect = destination.getBoundingClientRect();
+
+    const xDiff = destRect.left - originRect.left;
+    const yDiff = destRect.top - originRect.top;
+
+    // origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
+    origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
+    origin.classList.add("swap");
+
+    // destination.classList.add("swap");
+
+    setTimeout(() => {
+        origin.style.transform = "";
+        destination.style.transform = "";
+        origin.classList.remove("swap");
+        destination.classList.remove("swap");
+    }, 600);
+}
+
+function discardPendingAnimation(action) {
+    const origin = document.getElementById(`${action.userId}-pending`);
+    const destination = document.getElementById("card-discard-img");
     if(!origin || !destination) {
         console.log("Animation failed, origin or destination does not exist");
     }

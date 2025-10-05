@@ -22,15 +22,15 @@ function subscribeGameState(gameId) {
     });
 }
 
-function subscribeActions(gameId) {
-    stompClient.subscribe(`/topic/game.${gameId}.action`, msg => {
+async function subscribeActions(gameId) {
+    stompClient.subscribe(`/topic/game.${gameId}.action`, async msg => {
         const action = JSON.parse(msg.body);
         console.log(action);
         appendAction(action);
         animationInProgress = true;
-        animationHandler(action);
+        await animationHandler(action);
         animationInProgress = false;
-        if(pendingState) {
+        if (pendingState) {
             renderHands(pendingState);
             displayTurn(pendingState);
             setButtonsEnabled(pendingState);
@@ -225,23 +225,29 @@ function renderPlayer(player, slotId) {
 
 
 function animationHandler(action) {
-    switch(action.type) {
-        case "DRAW_DECK":
-            drawAnimation(action)
-            break;
-        case "SWAP":
-            swapAnimation(action)
-            break;
-        case "DISCARD_PENDING":
-            discardPendingAnimation(action);
-            break;
-
-    }
+    return new Promise(resolve => {
+        switch (action.type) {
+            case "DRAW_DECK":
+                animation(false, false, "card-deck-img", `${action.userId}-pending`, resolve)
+                break;
+            case "SWAP":
+                animation(false,true, action, resolve);
+                break;
+            case "SWAP_PENDING":
+                animation(true,true, `${action.payload.destinationUserId}-${action.payload.destination}`, `${action.userId}-pending`, resolve);
+                break;
+            case "DISCARD_PENDING":
+                animation(false,false, `${action.userId}-pending`, "card-discard-img", resolve);
+                break;
+            default:
+                resolve();
+        }
+})
 }
 
-function drawAnimation(action) {
-    const origin = document.getElementById("card-deck-img");
-    const destination = document.getElementById(`${action.userId}-pending`);
+function animation(swapP,twoWay, o, d, resolve) {
+    const origin = document.getElementById(o);
+    const destination = document.getElementById(d);
     if(!origin || !destination) {
         console.log("Animation failed, origin or destination does not exist");
     }
@@ -252,50 +258,28 @@ function drawAnimation(action) {
     const xDiff = destRect.left - originRect.left;
     const yDiff = destRect.top - originRect.top;
 
-    // origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
     origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
     origin.classList.add("swap");
+    if(twoWay) {
+        destination.style.transform = `translate(${!xDiff}px, ${!yDiff}px)`;
+        destination.classList.add("swap");
+    }
 
-    // destination.classList.add("swap");
 
-    setTimeout(() => {
+    setTimeout(async () => {
         origin.style.transform = "";
         destination.style.transform = "";
         origin.classList.remove("swap");
         destination.classList.remove("swap");
+        if (swapP) {
+            await animation(false, false, d, "card-discard-img", resolve);
+        }
+        resolve();
     }, 600);
 }
 
-function discardPendingAnimation(action) {
-    const origin = document.getElementById(`${action.userId}-pending`);
-    const destination = document.getElementById("card-discard-img");
-    if(!origin || !destination) {
-        console.log("Animation failed, origin or destination does not exist");
-    }
-    console.log("Discard animation is firing")
 
-    const originRect = origin.getBoundingClientRect();
-    const destRect = destination.getBoundingClientRect();
 
-    const xDiff = destRect.left - originRect.left;
-    const yDiff = destRect.top - originRect.top;
-
-    // origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
-    origin.style.visibility = "visible";
-    origin.classList.add("discard");
-    origin.offsetWidth;
-    console.log("Animating to:", xDiff, yDiff)
-    origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
-
-    // destination.classList.add("swap");
-
-    origin.addEventListener("transitionend", () => {
-        origin.style.transform = "";
-        origin.classList.remove("discard");
-        console.log("Discard pending animation complete");
-    }, { once: true });
-
-}
 
 
 

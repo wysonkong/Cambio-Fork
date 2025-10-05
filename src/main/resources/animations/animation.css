@@ -4,6 +4,6 @@
 }
 
 .discard {
-    transition: transform 1.3s ease-in-out;
+    transition: transform 1.3s ease-in-out !important;
     z-index: 10;
 }

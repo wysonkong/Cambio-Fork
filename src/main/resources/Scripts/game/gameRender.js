@@ -224,58 +224,72 @@ function renderPlayer(player, slotId) {
 
 
 
-function animationHandler(action) {
-    return new Promise(resolve => {
-        switch (action.type) {
-            case "DRAW_DECK":
-                animation(false, false, "card-deck-img", `${action.userId}-pending`, resolve)
-                break;
-            case "SWAP":
-                animation(false,true, action, resolve);
-                break;
-            case "SWAP_PENDING":
-                animation(true,true, `${action.payload.destinationUserId}-${action.payload.destination}`, `${action.userId}-pending`, resolve);
-                break;
-            case "DISCARD_PENDING":
-                animation(false,false, `${action.userId}-pending`, "card-discard-img", resolve);
-                break;
-            default:
-                resolve();
-        }
-})
+async function animationHandler(action) {
+    switch (action.type) {
+        case "DRAW_DECK":
+            await animation(false, "card-deck-img", `${action.userId}-pending`);
+            break;
+
+        case "SWAP":
+            await animation(true, action.origin, action.destination);
+            break;
+
+        case "SWAP_PENDING":
+            // run in sequence
+            await animation(true, `${action.payload.destinationUserId}-${action.payload.destination}`, `${action.userId}-pending`);
+            await animation(false, `${action.userId}-pending`, "card-discard-img");
+            break;
+
+        case "DISCARD_PENDING":
+            await animation(false, `${action.userId}-pending`, "card-discard-img");
+            break;
+
+        default:
+            // no animation to run
+            break;
+    }
 }
 
-function animation(swapP,twoWay, o, d, resolve) {
-    const origin = document.getElementById(o);
-    const destination = document.getElementById(d);
-    if(!origin || !destination) {
-        console.log("Animation failed, origin or destination does not exist");
-    }
-
-    const originRect = origin.getBoundingClientRect();
-    const destRect = destination.getBoundingClientRect();
-
-    const xDiff = destRect.left - originRect.left;
-    const yDiff = destRect.top - originRect.top;
-
-    origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
-    origin.classList.add("swap");
-    if(twoWay) {
-        destination.style.transform = `translate(${!xDiff}px, ${!yDiff}px)`;
-        destination.classList.add("swap");
-    }
-
-
-    setTimeout(async () => {
-        origin.style.transform = "";
-        destination.style.transform = "";
-        origin.classList.remove("swap");
-        destination.classList.remove("swap");
-        if (swapP) {
-            await animation(false, false, d, "card-discard-img", resolve);
+function animation(twoWay, o, d) {
+    return new Promise(resolve => {
+        const origin = document.getElementById(o);
+        const destination = document.getElementById(d);
+        if (!origin || !destination) {
+            console.warn("Animation failed, missing element:", o, d);
+            return resolve();
         }
-        resolve();
-    }, 600);
+
+        const originRect = origin.getBoundingClientRect();
+        const destRect = destination.getBoundingClientRect();
+
+        const xDiff = destRect.left - originRect.left;
+        const yDiff = destRect.top - originRect.top;
+
+        origin.classList.add("swap");
+        origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
+
+        if (twoWay) {
+            destination.classList.add("swap");
+            destination.style.transform = `translate(${-xDiff}px, ${-yDiff}px)`;
+        }
+
+        // When the transition ends, clean up and resolve
+        origin.addEventListener(
+            "transitionend",
+            () => {
+                origin.classList.remove("swap");
+                origin.style.transform = "";
+
+                if (twoWay) {
+                    destination.classList.remove("swap");
+                    destination.style.transform = "";
+                }
+
+                resolve();
+            },
+            { once: true }
+        );
+    });
 }
 
 

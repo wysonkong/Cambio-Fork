@@ -60,8 +60,30 @@ function appendAction(msg) {
     const messageEl = document.createElement('div');
     const cardText = msg.card ? `${msg.card.rank} of ${msg.card.suit}` : '';
     const username = msg.username || playersMap[msg.userId] || 'Unknown';
+
+
     messageEl.classList.add('message');
-    messageEl.innerText = `${username}: ${msg.type}: ${cardText}`;
+
+    switch (msg.type) {
+        case "DRAW_DECK":
+            messageEl.innerText = `${username}: ${msg.type}: ${username} drew from the deck`;
+            break;
+
+        case "SWAP":
+            messageEl.innerText = `${username}: ${msg.type}: ${username} swapped cards with ${msg.payload.destinationUserId.username}`;
+            break;
+
+        case "SWAP_PENDING":
+            messageEl.innerText = `${username}: ${msg.type}: ${username} swapped his card to his hand`;
+            break;
+
+        case "DISCARD_PENDING":
+            messageEl.innerText = `${username}: ${msg.type}: ${username} discarded their card`;
+            break;
+
+        default:
+            break;
+    }
     actionLog.appendChild(messageEl);
     actionLog.scrollTop = actionLog.scrollHeight;
 }

@@ -56,6 +56,7 @@ function appendMessage(msg) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+
 function appendAction(msg) {
     const messageEl = document.createElement('div');
     const cardText = msg.card ? `${msg.card.rank} of ${msg.card.suit}` : '';
@@ -82,8 +83,13 @@ function appendAction(msg) {
             break;
 
         case "STICK":
-            messageEl.innerText = `${username}: ${msg.type}: ${username} matched a card from the discard`; // needs a condition for a match or a penalty
+            if(msg.payload?.didStickWork === true) {
+                messageEl.innerText = `${username}: ${msg.type}: ${username} matched a card from the discard`;
+            } else {
+                messageEl.innerText = `${username}: ${msg.type}: ${username} did not match a card, they received a penalty!`;
+            }// needs a condition for a match or a penalty
             break;
+
 
         default:
             break;

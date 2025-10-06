@@ -277,7 +277,12 @@ async function animationHandler(action) {
             break;
 
         case "STICK":
-            await animation(false, `${action.payload.originUserId}-${action.payload.origin}`, "card-discard-img");
+            if(action.payload.didStickWork) {
+                await animation(false, `${action.payload.originUserId}-${action.payload.origin}`, "card-discard-img");
+            }
+            else {
+                await animation(false, "card-deck-img", `${action.userId}-pending`);
+            }
             break;
 
         default:

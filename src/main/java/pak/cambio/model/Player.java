@@ -70,6 +70,10 @@ public class Player {
 
 
     public int getScore() {
+        score = 0;
+        for(Card c : hand) {
+            score += c.getValue();
+        }
         return score;
     }
 

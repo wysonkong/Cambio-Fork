@@ -9,8 +9,11 @@ public class GameEngine {
     private final Deque<Card> discard = new ArrayDeque<Card>();
     private final List<Player> players = new ArrayList<Player>();
     private boolean cambioCalled = false;
+    private int turnCambioCalled = 0;
+    private boolean end = false;
     private int currentTurn = 0;
     private boolean didStickWork;
+    private Player winner;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
@@ -87,6 +90,7 @@ public class GameEngine {
             }
             case CALL_CAMBIO -> {
                 cambioCalled = true;
+                turnCambioCalled = currentTurn;
             }
             case START -> {
                 startNewGame();
@@ -132,6 +136,19 @@ public class GameEngine {
 
     public void advanceTurn() {
         currentTurn = (currentTurn + 1) % players.size();
+        if(currentTurn == turnCambioCalled && cambioCalled) {
+            endGame();
+        }
+    }
+
+    public void endGame() {
+        end = true;
+        int min = players.get(0).getScore();
+        for(Player p : players) {
+            if(p.getScore() < min) {
+                winner = p;
+            }
+        }
     }
 
 
@@ -151,7 +168,7 @@ public class GameEngine {
                     handView.add(p.getHand().get(i));
                 }
             }
-            int score = cambioCalled ? p.getScore() : -1;
+            int score = p.getScore();
             views.add(new GameState.PlayerView(
                     p.getId(),
                     p.getUser(),
@@ -162,7 +179,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork);
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, winner);
     }
 
 }

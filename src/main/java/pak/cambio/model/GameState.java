@@ -9,13 +9,15 @@ public class GameState {
     private final int currentTurn;
     private final boolean cambioCalled;
     private final boolean didStickWork;
+    private final Player winner;
 
-    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork) {
+    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork, Player winner) {
         this.players = players;
         this.prevCard = prevCard;
         this.currentTurn = currentTurn;
         this.cambioCalled = cambioCalled;
         this.didStickWork = didStickWork;
+        this.winner = winner;
     }
 
     public boolean isCambioCalled() {

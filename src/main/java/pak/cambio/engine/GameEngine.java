@@ -90,6 +90,23 @@ public class GameEngine {
             case START -> {
                 startNewGame();
             }
+            case STICK -> {
+                long originUserId = action.getLong("originUserId");
+                Player originPlayer = findPlayer(originUserId);
+                int origin = action.getInt("origin");
+                Card card = originPlayer.getHand().get(origin);
+                Card prev = discard.getFirst();
+                if(card.getRank() == prev.getRank()) {
+                    originPlayer.getHand().remove(origin);
+                    discard.addFirst(card);
+                }
+                else {
+                    long actionUserId = action.getUserId();
+                    Player actionPlayer = findPlayer(actionUserId);
+                    Card drawn = deck.removeFirst();
+                    actionPlayer.getHand().add(drawn);
+                }
+            }
         }
         if(!pending) {
             advanceTurn();

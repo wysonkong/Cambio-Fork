@@ -49,7 +49,12 @@ public class GameWsController {
         GameState updatedForRequester = gameService.applyAction(gameId, action);
         if(action.getType().equals(ActionType.STICK)) {
             Map<String, Object> newPayload = action.getPayload();
+            if(updatedForRequester.isDidStickWork()) {
             newPayload.put("didStickWork", true);
+            }
+            else {
+                newPayload.put("didStickWork", false);
+            }
             action.setPayload(newPayload);
             messaging.convertAndSend("/topic/game." + gameId + ".action", action);
         }

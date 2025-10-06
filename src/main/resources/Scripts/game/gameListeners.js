@@ -51,7 +51,6 @@ cambioBtn.addEventListener("click", () => {
 swapPendingBtn.addEventListener("click", () => {
     console.log("Select one of your cards to swap with the drawn card");
     swapPendingModeActive = true;
-    swapModeActive = true;
 });
 
 stickBtn.addEventListener("click", () => {
@@ -73,7 +72,7 @@ start.addEventListener('click', () => {
 document.body.addEventListener("click", (card) => {
     if (card.target.matches("img.card")) {
         let raw = card.target.id.split("-");
-        if (!swapPendingModeActive) {
+        if (swapModeActive) {
             if (swapState.originIndex === null) {
                 swapState.originUserId = parseInt(raw[0], 10);
                 swapState.originIndex = parseInt(raw[1], 10);
@@ -102,7 +101,7 @@ document.body.addEventListener("click", (card) => {
                 })
             }
         }
-        else {
+        else if(swapPendingModeActive) {
             if(swapState.destinationIndex === null) {
                 swapState.destinationIndex = parseInt(raw[1], 10);
                 swapState.destinationUserId = parseInt(raw[0], 10);

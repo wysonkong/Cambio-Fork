@@ -244,6 +244,10 @@ async function animationHandler(action) {
             await animation(false, `${action.userId}-pending`, "card-discard-img");
             break;
 
+        case "STICK":
+            await animation(false, `${action.payload.originUserId}-${action.payload.origin}`, "card-discard-img");
+            break;
+
         default:
             // no animation to run
             break;

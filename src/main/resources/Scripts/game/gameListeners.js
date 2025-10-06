@@ -54,6 +54,11 @@ swapPendingBtn.addEventListener("click", () => {
     swapModeActive = true;
 });
 
+stickBtn.addEventListener("click", () => {
+    console.log("Stick!");
+    stickModeActive = true;
+})
+
 // stickBtn.addEventListener("click", () => {
 //     console.log("Stick");
 //     sendAction(gameId, currentUser.userId, currentUser.username,"CALL_STICK", {});
@@ -86,6 +91,17 @@ document.body.addEventListener("click", (card) => {
                 });
             }
         }
+        else if(stickModeActive) {
+            if(swapState.originIndex === null) {
+                swapState.originUserId = parseInt(raw[0], 10);
+                swapState.originIndex = parseInt(raw[1], 10);
+                console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
+                sendAction(gameId, currentUser.userId, currentUser.username, "STICK", {
+                    origin: swapState.originIndex,
+                    originUserId: swapState.originUserId
+                })
+            }
+        }
         else {
             if(swapState.destinationIndex === null) {
                 swapState.destinationIndex = parseInt(raw[1], 10);
@@ -105,6 +121,7 @@ document.body.addEventListener("click", (card) => {
             destinationUserId: null
         };
         swapModeActive = false;
+        stickModeActive = false;
         endTurn();
     }
 });

@@ -11,6 +11,7 @@ let hasDrawn = false;
 let cardPending = false;
 let swapModeActive = false;
 let swapPendingModeActive = false;
+let stickModeActive = false;
 
 
 const displayMyTurn = document.getElementById("display-turn");

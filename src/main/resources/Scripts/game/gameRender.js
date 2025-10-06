@@ -259,28 +259,35 @@ function renderPlayer(player, slotId) {
 async function animationHandler(action) {
     switch (action.type) {
         case "DRAW_DECK":
+            playSound("flip");
             await animation(false, "card-deck-img", `${action.userId}-pending`);
             break;
 
         case "SWAP":
+            playSound("slide");
             await animation(true, action.origin, action.destination);
             break;
 
         case "SWAP_PENDING":
             // run in sequence
+            playSound("slide");
             await animation(true, `${action.payload.destinationUserId}-${action.payload.destination}`, `${action.userId}-pending`);
+            playSound("flip");
             await animation(false, `${action.userId}-pending`, "card-discard-img");
             break;
 
         case "DISCARD_PENDING":
+            playSound("flip");
             await animation(false, `${action.userId}-pending`, "card-discard-img");
             break;
 
         case "STICK":
             if(action.payload.didStickWork) {
+                playSound("slide");
                 await animation(false, `${action.payload.originUserId}-${action.payload.origin}`, "card-discard-img");
             }
             else {
+                playSound("slide");
                 await animation(false, "card-deck-img", `${action.userId}-pending`);
             }
             break;
@@ -289,6 +296,14 @@ async function animationHandler(action) {
             // no animation to run
             break;
     }
+}
+
+function playSound(name) {
+    const sound = sounds[name];
+    if (!sound) return;
+    sound.pause();
+    sound.currentTime = 0;
+    sound.play();
 }
 
 function animation(twoWay, o, d) {

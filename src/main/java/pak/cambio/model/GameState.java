@@ -8,16 +8,22 @@ public class GameState {
     private final Card prevCard;
     private final int currentTurn;
     private final boolean cambioCalled;
+    private final boolean didStickWork;
 
-    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled) {
+    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork) {
         this.players = players;
         this.prevCard = prevCard;
         this.currentTurn = currentTurn;
         this.cambioCalled = cambioCalled;
+        this.didStickWork = didStickWork;
     }
 
     public boolean isCambioCalled() {
         return cambioCalled;
+    }
+
+    public boolean isDidStickWork() {
+        return didStickWork;
     }
 
     public List<PlayerView> getPlayers() {
@@ -49,6 +55,7 @@ public class GameState {
             this.score = score;
             this.pending = pending;
         }
+
 
         public Long getUserId() {
             return userId;

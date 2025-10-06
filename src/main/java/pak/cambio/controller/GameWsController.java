@@ -13,6 +13,8 @@ import pak.cambio.repository.GameRepository;
 import pak.cambio.repository.UserRepository;
 import pak.cambio.service.GameService;
 
+import java.util.Map;
+
 @Controller
 public class GameWsController {
 
@@ -41,8 +43,16 @@ public class GameWsController {
     @MessageMapping("/game/{gameId}/action")
     public void handleAction(@DestinationVariable Long gameId, GameAction action) {
         // NOTE: In production, verify the principal (Principal) to ensure action.userId matches the authenticated user
-        messaging.convertAndSend("/topic/game." + gameId + ".action", action);
+        if(!action.getType().equals(ActionType.STICK)) {
+            messaging.convertAndSend("/topic/game." + gameId + ".action", action);
+        }
         GameState updatedForRequester = gameService.applyAction(gameId, action);
+        if(action.getType().equals(ActionType.STICK)) {
+            Map<String, Object> newPayload = action.getPayload();
+            newPayload.put("didStickWork", true);
+            action.setPayload(newPayload);
+            messaging.convertAndSend("/topic/game." + gameId + ".action", action);
+        }
 
         // Broadcast full state to all players
         // We broadcast the snapshot *as seen by the action initiator* for convenience.

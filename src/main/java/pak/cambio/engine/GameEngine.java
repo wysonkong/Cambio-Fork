@@ -98,6 +98,7 @@ public class GameEngine {
                 Card prev = discard.getFirst();
                 if(card.getRank() == prev.getRank()) {
                     originPlayer.getHand().remove(origin);
+                    originPlayer.getVisible().remove(origin);
                     discard.addFirst(card);
                 }
                 else {
@@ -105,6 +106,7 @@ public class GameEngine {
                     Player actionPlayer = findPlayer(actionUserId);
                     Card drawn = deck.removeFirst();
                     actionPlayer.getHand().add(drawn);
+                    actionPlayer.getVisible().add(true);
                 }
             }
         }

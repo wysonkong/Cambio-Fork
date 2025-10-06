@@ -81,6 +81,10 @@ function appendAction(msg) {
             messageEl.innerText = `${username}: ${msg.type}: ${username} discarded their card`;
             break;
 
+        case "STICK":
+            messageEl.innerText = `${username}: ${msg.type}: ${username} matched a card from the discard`; // needs a condition for a match or a penalty
+            break;
+
         default:
             break;
     }

@@ -10,6 +10,7 @@ public class GameEngine {
     private final List<Player> players = new ArrayList<Player>();
     private boolean cambioCalled = false;
     private int currentTurn = 0;
+    private boolean didStickWork;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
@@ -100,6 +101,7 @@ public class GameEngine {
                     originPlayer.getHand().remove(origin);
                     originPlayer.getVisible().remove(origin);
                     discard.addFirst(card);
+                    didStickWork = true;
                 }
                 else {
                     long actionUserId = action.getUserId();
@@ -107,6 +109,7 @@ public class GameEngine {
                     Card drawn = deck.removeFirst();
                     actionPlayer.getHand().add(drawn);
                     actionPlayer.getVisible().add(true);
+                    didStickWork = false;
                 }
             }
         }
@@ -159,7 +162,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled);
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork);
     }
 
 }

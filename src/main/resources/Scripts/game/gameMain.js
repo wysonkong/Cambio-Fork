@@ -29,6 +29,17 @@ const start = document.getElementById('start-btn');
 const swapPendingBtn = document.getElementById("swap-pending-btn");
 swapPendingBtn.hidden = true;
 
+const sounds = {
+    flip: new Audio("../../sounds/card-flick.wav"),
+    slide: new Audio("../../sounds/air-whoosh.wav"),
+    cambio: new Audio("../../sounds/classic-alarm.wav")
+}
+
+Object.values(sounds).forEach(sound => {
+    sound.preload = "auto";
+    sound.volume = 0.5;
+})
+
 
 joinCode.innerText = "Join Code: " + gameId;
 

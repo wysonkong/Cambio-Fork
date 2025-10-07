@@ -116,7 +116,7 @@ function setButtonsEnabled(state) {
                     btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
                     btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
                 }
-                else if (btn.id === "cambio-btn") {
+                else if (btn.id === "cambio-btn" && !state.cambioCalled) {
                     btn.disabled = false;
                     btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
                     btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
@@ -128,7 +128,7 @@ function setButtonsEnabled(state) {
                 }
             }
             else if (cardPending) {
-                if (btn.id === "draw-btn") {
+                if ((btn.id === "draw-btn") || (btn.id === "cambio-btn")) {
                     btn.disabled = true;
                     btn.classList.remove("bg-green-600", "text-white", "hover:bg-green-700");
                     btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");

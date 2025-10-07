@@ -20,6 +20,10 @@ public class GameState {
         this.winner = winner;
     }
 
+    public Player getWinner() {
+        return winner;
+    }
+
     public boolean isCambioCalled() {
         return cambioCalled;
     }

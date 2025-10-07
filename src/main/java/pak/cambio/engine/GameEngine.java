@@ -9,7 +9,7 @@ public class GameEngine {
     private final Deque<Card> discard = new ArrayDeque<Card>();
     private final List<Player> players = new ArrayList<Player>();
     private boolean cambioCalled = false;
-    private int turnCambioCalled = 0;
+    private int cambioCountDown;
     private boolean end = false;
     private int currentTurn = 0;
     private boolean didStickWork;
@@ -43,6 +43,7 @@ public class GameEngine {
         discard.clear();
         discard.add(deck.removeLast());
         cambioCalled = false;
+        cambioCountDown = players.size();
     }
 
     public GameState applyAction(GameAction action) {
@@ -90,7 +91,6 @@ public class GameEngine {
             }
             case CALL_CAMBIO -> {
                 cambioCalled = true;
-                turnCambioCalled = currentTurn;
             }
             case START -> {
                 startNewGame();
@@ -136,7 +136,10 @@ public class GameEngine {
 
     public void advanceTurn() {
         currentTurn = (currentTurn + 1) % players.size();
-        if((currentTurn == turnCambioCalled) && cambioCalled) {
+        if(cambioCalled) {
+            cambioCountDown--;
+        }
+        if((cambioCountDown == 0) && cambioCalled) {
             endGame();
         }
     }
@@ -149,6 +152,7 @@ public class GameEngine {
                 winner = p;
             }
         }
+        System.out.println("Game is over, winner is " + winner.getUser());
     }
 
 

@@ -5,6 +5,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.yaml.snakeyaml.events.Event;
 import pak.cambio.dto.ChatDTO;
 import pak.cambio.dto.ChatMessageDTO;
 import pak.cambio.model.*;
@@ -13,6 +14,9 @@ import pak.cambio.repository.GameRepository;
 import pak.cambio.repository.UserRepository;
 import pak.cambio.service.GameService;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -63,6 +67,30 @@ public class GameWsController {
         // We broadcast the snapshot *as seen by the action initiator* for convenience.
         // If you prefer to broadcast individualized states (hiding certain cards per player),
         // you can iterate all players and messaging.convertAndSendToUser(...) accordingly.
+        //check if game is over, update players records and change game status if so
+        if(updatedForRequester.getWinner() != null) {
+            List<GameState.PlayerView> players = updatedForRequester.getPlayers();
+            ArrayList<Long> ids = new ArrayList<Long>();
+            for(GameState.PlayerView p : players) {
+               ids.add(p.getUserId());
+            }
+            List<User> users = userRepository.findAllById(ids);
+            for(User u : users) {
+                if(u.getUsername().equals(updatedForRequester.getWinner().getUser())) {
+                    System.out.println("Adding win to " + u.getUsername());
+                    u.setWins(u.getWins() + 1);
+                }
+                else {
+                    System.out.println("Adding loss to " + u.getUsername());
+                    u.setLoses(u.getLoses() + 1);
+                }
+                userRepository.save(u);
+            }
+            Game game = gameRepository.findById(gameId).orElseThrow();
+            game.setStatus("Finished");
+            gameRepository.save(game);
+        }
+
         messaging.convertAndSend("/topic/game." + gameId + ".state", updatedForRequester);
     }
 

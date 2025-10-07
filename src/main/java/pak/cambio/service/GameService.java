@@ -97,7 +97,12 @@ public class GameService {
         }
         // engine.applyAction will mutate engine and return snapshot for the requesting player
         System.out.println("Applying action " + action.getType() + " for game " + gameId);
-        return engine.applyAction(action);
+        GameState result = engine.applyAction(action);
+        if(result.getWinner() != null) {
+            this.activeEngines.remove(gameId);
+            this.playersByGame.remove(gameId);
+        }
+        return result;
     }
 
     /**

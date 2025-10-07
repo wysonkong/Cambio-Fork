@@ -66,6 +66,14 @@ function appendAction(msg) {
     messageEl.classList.add('message');
 
     switch (msg.type) {
+        case "START":
+            bgMusic.play().catch();
+            break;
+        case "CALL_CAMBIO" :
+            bgMusic.pause();
+            playSound("cambio");
+            cambioMusic.play().catch();
+            break;
         case "DRAW_DECK":
             messageEl.innerText = `${username}: ${msg.type}: ${username} drew from the deck`;
             break;
@@ -107,7 +115,13 @@ function setButtonsEnabled(state) {
                     btn.disabled = false;
                     btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
                     btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
-                } else {
+                }
+                else if (btn.id === "cambio-btn") {
+                    btn.disabled = false;
+                    btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                    btn.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
+                }
+                else {
                     btn.disabled = true;
                     btn.classList.remove("bg-blue-600", "bg-indigo-600", "bg-red-600", "hover:bg-blue-700", "hover:bg-indigo-700", "hover:bg-red-700", "text-white");
                     btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");

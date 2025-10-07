@@ -136,7 +136,7 @@ public class GameEngine {
 
     public void advanceTurn() {
         currentTurn = (currentTurn + 1) % players.size();
-        if(currentTurn == turnCambioCalled && cambioCalled) {
+        if((currentTurn == turnCambioCalled) && cambioCalled) {
             endGame();
         }
     }

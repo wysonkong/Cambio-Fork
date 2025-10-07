@@ -1,9 +1,5 @@
 //This file handles user inputs (chat, event listeners)
 
-//global listener to preload music
-// document.body.addEventListener("click", () => {
-//     bgMusic.play().catch(() => console.log("Music autoplay blocked until user action"));
-// }, {once: true})
 
 // ===== Chat =====
 sendBtn.addEventListener('click', sendMessage);
@@ -50,7 +46,6 @@ playBtn.addEventListener("click", () => {
 
 cambioBtn.addEventListener("click", () => {
     console.log("Called Cambio!");
-    playSound("cambio");
     sendAction(gameId, currentUser.userId, currentUser.username, "CALL_CAMBIO", {});
 });
 

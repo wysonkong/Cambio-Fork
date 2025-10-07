@@ -35,6 +35,14 @@ const sounds = {
     cambio: new Audio("../../sounds/classic-alarm.wav")
 }
 
+const bgMusic = new Audio("../../music/background-pixelparty.mp3");
+bgMusic.volume = 0.4;
+bgMusic.loop = true;
+
+const cambioMusic = new Audio("../../music/background-cambio.mp3");
+cambioMusic.volume = 0.4;
+cambioMusic.loop = true;
+
 Object.values(sounds).forEach(sound => {
     sound.preload = "auto";
     sound.volume = 0.5;

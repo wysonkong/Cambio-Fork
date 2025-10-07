@@ -14,6 +14,7 @@ public class GameEngine {
     private int currentTurn = 0;
     private boolean didStickWork;
     private Player winner;
+    private int specialMove = 0;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
@@ -49,6 +50,7 @@ public class GameEngine {
     public GameState applyAction(GameAction action) {
         Player player = findPlayer(action.getUserId());
         boolean pending = false;
+        specialMove = 0;
 
         switch (action.getType()) {
             case DRAW_DECK -> {
@@ -69,7 +71,24 @@ public class GameEngine {
                 player.setPending(null);
             }
             case DISCARD_PENDING -> {
-                discard.addFirst(player.getPending());
+                Card card = player.getPending();
+                if(card.getRank().equals("7") || card.getRank().equals("8")) {
+                    specialMove = 1;
+                    pending = true;
+                }
+                else if(card.getRank().equals("9") || card.getRank().equals("10")) {
+                    specialMove = 2;
+                    pending = true;
+                }
+                else if(card.getRank().equals("J") || card.getRank().equals("Q")) {
+                    specialMove = 3;
+                    pending = true;
+                }
+                else if(card.getRank().equals("K") && (card.getSuit().equals("Spade") || card.getSuit().equals("Club"))) {
+                    specialMove = 4;
+                    pending = true;
+                }
+                discard.addFirst(card);
                 player.setPending(null);
             }
             case SWAP -> {
@@ -184,7 +203,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, winner);
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winner);
     }
 
 }

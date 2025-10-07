@@ -147,6 +147,7 @@ public class GameEngine {
     public void endGame() {
         end = true;
         int min = players.get(0).getScore();
+        winner = players.get(0);
         for(Player p : players) {
             if(p.getScore() < min) {
                 winner = p;

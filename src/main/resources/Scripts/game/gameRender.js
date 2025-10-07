@@ -15,6 +15,7 @@ function subscribeGameState(gameId) {
             renderHands(state);
             displayTurn(state);
             setButtonsEnabled(state);
+            winner(state);
         }
         players.forEach(p => {
             playersMap[p.userId] = p.userName;
@@ -34,6 +35,7 @@ async function subscribeActions(gameId) {
             renderHands(pendingState);
             displayTurn(pendingState);
             setButtonsEnabled(pendingState);
+            winner(pendingState);
             pendingState = null;
         }
     });
@@ -362,7 +364,27 @@ function animation(twoWay, o, d) {
     });
 }
 
+function winner(state) {
+    let result = document.getElementById("gameOverTitle");
+    let points = document.getElementById("gamePoints");
+    let modal = document.getElementById("gameOver");
 
+    const me = state.players.find(p => p.userId === currentUser.userId);
+
+    if(state.winner && state.winner.id != null) {
+        modal.showModal();
+
+        if (me.userId === state.winner.id) {
+            result.textContent = "You Win!";
+            points.textContent = `Final Score: ${me.score}`;
+        } else {
+            const winningPlayer = state.players.find(p => p.userId === state.winner.id);
+            result.textContent = `${winningPlayer.userName} Wins!`;
+            points.textContent = `Winning Score: ${winningPlayer.score} Your Score: ${me.score}`;
+        }
+
+    }
+}
 
 
 

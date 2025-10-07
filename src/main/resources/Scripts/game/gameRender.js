@@ -383,7 +383,7 @@ function winner(state) {
             points.textContent = `Winning Score: ${winningPlayer.score} Your Score: ${me.score}`;
         }
 
-        if (me.userId === winner.id) {
+        if (me.userId === state.winner.id) {
             launchConfetti();
         }
     }

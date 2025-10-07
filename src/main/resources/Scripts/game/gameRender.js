@@ -383,7 +383,36 @@ function winner(state) {
             points.textContent = `Winning Score: ${winningPlayer.score} Your Score: ${me.score}`;
         }
 
+        if (me.userId === winner.id) {
+            launchConfetti();
+        }
     }
+}
+
+function launchConfetti() {
+    const duration = 3 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ["#fbbf24", "#f87171", "#34d399", "#60a5fa"]
+        });
+        confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ["#fbbf24", "#f87171", "#34d399", "#60a5fa"]
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    })();
 }
 
 

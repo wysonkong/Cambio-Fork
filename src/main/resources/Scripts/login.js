@@ -3,6 +3,7 @@ const password = document.getElementById("password");
 const submit = document.getElementById("submit");
 let sessionId = null;
 let currentUser = null;
+let avatar = null;
 
 submit.addEventListener("click", async(e) => {
     e.preventDefault();
@@ -19,8 +20,10 @@ submit.addEventListener("click", async(e) => {
     const user = await response.json();
     sessionId = user.sessionId;
     currentUser = {userId : Number(user.userId), username : user.username};
+    avatar = user.avatar;
     console.log("Logged in as " + currentUser.username + "with id of " + currentUser.userId);
     sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
     sessionStorage.setItem("sessionId", sessionId);
+    sessionStorage.setItem("avatar", avatar);
     window.location.href="../index.html";
 })

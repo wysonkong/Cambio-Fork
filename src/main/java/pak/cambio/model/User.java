@@ -13,6 +13,7 @@ public class User {
     private String password;
     int wins;
     int loses;
+    private String avatar;
 
     public User() {
 
@@ -23,6 +24,15 @@ public class User {
         this.password = password;
         this.wins = wins;
         this.loses = loses;
+        this.avatar = "dog";
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getPassword() {

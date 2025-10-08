@@ -218,6 +218,26 @@ function renderHands(state) {
         img.classList.add("w-24", "h-24", "object-contain", "m-1", "card");
         discardDiv.appendChild(img);
     }
+
+    switch (state.specialMove) {
+        case 0 :
+            instructions.innerText = "";
+            break;
+        case 1 :
+            instructions.innerText = "Played a 7 or 8, choose one of your cards to peek"
+            break;
+        case 2:
+            instructions.innerText = "Played a 9 or 10, choose someone else's card to peek"
+            break;
+        case 3:
+            instructions.innerText = "Played a Jack or Queen, choose any two cards to swap"
+            swapModeActive = true;
+            break;
+        case 4:
+            instructions.innerText = "Played a Black King, take a peek at any card and make a swap"
+            swapModeActive = true;
+            break;
+    }
 }
 
 function renderPlayer(player, slotId) {
@@ -281,7 +301,7 @@ async function animationHandler(action) {
 
         case "SWAP":
             playSound("slide");
-            await animation(true, action.origin, action.destination);
+            await animation(true, `${action.payload.originUserId}-${action.payload.origin}`, `${action.payload.destinationUserId}-${action.payload.destination}`);
             break;
 
         case "SWAP_PENDING":

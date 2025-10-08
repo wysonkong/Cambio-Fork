@@ -25,7 +25,6 @@ function sendMessage() {
 }
 
 // ===== Buttons =====
-buttons.cambio.addEventListener("click", endTurn);
 buttons.discard.addEventListener("click", () => {
     console.log("Discarded pending draw");
     sendAction(gameId, currentUser.userId, currentUser.username, "DISCARD_PENDING",{});
@@ -47,6 +46,7 @@ playBtn.addEventListener("click", () => {
 cambioBtn.addEventListener("click", () => {
     console.log("Called Cambio!");
     sendAction(gameId, currentUser.userId, currentUser.username, "CALL_CAMBIO", {});
+    endTurn();
 });
 
 swapPendingBtn.addEventListener("click", () => {
@@ -78,7 +78,8 @@ document.body.addEventListener("click", (card) => {
                 swapState.originUserId = parseInt(raw[0], 10);
                 swapState.originIndex = parseInt(raw[1], 10);
                 console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
-            } else if (swapState.destinationIndex === null) {
+                return;
+            } if (swapState.destinationIndex === null) {
                 swapState.destinationIndex = parseInt(raw[1], 10);
                 swapState.destinationUserId = parseInt(raw[0], 10);
                 console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);

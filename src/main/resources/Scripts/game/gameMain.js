@@ -27,6 +27,7 @@ const playBtn = document.getElementById("play-btn");
 const discardBtn = document.getElementById("discard-btn");
 const start = document.getElementById('start-btn');
 const swapPendingBtn = document.getElementById("swap-pending-btn");
+const instructions = document.getElementById("instructions");
 swapPendingBtn.hidden = true;
 
 const sounds = {
@@ -85,6 +86,9 @@ function sendAction(gameId, userId, username, actionType, payload) {
 
 function endTurn() {
     hasDrawn = false;
+    swapModeActive = false;
+    swapPendingModeActive = false;
+    cardPending = false;
 }
 
 function connectWebSocket(gameId) {

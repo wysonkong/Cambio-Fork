@@ -36,10 +36,11 @@ public class GameEngine {
             List<Boolean> visible = new ArrayList<Boolean>();
             for(int i =0; i < 4; i++) {
                 hand.add(deck.removeFirst());
-                visible.add(i < 2);
+                if(i == 1 || i == 3) {
+                    p.makeCardVisible(p.getId(), i);
+                }
             }
             p.setHand(hand);
-            p.setVisible(visible);
         }
         discard.clear();
         discard.add(deck.removeLast());
@@ -66,9 +67,10 @@ public class GameEngine {
                 int idx = action.getInt("destination");
                 Card old = player.getHand().get(idx);
                 player.getHand().set(idx, newCard);
-                player.getVisible().set(idx, true);
+                player.makeCardVisible(player.getId(), idx);
                 discard.addFirst(old);
                 player.setPending(null);
+                System.out.println("After SWAP_PENDING visibleToMe=" + player.getVisibleToMe());
             }
             case DISCARD_PENDING -> {
                 Card card = player.getPending();
@@ -101,9 +103,9 @@ public class GameEngine {
                 Card newCard = destinationPlayer.getHand().get(destination);
                 Card old = originPlayer.getHand().get(origin);
                 originPlayer.getHand().set(origin, newCard);
-                originPlayer.getVisible().set(origin, true);
                 destinationPlayer.getHand().set(destination, old);
-                destinationPlayer.getVisible().set(destination, false);
+                originPlayer.swapVisible(originUserId, origin, destinationUserId, destination);
+                destinationPlayer.swapVisible(destinationUserId, destination, originUserId, origin);
             }
             case DISCARD -> {
 
@@ -122,7 +124,6 @@ public class GameEngine {
                 Card prev = discard.getFirst();
                 if(card.getRank() == prev.getRank()) {
                     originPlayer.getHand().remove(origin);
-                    originPlayer.getVisible().remove(origin);
                     discard.addFirst(card);
                     didStickWork = true;
                 }
@@ -131,7 +132,6 @@ public class GameEngine {
                     Player actionPlayer = findPlayer(actionUserId);
                     Card drawn = deck.removeFirst();
                     actionPlayer.getHand().add(drawn);
-                    actionPlayer.getVisible().add(true);
                     didStickWork = false;
                 }
             }
@@ -180,26 +180,23 @@ public class GameEngine {
     //GAME STATE
     public GameState snapshotState(Long requestingUserId) {
         List<GameState.PlayerView> views = new ArrayList<>();
+        Player current = findPlayer(requestingUserId);
         for (Player p : players) {
             List<Card> handView = new ArrayList<>();
             System.out.println(p.getHand().toString());
             for (int i = 0; i < p.getHand().size(); i++) {
-                if (p.getId() == requestingUserId || p.getVisible().get(i) || cambioCalled) {
-                    p.getHand().get(i).setVisible(true);
-                    handView.add(p.getHand().get(i));
-                } else {
-                    p.getHand().get(i).setVisible(true);
-                    handView.add(p.getHand().get(i));
-                }
+                handView.add(p.getHand().get(i));
             }
             int score = p.getScore();
+            System.out.println(p.getVisibleToMe().toString());
             views.add(new GameState.PlayerView(
                     p.getId(),
                     p.getUser(),
                     p.getIndex(),
                     handView,
                     score,
-                    p.getPending()
+                    p.getPending(),
+                    p.getVisibleToMe()
             ));
         }
 

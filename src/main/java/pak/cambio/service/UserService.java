@@ -29,6 +29,10 @@ public class UserService {
         return userRepository.findUserByUsername(username).orElse(null);
     }
 
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow();
+    }
+
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }

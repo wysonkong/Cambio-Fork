@@ -72,7 +72,8 @@ let buttons = {
     play: playBtn,
     discard: discardBtn,
     cambio: cambioBtn,
-    swapPending: swapPendingBtn
+    swapPending: swapPendingBtn,
+    stick: stickBtn
 };
 
 // ===== Utility Functions =====

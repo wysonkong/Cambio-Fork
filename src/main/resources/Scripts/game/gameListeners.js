@@ -1,5 +1,5 @@
 //This file handles user inputs (chat, event listeners)
-
+document.addEventListener("DOMContentLoaded", fetchUsers);
 
 // ===== Chat =====
 sendBtn.addEventListener('click', sendMessage);
@@ -92,13 +92,9 @@ async function fetchUsers() {
 
 start.addEventListener('click', async () => {
     start.hidden = true;
-    try {
-        await fetchUsers();
 
         sendAction(gameId, currentUser.userId, currentUser.username, "START", {});
-    } catch (err) {
-        console.error("Error starting game:", err);
-    }
+
 });
 
 // ===== Swap Mode (Card Clicks) =====

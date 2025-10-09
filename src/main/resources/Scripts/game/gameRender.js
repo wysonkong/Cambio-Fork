@@ -246,8 +246,14 @@ function renderPlayer(player, slotId, visibleToMe) {
     const container = document.getElementById(slotId);
     container.classList.add("rounded-lg", "p-2", "bg-white", "border", "shadow", "flex", "flex-col", "items-center");
     if (!container) return;
+    const user = usersMap.get(player.userId);
+    console.log("User found:", user);
+    console.log("Avatar:", user?.avatar);
+
+    const avatarFile = user?.avatar || "dog";
 
     container.innerHTML = `
+    <img src="../images/avatars/${avatarFile}.png" alt="${player.userName}'s avatar" class="w-16 h-16 rounded-full mb-2" />
     <div id="${slotId}-username" class="text-center font-bold mb-2">${player.userName}</div>
     <div id="${slotId}-cards" class="flex justify-center grid grid-flow-col grid-rows-2"></div>
     <div id="${slotId}-draw" class="flex justify-center"></div>
@@ -282,14 +288,8 @@ function renderPlayer(player, slotId, visibleToMe) {
     player.hand.forEach((card, i) => {
         if (!card) return;
         const img = document.createElement("img");
-        if(visibleToMe instanceof Map) {
-            console.log("is a map")
-        }
-        else {
-            console.log("is not a map")
-        }
         if(Object.hasOwn(visibleToMe, player.userId)) {
-            if(visibleToMe[player.userId].includes(i)) {
+            if(Object.hasOwn(visibleToMe[player.userId], i)) {
                 img.src = `../images/cards/${card.rank}-${card.suit}.png`
             }
             else {

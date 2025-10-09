@@ -64,9 +64,41 @@ stickBtn.addEventListener("click", () => {
 //     sendAction(gameId, currentUser.userId, currentUser.username,"CALL_STICK", {});
 // });
 
-start.addEventListener('click', () => {
+const usersMap = new Map();
+
+async function fetchUsers() {
+    try {
+        const response = await fetch("http://localhost:8080/api/standings", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch users");
+
+        const users = await response.json();
+
+        usersMap.clear();
+        users.forEach(user => usersMap.set(user.id, user));
+
+        console.log("Fetched users:", users);
+
+    } catch (err) {
+        console.error("Error fetching users:", err);
+    }
+}
+
+
+start.addEventListener('click', async () => {
     start.hidden = true;
-    sendAction(gameId, currentUser.userId, currentUser.username, "START", {});
+    try {
+        await fetchUsers();
+
+        sendAction(gameId, currentUser.userId, currentUser.username, "START", {});
+    } catch (err) {
+        console.error("Error starting game:", err);
+    }
 });
 
 // ===== Swap Mode (Card Clicks) =====

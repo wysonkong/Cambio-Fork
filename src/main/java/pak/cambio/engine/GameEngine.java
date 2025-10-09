@@ -68,7 +68,7 @@ public class GameEngine {
                 player.makeCardVisible(id, idx);
             }
             case PEEK_PLUS -> {
-                int idx = action.getInt("index");
+                int idx = action.getInt("idx");
                 long id = action.getLong("id");
                 player.makeCardVisible(id, idx);
                 pending = true;

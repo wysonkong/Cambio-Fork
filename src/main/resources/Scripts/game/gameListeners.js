@@ -143,8 +143,8 @@ document.body.addEventListener("click", (card) => {
             }
         }
         else if(peekMeActive) {
-            let ID = parseInt(raw[1], 10);
-            let IDX = parseInt(raw[0], 10);
+            let ID = parseInt(raw[0], 10);
+            let IDX = parseInt(raw[1], 10);
             if(ID === currentUser.userId) {
                 sendAction(gameId, currentUser.userId, currentUser.username, "PEEK", {
                     id: ID,
@@ -157,8 +157,8 @@ document.body.addEventListener("click", (card) => {
             }
         }
         else if(peekAnyActive) {
-            let ID = parseInt(raw[1], 10);
-            let IDX = parseInt(raw[0], 10);
+            let ID = parseInt(raw[0], 10);
+            let IDX = parseInt(raw[1], 10);
             sendAction(gameId, currentUser.userId, currentUser.username, "PEEK", {
                 id: ID,
                 idx: IDX
@@ -166,8 +166,8 @@ document.body.addEventListener("click", (card) => {
             console.log("Peeked card " + IDX + "for userId " + IDX);
         }
         else if(peekPlusActive) {
-            let ID = parseInt(raw[1], 10);
-            let IDX = parseInt(raw[0], 10);
+            let ID = parseInt(raw[0], 10);
+            let IDX = parseInt(raw[1], 10);
             sendAction(gameId, currentUser.userId, currentUser.username, "PEEK_PLUS", {
                 id: ID,
                 idx: IDX

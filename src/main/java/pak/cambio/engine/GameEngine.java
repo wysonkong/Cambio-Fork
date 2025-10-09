@@ -62,6 +62,17 @@ public class GameEngine {
             case DRAW_DISCARD -> {
                 player.getHand().add(discard.removeFirst());
             }
+            case PEEK -> {
+                int idx = action.getInt("idx");
+                long id = action.getLong("id");
+                player.makeCardVisible(id, idx);
+            }
+            case PEEK_PLUS -> {
+                int idx = action.getInt("index");
+                long id = action.getLong("id");
+                player.makeCardVisible(id, idx);
+                pending = true;
+            }
             case SWAP_PENDING -> {
                 Card newCard = player.getPending();
                 int idx = action.getInt("destination");

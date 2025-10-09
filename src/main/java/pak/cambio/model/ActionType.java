@@ -3,6 +3,8 @@ package pak.cambio.model;
 public enum ActionType {
     DRAW_DECK,
     STICK,
+    PEEK_PLUS,
+    PEEK,
     SWAP_PENDING,
     DISCARD_PENDING,// take from deck
     DRAW_DISCARD,   // take from discard

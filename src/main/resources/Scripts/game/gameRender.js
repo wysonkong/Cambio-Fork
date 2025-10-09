@@ -225,9 +225,11 @@ function renderHands(state) {
             break;
         case 1 :
             instructions.innerText = "Played a 7 or 8, choose one of your cards to peek"
+            peekMeActive = true;
             break;
         case 2:
             instructions.innerText = "Played a 9 or 10, choose someone else's card to peek"
+            peekAnyActive = true;
             break;
         case 3:
             instructions.innerText = "Played a Jack or Queen, choose any two cards to swap"
@@ -235,7 +237,7 @@ function renderHands(state) {
             break;
         case 4:
             instructions.innerText = "Played a Black King, take a peek at any card and make a swap"
-            swapModeActive = true;
+            peekPlusActive = true;
             break;
     }
 }

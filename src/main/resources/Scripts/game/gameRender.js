@@ -12,6 +12,7 @@ function subscribeGameState(gameId) {
         if(animationInProgress) {
             pendingState = state;
         } else {
+            fetchUsers();
             renderHands(state);
             displayTurn(state);
             setButtonsEnabled(state);
@@ -32,6 +33,7 @@ async function subscribeActions(gameId) {
         await animationHandler(action);
         animationInProgress = false;
         if (pendingState) {
+            fetchUsers();
             renderHands(pendingState);
             displayTurn(pendingState);
             setButtonsEnabled(pendingState);

@@ -36,6 +36,11 @@ public class MainRestController {
         return Map.of("exists", exists);
     }
 
+    @GetMapping("/getUser")
+    public User getUser(@RequestParam Long userId) {
+        return userService.getUserById(userId);
+    }
+
     @PostMapping("/user")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginDTO login) {
         User user =  userService.findUserByName(login.username());

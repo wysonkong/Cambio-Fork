@@ -2,6 +2,8 @@ package pak.cambio.model;
 
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class GameState {
     private final List<PlayerView> players;
@@ -58,19 +60,25 @@ public class GameState {
         private final List<Card> hand;
         private final int score;
         private final Card pending;
+        private final Map<Long, Set<Integer>> visibleToMe;
 
-        public PlayerView(Long userId, String userName, int index, List<Card> hand, int score, Card pending) {
+        public PlayerView(Long userId, String userName, int index, List<Card> hand, int score, Card pending, Map<Long, Set<Integer>> visibleToMe) {
             this.userId = userId;
             this.userName = userName;
             this.index = index;
             this.hand = hand;
             this.score = score;
             this.pending = pending;
+            this.visibleToMe = visibleToMe;
         }
 
 
         public Long getUserId() {
             return userId;
+        }
+
+        public Map<Long, Set<Integer>> getVisibleToMe() {
+            return visibleToMe;
         }
 
         public String getUserName() {

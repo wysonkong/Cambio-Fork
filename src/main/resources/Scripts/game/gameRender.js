@@ -198,12 +198,12 @@ function renderHands(state) {
     ];
 
     // Render me (always bottom)
-    renderPlayer(me, "player-bottom");
+    renderPlayer(me, "player-bottom", me.visibleToMe);
 
     // Render opponents
     others.forEach((player, index) => {
         if (playerSlots[index]) {
-            renderPlayer(player, playerSlots[index]);
+            renderPlayer(player, playerSlots[index], me.visibleToMe);
         }
     });
 
@@ -240,7 +240,7 @@ function renderHands(state) {
     }
 }
 
-function renderPlayer(player, slotId) {
+function renderPlayer(player, slotId, visibleToMe) {
     const container = document.getElementById(slotId);
     container.classList.add("rounded-lg", "p-2", "bg-white", "border", "shadow", "flex", "flex-col", "items-center");
     if (!container) return;
@@ -280,9 +280,17 @@ function renderPlayer(player, slotId) {
     player.hand.forEach((card, i) => {
         if (!card) return;
         const img = document.createElement("img");
-        img.src = card.visible
-            ? `../images/cards/${card.rank}-${card.suit}.png`
-            : "../images/cards/card-back.png";
+        if(Object.hasOwn(visibleToMe, player.userId)) {
+            if(Object.hasOwn(visibleToMe[player.userId], i)) {
+                img.src = `../images/cards/${card.rank}-${card.suit}.png`
+            }
+            else {
+                img.src = "../images/cards/card-back.png";
+            }
+        }
+        else {
+            img.src = "../images/cards/card-back.png";
+        }
         img.alt = "card";
         img.id = `${player.userId}-${i}`;
         img.classList.add("w-20", "h-20", "object-contain", "m-1", "card");

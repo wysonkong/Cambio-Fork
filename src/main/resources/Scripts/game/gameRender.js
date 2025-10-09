@@ -247,8 +247,6 @@ function renderPlayer(player, slotId, visibleToMe) {
     container.classList.add("rounded-lg", "p-2", "bg-white", "border", "shadow", "flex", "flex-col", "items-center");
     if (!container) return;
     const user = usersMap.get(player.userId);
-    console.log("User found:", user);
-    console.log("Avatar:", user?.avatar);
 
     const avatarFile = user?.avatar || "dog";
 

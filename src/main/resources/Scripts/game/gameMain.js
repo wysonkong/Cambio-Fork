@@ -12,6 +12,9 @@ let cardPending = false;
 let swapModeActive = false;
 let swapPendingModeActive = false;
 let stickModeActive = false;
+let peekMeActive = false;
+let peekAnyActive = false;
+let peekPlusActive = false;
 
 
 const displayMyTurn = document.getElementById("display-turn");
@@ -86,7 +89,11 @@ function sendAction(gameId, userId, username, actionType, payload) {
 
 function endTurn() {
     hasDrawn = false;
+    peekMeActive = false;
+    peekAnyActive = false;
+    peekPlusActive = false;
     swapModeActive = false;
+    stickModeActive = false;
     swapPendingModeActive = false;
     cardPending = false;
 }

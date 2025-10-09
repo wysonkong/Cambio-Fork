@@ -114,6 +114,38 @@ document.body.addEventListener("click", (card) => {
                 })
             }
         }
+        else if(peekMeActive) {
+            let ID = parseInt(raw[1], 10);
+            let IDX = parseInt(raw[0], 10);
+            if(ID === currentUser.userId) {
+                sendAction(gameId, currentUser.userId, currentUser.username, "PEEK", {
+                    id: ID,
+                    idx: IDX
+                })
+                console.log("Peeked card " + IDX + "for userId " + IDX);
+            }
+            else {
+                console.log("CAN ONLY SELECT ONE OF YOUR CARDS TO PEEK")
+            }
+        }
+        else if(peekAnyActive) {
+            let ID = parseInt(raw[1], 10);
+            let IDX = parseInt(raw[0], 10);
+            sendAction(gameId, currentUser.userId, currentUser.username, "PEEK", {
+                id: ID,
+                idx: IDX
+            })
+            console.log("Peeked card " + IDX + "for userId " + IDX);
+        }
+        else if(peekPlusActive) {
+            let ID = parseInt(raw[1], 10);
+            let IDX = parseInt(raw[0], 10);
+            sendAction(gameId, currentUser.userId, currentUser.username, "PEEK_PLUS", {
+                id: ID,
+                idx: IDX
+            })
+            console.log("Peeked card " + IDX + "for userId " + IDX);
+        }
 
         swapState = {
             originIndex: null,
@@ -121,9 +153,13 @@ document.body.addEventListener("click", (card) => {
             destinationIndex: null,
             destinationUserId: null
         };
-        swapModeActive = false;
-        stickModeActive = false;
-        endTurn();
+        if(!peekPlusActive) {
+            endTurn();
+        }
+        else {
+            endTurn();
+            swapModeActive = true;
+        }
     }
 });
 

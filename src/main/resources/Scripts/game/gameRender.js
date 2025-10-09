@@ -280,8 +280,14 @@ function renderPlayer(player, slotId, visibleToMe) {
     player.hand.forEach((card, i) => {
         if (!card) return;
         const img = document.createElement("img");
+        if(visibleToMe instanceof Map) {
+            console.log("is a map")
+        }
+        else {
+            console.log("is not a map")
+        }
         if(Object.hasOwn(visibleToMe, player.userId)) {
-            if(Object.hasOwn(visibleToMe[player.userId], i)) {
+            if(visibleToMe[player.userId].includes(i)) {
                 img.src = `../images/cards/${card.rank}-${card.suit}.png`
             }
             else {

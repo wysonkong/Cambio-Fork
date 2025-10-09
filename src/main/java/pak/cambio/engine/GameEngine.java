@@ -65,6 +65,7 @@ public class GameEngine {
             case SWAP_PENDING -> {
                 Card newCard = player.getPending();
                 int idx = action.getInt("destination");
+                System.out.println("SWAP_PENDING userId " + player.getId() + "with index" + idx);
                 Card old = player.getHand().get(idx);
                 player.getHand().set(idx, newCard);
                 player.makeCardVisible(player.getId(), idx);

@@ -289,7 +289,7 @@ function renderPlayer(player, slotId, visibleToMe) {
         if (!card) return;
         const img = document.createElement("img");
         if(Object.hasOwn(visibleToMe, player.userId)) {
-            if(Object.hasOwn(visibleToMe[player.userId], i)) {
+            if(visibleToMe[player.userId].includes(i)) {
                 img.src = `../images/cards/${card.rank}-${card.suit}.png`
             }
             else {

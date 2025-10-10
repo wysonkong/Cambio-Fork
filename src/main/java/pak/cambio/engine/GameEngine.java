@@ -35,10 +35,11 @@ public class GameEngine {
             List<Card> hand = new ArrayList<Card>();
             List<Boolean> visible = new ArrayList<Boolean>();
             for(int i =0; i < 4; i++) {
-                hand.add(deck.removeFirst());
+                Card dealt = deck.removeFirst();
                 if(i == 1 || i == 3) {
-                    p.makeCardVisible(p.getId(), i);
+                    dealt.makeVisibleTo(p.getId());
                 }
+                hand.add(dealt);
             }
             p.setHand(hand);
         }
@@ -65,12 +66,14 @@ public class GameEngine {
             case PEEK -> {
                 int idx = action.getInt("idx");
                 long id = action.getLong("id");
-                player.makeCardVisible(id, idx);
+                Player peeked = findPlayer(id);
+                peeked.getHand().get(idx).makeVisibleTo(player.getId());
             }
             case PEEK_PLUS -> {
                 int idx = action.getInt("idx");
                 long id = action.getLong("id");
-                player.makeCardVisible(id, idx);
+                Player peeked = findPlayer(id);
+                peeked.getHand().get(idx).makeVisibleTo(player.getId());
                 pending = true;
             }
             case SWAP_PENDING -> {
@@ -78,11 +81,10 @@ public class GameEngine {
                 int idx = action.getInt("destination");
                 System.out.println("SWAP_PENDING userId " + player.getId() + "with index" + idx);
                 Card old = player.getHand().get(idx);
+                newCard.makeVisibleTo(player.getId());
                 player.getHand().set(idx, newCard);
-                player.makeCardVisible(player.getId(), idx);
                 discard.addFirst(old);
                 player.setPending(null);
-                System.out.println("After SWAP_PENDING visibleToMe=" + player.getVisibleToMe());
             }
             case DISCARD_PENDING -> {
                 Card card = player.getPending();
@@ -116,8 +118,6 @@ public class GameEngine {
                 Card old = originPlayer.getHand().get(origin);
                 originPlayer.getHand().set(origin, newCard);
                 destinationPlayer.getHand().set(destination, old);
-                originPlayer.swapVisible(originUserId, origin, destinationUserId, destination);
-                destinationPlayer.swapVisible(destinationUserId, destination, originUserId, origin);
             }
             case DISCARD -> {
 
@@ -200,15 +200,13 @@ public class GameEngine {
                 handView.add(p.getHand().get(i));
             }
             int score = p.getScore();
-            System.out.println(p.getVisibleToMe().toString());
             views.add(new GameState.PlayerView(
                     p.getId(),
                     p.getUser(),
                     p.getIndex(),
                     handView,
                     score,
-                    p.getPending(),
-                    p.getVisibleToMe()
+                    p.getPending()
             ));
         }
 

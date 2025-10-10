@@ -273,7 +273,12 @@ function renderPlayer(player, slotId) {
 
     const img = document.createElement("img");
     if (player.pending) {
-        img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.png`;
+        if (cardPending) {
+            img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.png`;
+        }
+        else {
+            img.src= "../images/cards/card-back.png";
+        }
         img.style.visibility= 'visible';
         // img.style.visibility = 'hidden';
         // setTimeout(() => {

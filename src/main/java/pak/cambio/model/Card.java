@@ -1,9 +1,13 @@
 package pak.cambio.model;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Card {
     private String rank;
     private String suit;
+    private Set<Long> visible;
 
     public Card() {
 
@@ -12,6 +16,7 @@ public class Card {
     public Card(String rank, String suit) {
         this.rank = rank;
         this.suit = suit;
+        this.visible = new HashSet<Long>();
     }
 
     public int getValue() {
@@ -40,6 +45,22 @@ public class Card {
         deck.add(new Card("Joker", "Little"));
         deck.add(new Card("Joker", "Big"));
         return deck;
+    }
+
+    public Set<Long> getVisible() {
+        return visible;
+    }
+
+    public void makeVisibleTo(long id) {
+        if(!this.visible.contains(id)) {
+            this.visible.add(id);
+        }
+    }
+
+    public void removeVisibleTo(long id) {
+        if(this.visible.contains(id)) {
+            this.visible.remove(id);
+        }
     }
 
 

@@ -60,16 +60,14 @@ public class GameState {
         private final List<Card> hand;
         private final int score;
         private final Card pending;
-        private final Map<Long, Set<Integer>> visibleToMe;
 
-        public PlayerView(Long userId, String userName, int index, List<Card> hand, int score, Card pending, Map<Long, Set<Integer>> visibleToMe) {
+        public PlayerView(Long userId, String userName, int index, List<Card> hand, int score, Card pending) {
             this.userId = userId;
             this.userName = userName;
             this.index = index;
             this.hand = hand;
             this.score = score;
             this.pending = pending;
-            this.visibleToMe = visibleToMe;
         }
 
 
@@ -77,9 +75,6 @@ public class GameState {
             return userId;
         }
 
-        public Map<Long, Set<Integer>> getVisibleToMe() {
-            return visibleToMe;
-        }
 
         public String getUserName() {
             return userName;

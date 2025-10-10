@@ -172,7 +172,12 @@ function setButtonsEnabled(state) {
             btn.disabled = true;
             btn.classList.remove("bg-green-600", "bg-blue-600", "bg-indigo-600", "bg-red-600", "hover:bg-green-700", "hover:bg-blue-700", "hover:bg-indigo-700", "hover:bg-red-700", "text-white");
             btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+            if(btn.id === "stick-btn") {
+                btn.disabled = false;
+                btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+                btn.classList.add("bg-red-600", "text-white", "hover:bg-red-700");
         }
+    }
     });
 }
 

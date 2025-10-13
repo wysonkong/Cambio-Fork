@@ -99,6 +99,7 @@ start.addEventListener('click', async () => {
 
 // ===== Swap Mode (Card Clicks) =====
 document.body.addEventListener("click", (card) => {
+    let retry = false;
     if (card.target.matches("img.card")) {
         let raw = card.target.id.split("-");
         if (swapModeActive) {
@@ -135,11 +136,17 @@ document.body.addEventListener("click", (card) => {
             if(swapState.destinationIndex === null) {
                 swapState.destinationIndex = parseInt(raw[1], 10);
                 swapState.destinationUserId = parseInt(raw[0], 10);
-                console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
-                sendAction(gameId, currentUser.userId, currentUser.username, "SWAP_PENDING", {
-                    destination: swapState.destinationIndex,
-                    destinationUserId: swapState.destinationUserId
-                })
+                if(swapState.destinationUserId === currentUser.userId) {
+                    console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
+                    sendAction(gameId, currentUser.userId, currentUser.username, "SWAP_PENDING", {
+                        destination: swapState.destinationIndex,
+                        destinationUserId: swapState.destinationUserId
+                    })
+                }
+                else {
+                    console.log("You can only swap your pending card with one of your cards, try again");
+                    retry = true;
+                }
             }
         }
         else if(peekMeActive) {
@@ -184,7 +191,7 @@ document.body.addEventListener("click", (card) => {
         if(!peekPlusActive) {
             endTurn();
         }
-        else {
+        else if (!retry) {
             endTurn();
             swapModeActive = true;
         }

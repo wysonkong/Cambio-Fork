@@ -200,15 +200,13 @@ function renderHands(state) {
     // Order others around the board
     // top → left → right (expandable up to 5 others)
     const playerSlots = [
-        "player-top",   // 1st opponent
-        "player-left",  // 2nd
-        "player-right", // 3rd
-        "player-top-left",  // 4th (optional)
-        "player-top-right"  // 5th (optional)
+        "player-top-right",   // 1st opponent
+        "player-top-left",  // 2nd
+        "player-bottom-right" // 3rd
     ];
 
     // Render me (always bottom)
-    renderPlayer(me, "player-bottom");
+    renderPlayer(me, "player-bottom-left");
 
     // Render opponents
     others.forEach((player, index) => {
@@ -265,10 +263,14 @@ function renderPlayer(player, slotId) {
     const avatarFile = user?.avatar || "dog";
 
     container.innerHTML = `
-    <img src="../images/avatars/${avatarFile}.png" alt="${player.userName}'s avatar" class="w-16 h-16 rounded-full mb-2" />
-    <div id="${slotId}-username" class="text-center font-bold mb-2">${player.userName}</div>
-    <div id="${slotId}-cards" class="flex justify-center grid grid-flow-col grid-rows-2"></div>
-    <div id="${slotId}-draw" class="flex justify-center"></div>
+    <div class="flex justify-center grid grid-flow-col grid-rows-1">
+        <img src="../images/avatars/${avatarFile}.png" alt="${player.userName}'s avatar" class="w-16 h-16 rounded-full mb-2" />
+        <div id="${slotId}-username" class="text-center font-bold mb-2">${player.userName}</div>
+    </div>
+    <div class="flex justify-center grid grid-flow-col grid-rows-1">
+        <div id="${slotId}-cards" class="flex justify-center grid grid-flow-col grid-rows-2"></div>
+        <div id="${slotId}-draw" class="flex justify-center"></div>
+    </div>
   `;
 
     const cardContainer = document.getElementById(`${slotId}-cards`);

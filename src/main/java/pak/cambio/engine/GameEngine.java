@@ -146,6 +146,7 @@ public class GameEngine {
                     actionPlayer.getHand().add(drawn);
                     didStickWork = false;
                 }
+                pending = true;
             }
         }
         if(!pending) {

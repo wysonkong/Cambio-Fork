@@ -31,6 +31,7 @@ const discardBtn = document.getElementById("discard-btn");
 const start = document.getElementById('start-btn');
 const swapPendingBtn = document.getElementById("swap-pending-btn");
 const instructions = document.getElementById("instructions");
+instructions.style.color = "white";
 swapPendingBtn.hidden = true;
 
 const sounds = {

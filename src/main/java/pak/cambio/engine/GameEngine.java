@@ -49,10 +49,23 @@ public class GameEngine {
         cambioCountDown = players.size();
     }
 
+    private void reshuffle() {
+        List<Card> deckList = new ArrayList<Card>(discard);
+        deckList.remove(0);
+        discard.removeAll(deckList);
+        Collections.shuffle(deckList);
+        deck.clear();
+        deckList.forEach(deck::addLast);
+    }
+
     public GameState applyAction(GameAction action) {
         Player player = findPlayer(action.getUserId());
         boolean pending = false;
         specialMove = 0;
+        didStickWork = false;
+        if(deck.isEmpty()) {
+            reshuffle();
+        }
 
         switch (action.getType()) {
             case DRAW_DECK -> {

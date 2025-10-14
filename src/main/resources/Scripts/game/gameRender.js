@@ -311,9 +311,16 @@ function renderPlayer(player, slotId) {
 
         if (card.visible.includes(currentUser.userId)) {
             img.src = `../images/cards/${card.rank}-${card.suit}.png`;
-        } else if (card.visible.size > 0) {
-            img.src = "../images/cards/card-back-peek.png";
-        } else {
+        }
+        else if(player.userId === currentUser.userId) {
+            if (card.visible.length > 0 && !card.visible.includes(currentUser.userId)) {
+                img.src = "../images/cards/card-back-peek.png";
+            }
+        else {
+            img.src = "../images/cards/card-back.png";
+        }
+        }
+        else {
             img.src = "../images/cards/card-back.png";
         }
 

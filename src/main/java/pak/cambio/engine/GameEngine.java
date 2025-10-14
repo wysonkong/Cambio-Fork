@@ -53,6 +53,7 @@ public class GameEngine {
         Player player = findPlayer(action.getUserId());
         boolean pending = false;
         specialMove = 0;
+        didStickWork = false;
 
         switch (action.getType()) {
             case DRAW_DECK -> {

@@ -300,8 +300,9 @@ function renderPlayer(player, slotId) {
         img.style.visibility= 'hidden';
     }
         img.alt = "card";
-        img.classList.add("w-20", "h-20", "m-1", "object-contain", "card", "hover: bg-violet-600", "focus: outline-2", "focus: outline-offset-2", "focus: outline-violet-500");
+        img.classList.add("w-20", "h-20", "m-1", "object-contain", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
         img.id=`${player.userId}-pending`;
+        img.tabIndex = 0;
         pendingContainer.appendChild(img);
 
     player.hand.forEach((card, i) => {
@@ -315,7 +316,8 @@ function renderPlayer(player, slotId) {
         }
         img.alt = "card";
         img.id = `${player.userId}-${i}`;
-        img.classList.add("w-20", "h-20", "object-contain", "m-1", "card", "hover: bg-violet-600", "focus: outline-2", "focus: outline-offset-2", "focus: outline-violet-500");
+        img.tabIndex= i;
+        img.classList.add("w-20", "h-20", "object-contain", "m-1", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
         cardContainer.appendChild(img);
     });
 }

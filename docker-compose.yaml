@@ -1,8 +1,9 @@
 version: "3.8"
+
 services:
   postgres-db:
     container_name: cambio
-    image: postgres # use latest official postgres version
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: acc_dev
@@ -11,6 +12,35 @@ services:
       POSTGRES_HOST_AUTH_METHOD: password
     ports:
       - "5428:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cambio-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      # Mount GitHub private key at runtime (read-only)
+      - ./secrets/github-app.pem:/app/config/github-app.pem:ro
+    depends_on:
+      - postgres-db
+
+    command: ["/app/wait-for-postgres.sh", "postgres-db", "java", "-jar", "/app/app.jar"]
+
+    environment:
+      GITHUB_APP_ID: ${GITHUB_APP_ID}
+      GITHUB_INSTALLATION_ID: ${GITHUB_INSTALLATION_ID}
+      GITHUB_OWNER: ${GITHUB_OWNER}
+      GITHUB_REPO: ${GITHUB_REPO}
+      GITHUB_PRIVATE_KEY_PATH: ${GITHUB_PRIVATE_KEY_PATH}
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
 
 volumes:
   postgresql_data:

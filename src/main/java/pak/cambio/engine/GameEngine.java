@@ -51,7 +51,7 @@ public class GameEngine {
 
     private void reshuffle() {
         List<Card> deckList = new ArrayList<Card>(discard);
-        deckList.remove(0);
+        deckList.removeFirst();
         discard.removeAll(deckList);
         Collections.shuffle(deckList);
         deck.clear();
@@ -63,7 +63,7 @@ public class GameEngine {
         boolean pending = false;
         specialMove = 0;
         didStickWork = false;
-        if(deck.isEmpty()) {
+        if(deck.isEmpty() && !action.getType().equals(ActionType.START)) {
             reshuffle();
         }
 

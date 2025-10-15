@@ -6,6 +6,7 @@ public enum ActionType {
     PEEK_PLUS,
     PEEK,
     SWAP_PENDING,
+    GIVE,
     DISCARD_PENDING,// take from deck
     DRAW_DISCARD,   // take from discard
     SWAP,           // swap drawn card with one in hand

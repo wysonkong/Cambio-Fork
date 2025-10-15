@@ -6,6 +6,19 @@ sendBtn.addEventListener('click', sendMessage);
 chatInput.addEventListener('keypress', e => {
     if (e.key === 'Enter') sendMessage();
 });
+window.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+        chat.showModal();
+        chatInput.focus();
+    }
+    if (e.key.toLowerCase() === '`') {
+        if (action.open) {
+            action.close();
+        } else {
+            action.showModal();
+        }
+    }
+})
 
 function sendMessage() {
     const content = chatInput.value.trim();

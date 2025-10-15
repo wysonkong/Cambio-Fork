@@ -21,8 +21,10 @@ let lastStickPlayer = null;
 
 const displayMyTurn = document.getElementById("display-turn");
 const actionLog = document.getElementById("action-log");
+const action = document.getElementById("actionDrawer")
 const chatBox = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
+const chat = document.getElementById('drawer');
 const sendBtn = document.getElementById('send-btn');
 const joinCode = document.getElementById("join-code");
 const stickBtn = document.getElementById("stick-btn");
@@ -33,6 +35,7 @@ const discardBtn = document.getElementById("discard-btn");
 const start = document.getElementById('start-btn');
 const swapPendingBtn = document.getElementById("swap-pending-btn");
 const instructions = document.getElementById("instructions");
+
 instructions.style.color = "white";
 swapPendingBtn.hidden = true;
 

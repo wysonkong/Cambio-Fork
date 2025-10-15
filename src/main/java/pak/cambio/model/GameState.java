@@ -13,8 +13,9 @@ public class GameState {
     private final boolean didStickWork;
     private final int specialMove;
     private final Player winner;
+    private final boolean tempTurn;
 
-    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork, int specialMove, Player winner) {
+    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork, int specialMove, Player winner, boolean tempTurn) {
         this.players = players;
         this.prevCard = prevCard;
         this.currentTurn = currentTurn;
@@ -22,6 +23,11 @@ public class GameState {
         this.didStickWork = didStickWork;
         this.specialMove = specialMove;
         this.winner = winner;
+        this.tempTurn = tempTurn;
+    }
+
+    public boolean isTempTurn() {
+        return tempTurn;
     }
 
     public int getSpecialMove() {

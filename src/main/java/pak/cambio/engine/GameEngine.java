@@ -15,6 +15,8 @@ public class GameEngine {
     private boolean didStickWork;
     private Player winner;
     private int specialMove = 0;
+    private boolean tempTurn = false;
+    private int lastTurn;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
@@ -63,6 +65,10 @@ public class GameEngine {
         boolean pending = false;
         specialMove = 0;
         didStickWork = false;
+        if(tempTurn) {
+            currentTurn = lastTurn;
+        }
+        int nextTurn = 0;
         if(deck.isEmpty() && !action.getType().equals(ActionType.START)) {
             reshuffle();
         }
@@ -138,6 +144,18 @@ public class GameEngine {
             case CALL_CAMBIO -> {
                 cambioCalled = true;
             }
+            case GIVE -> {
+                long originUserId = action.getLong("originUserId");
+                Player originPlayer = findPlayer(originUserId);
+                int origin = action.getInt("origin");
+                long destinationUserId = action.getLong("destinationUserId");
+                Card card = originPlayer.getHand().get(origin);
+                originPlayer.getHand().remove(origin);
+                Player destinationPlayer = findPlayer(destinationUserId);
+                destinationPlayer.getHand().add(card);
+                tempTurn = false;
+                pending = true;
+            }
             case START -> {
                 startNewGame();
             }
@@ -151,6 +169,10 @@ public class GameEngine {
                     originPlayer.getHand().remove(origin);
                     discard.addFirst(card);
                     didStickWork = true;
+                    if(originUserId != action.getUserId()) {
+                        tempTurn = true;
+                        nextTurn = players.indexOf(findPlayer(action.getUserId()));
+                    }
                 }
                 else {
                     long actionUserId = action.getUserId();
@@ -164,6 +186,10 @@ public class GameEngine {
         }
         if(!pending) {
             advanceTurn();
+        }
+        lastTurn = currentTurn;
+        if(tempTurn) {
+            currentTurn = nextTurn;
         }
         return snapshotState(action.getUserId());
     }
@@ -224,7 +250,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winner);
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winner, tempTurn);
     }
 
 }

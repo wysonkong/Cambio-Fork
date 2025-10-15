@@ -163,7 +163,13 @@
                         </el-dialog>
                     </div>
                     <div>
-                        <button command="show-modal" commandfor="drawer" class="rounded-lg bg-white/10 px-4 py-2 font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Chat</button>
+                        <button id="chat-btn" command="show-modal" commandfor="drawer" class="relative rounded-lg bg-white/10 px-4 py-2 font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
+                            Chat
+                            <span id="chat-badge" class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">
+                                0
+                            </span>
+                        </button>
+
                         <el-dialog>
                             <dialog id="drawer" aria-labelledby="drawer-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-hidden bg-transparent not-open:hidden backdrop:bg-transparent">
                                 <el-dialog-backdrop class="absolute inset-0 bg-gray-900/50 transition-opacity duration-500 ease-in-out data-closed:opacity-0"></el-dialog-backdrop>

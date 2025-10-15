@@ -17,11 +17,14 @@ let peekAnyActive = false;
 let peekPlusActive = false;
 let giveModeActive = false;
 let lastStickPlayer = null;
+let unseenCount = 0;
 
 
 const displayMyTurn = document.getElementById("display-turn");
 const actionLog = document.getElementById("action-log");
 const action = document.getElementById("actionDrawer")
+const chatBtn = document.getElementById("chat-btn");
+const chatBadge = document.getElementById("chat-badge");
 const chatBox = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const chat = document.getElementById('drawer');

@@ -52,10 +52,25 @@ function subscribeChat(gameId) {
 function appendMessage(msg) {
     const messageEl = document.createElement('div');
     messageEl.classList.add('message');
+
+    if (msg.sender === currentUser) {
+        messageEl.classList.add('sent');
+    } else {
+        messageEl.classList.add('received');
+    }
+
     const time = new Date(msg.timestamp).toLocaleTimeString();
     messageEl.innerText = `[${time}] ${msg.sender}: ${msg.content}`;
     chatBox.appendChild(messageEl);
-    chatBox.scrollTop = chatBox.scrollHeight;
+
+    if (msg.sender !== currentUser && !chat.hasAttribute("open")) {
+        unseenCount++;
+        chatBadge.textContent = unseenCount.toString();
+        chatBadge.classList.remove("hidden");
+    } else {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
 }
 
 

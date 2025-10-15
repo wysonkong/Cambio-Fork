@@ -6,10 +6,16 @@ sendBtn.addEventListener('click', sendMessage);
 chatInput.addEventListener('keypress', e => {
     if (e.key === 'Enter') sendMessage();
 });
+chatBtn.addEventListener('click', () => {
+    unseenCount = 0;
+    chatBadge.classList.add("hidden");
+})
 window.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
         chat.showModal();
         chatInput.focus();
+        unseenCount = 0;
+        chatBadge.classList.add("hidden");
     }
     if (e.key.toLowerCase() === '`') {
         if (action.open) {
@@ -19,6 +25,8 @@ window.addEventListener('keydown', e => {
         }
     }
 })
+
+
 
 function sendMessage() {
     const content = chatInput.value.trim();

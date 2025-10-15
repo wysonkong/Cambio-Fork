@@ -217,3 +217,20 @@ document.body.addEventListener("click", (card) => {
     }
 });
 
+async function submitIssue() {
+
+    let page = document.getElementById("page").value;
+    let type = document.getElementById("issueType").value;
+    let issue = document.getElementById("issueText").value;
+
+    const res = await fetch("/api/create-issue", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ page, type, body: issue })
+    });
+
+    const msg = await res.text();
+    alert(msg);
+}
+
+

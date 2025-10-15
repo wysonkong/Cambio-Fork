@@ -126,10 +126,29 @@ document.body.addEventListener("click", (card) => {
                 swapState.originUserId = parseInt(raw[0], 10);
                 swapState.originIndex = parseInt(raw[1], 10);
                 console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
+                lastStickPlayer = swapState.originUserId;
                 sendAction(gameId, currentUser.userId, currentUser.username, "STICK", {
                     origin: swapState.originIndex,
                     originUserId: swapState.originUserId
                 })
+            }
+        }
+        else if(giveModeActive) {
+            if(swapState.originIndex === null) {
+                swapState.originUserId = parseInt(raw[0], 10);
+                swapState.originIndex = parseInt(raw[1], 10);
+                swapState.destinationUserId =lastStickPlayer;
+                if(swapState.originUserId === currentUser.userId) {
+                    console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
+                    sendAction(gameId, currentUser.userId, currentUser.username, "GIVE", {
+                        origin: swapState.originIndex,
+                        originUserId: swapState.originUserId,
+                        destinationUserId: swapState.destinationUserId
+                    })
+                }
+                else {
+                    retry = true;
+                }
             }
         }
         else if(swapPendingModeActive) {

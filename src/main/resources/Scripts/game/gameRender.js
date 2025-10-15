@@ -251,6 +251,10 @@ function renderHands(state) {
                 peekPlusActive = true;
                 break;
         }
+        if(state.tempTurn) {
+            instructions.innerText = "Good stick! Pick one of your cards to give"
+            giveModeActive = true;
+        }
     }
 }
 
@@ -338,6 +342,11 @@ async function animationHandler(action) {
         case "DRAW_DECK":
             playSound("flip");
             await animation(false, "card-deck-img", `${action.userId}-pending`);
+            break;
+
+        case "GIVE":
+            playSound("slide");
+            await animation(false, `${action.payload.originUserId}-${action.payload.origin}`, `${action.payload.destinationUserId}-pending`);
             break;
 
         case "SWAP":

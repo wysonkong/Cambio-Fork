@@ -15,6 +15,8 @@ let stickModeActive = false;
 let peekMeActive = false;
 let peekAnyActive = false;
 let peekPlusActive = false;
+let giveModeActive = false;
+let lastStickPlayer = null;
 
 
 const displayMyTurn = document.getElementById("display-turn");
@@ -98,6 +100,7 @@ function endTurn() {
     stickModeActive = false;
     swapPendingModeActive = false;
     cardPending = false;
+    giveModeActive = false;
 }
 
 function connectWebSocket(gameId) {

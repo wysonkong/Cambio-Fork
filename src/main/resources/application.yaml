@@ -3,19 +3,31 @@ spring:
     name: cambio
 
   datasource:
-    url: jdbc:postgresql://localhost:5428/aircraft
-    driver-class-name: org.postgresql.Driver
-    username: acc_dev
-    password: acc_dev12
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
   jpa:
     generate-ddl: false
     hibernate:
       ddl-auto: none
 
+  docker:
+    compose:
+      enabled: false
+
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+
+  github:
+    app:
+      id: ${GITHUB_APP_ID}
+      installationId: ${GITHUB_INSTALLATION_ID}
+      privateKeyPath: ${GITHUB_PRIVATE_KEY_PATH}
+      owner: ${GITHUB_OWNER}
+      repo: ${GITHUB_REPO}
 
 server:
   port: 8080

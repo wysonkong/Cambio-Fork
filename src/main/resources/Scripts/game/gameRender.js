@@ -220,7 +220,7 @@ function renderHands(state) {
     discardDiv.innerHTML = "";
     if (state.prevCard) {
         const img = document.createElement("img");
-        img.src = `../images/cards/${state.prevCard.rank}-${state.prevCard.suit}.png`;
+        img.src = `../images/cards/${state.prevCard.rank}-${state.prevCard.suit}.svg`;
         img.id = "card-discard-img"
         img.alt = "prevCard";
         img.classList.add("w-24", "h-24", "object-contain", "m-1", "card");
@@ -285,10 +285,10 @@ function renderPlayer(player, slotId) {
     const img = document.createElement("img");
     if (player.pending) {
         if (cardPending) {
-            img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.png`;
+            img.src = `../images/cards/${player.pending.rank}-${player.pending.suit}.svg`;
         }
         else {
-            img.src= "../images/cards/card-back.png";
+            img.src= "../images/cards/card-back.svg";
         }
         img.style.visibility= 'visible';
         // img.style.visibility = 'hidden';
@@ -296,11 +296,11 @@ function renderPlayer(player, slotId) {
         //     img.style.visibility = 'visible';
         // }, 600);
     } else {
-        img.src = "../images/cards/5-Spade.png";
+        img.src = "../images/cards/5-Spade.svg";
         img.style.visibility= 'hidden';
     }
         img.alt = "card";
-        img.classList.add("w-20", "h-20", "m-1", "object-contain", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
+        img.classList.add("w-24", "h-24", "m-1", "object-contain", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
         img.id=`${player.userId}-pending`;
         img.tabIndex = 0;
         pendingContainer.appendChild(img);
@@ -310,23 +310,23 @@ function renderPlayer(player, slotId) {
         const img = document.createElement("img");
 
         if (card.visible.includes(currentUser.userId)) {
-            img.src = `../images/cards/${card.rank}-${card.suit}.png`;
+            img.src = `../images/cards/${card.rank}-${card.suit}.svg`;
         }
         else if(player.userId === currentUser.userId) {
             if (card.visible.length > 0 && !card.visible.includes(currentUser.userId)) {
                 img.src = "../images/cards/card-back-peek.png";
             } else {
-            img.src = "../images/cards/card-back.png";
+            img.src = "../images/cards/card-back.svg";
             }
         }
         else {
-            img.src = "../images/cards/card-back.png";
+            img.src = "../images/cards/card-back.svg";
         }
 
         img.alt = "card";
         img.id = `${player.userId}-${i}`;
         img.tabIndex= i;
-        img.classList.add("w-20", "h-20", "object-contain", "m-1", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
+        img.classList.add("w-24", "h-24", "object-contain", "m-1", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
         cardContainer.appendChild(img);
     });
 }

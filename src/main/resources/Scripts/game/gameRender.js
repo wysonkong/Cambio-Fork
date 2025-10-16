@@ -335,24 +335,28 @@ function renderPlayer(player, slotId) {
         const front = document.createElement("div");
         front.classList.add("card-front");
         const frontImg = document.createElement("img");
-        frontImg.src = "../images/cards/card-back.svg";
+        frontImg.src = "../images/svgtopng/card-back.png";
         frontImg.classList.add("w-24", "h-24", "object-contain", "m-1", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
         frontImg.alt = "card";
 
         const back = document.createElement("div");
         back.classList.add("card-back");
         const backImg = document.createElement("img");
-        backImg.src= `../images/cards/${card.rank}-${card.suit}.svg`;
+        backImg.src= `../images/svgtopng/${card.rank}-${card.suit}.png`;
         backImg.classList.add("w-24", "h-24", "object-contain", "m-1", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
         backImg.alt = "card";
 
 
         if (card.visible.includes(currentUser.userId)) {
             cardInner.classList.add("flipped");
+
         }
-        else if(player.userId === currentUser.userId) {
+        if(player.userId === currentUser.userId) {
             if (card.visible.length > 0 && !card.visible.includes(currentUser.userId)) {
-                frontImg.src = "../images/cards/card-back-peek.png";
+                frontImg.src = "../images/svgtopng/card-back-peek.png";
+            } else if (card.visible.length > 1 && card.visible.includes(currentUser.userId)) {
+                console.log("peeked card");
+                backImg.src = `../images/svgtopng/${card.rank}-${card.suit}peek.png`
             }
         }
 

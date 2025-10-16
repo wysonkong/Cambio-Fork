@@ -24,6 +24,13 @@ window.addEventListener('keydown', e => {
             action.showModal();
         }
     }
+    if (e.key.toLowerCase() === 'r') {
+        if (rule.open) {
+            rule.close();
+        } else {
+            rule.showModal();
+        }
+    }
 })
 
 

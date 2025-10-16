@@ -22,7 +22,8 @@ let unseenCount = 0;
 
 const displayMyTurn = document.getElementById("display-turn");
 const actionLog = document.getElementById("action-log");
-const action = document.getElementById("actionDrawer")
+const action = document.getElementById("actionDrawer");
+const rule = document.getElementById("ruleDrawer");
 const chatBtn = document.getElementById("chat-btn");
 const chatBadge = document.getElementById("chat-badge");
 const chatBox = document.getElementById('chat-messages');

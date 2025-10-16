@@ -91,13 +91,15 @@ public class MainRestController {
         headers.setBearerAuth(installationToken);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-        issueRequest.setTitle(issueRequest.getPage() + " - " + issueRequest.getType() + " - " + issueRequest.getUsername());
+        issueRequest.setTitle(issueRequest.getPage() + " - " + issueRequest.getUsername());
         issueRequest.setBody(issueRequest.getIssue());
 
+        String[] labels = {issueRequest.getType()};
 
         Map<String, Object> body = Map.of(
                 "title", issueRequest.getTitle(),
-                "body", issueRequest.getBody()
+                "body", issueRequest.getBody(),
+                "labels", labels
         );
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);

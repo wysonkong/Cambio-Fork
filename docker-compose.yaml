@@ -26,7 +26,7 @@ services:
       - .env
     volumes:
       # Mount GitHub private key at runtime (read-only)
-      - ./secrets/github-app.pem:/app/config/github-app.pem:ro
+      - ./secrets/github-app-pkcs8.pem:/app/config/github-app-pkcs8.pem:ro
     depends_on:
       - postgres-db
 

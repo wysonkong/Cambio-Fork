@@ -5,6 +5,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -26,16 +29,16 @@ public class GitHubAuthUtils {
                 .compact();
     }
 
-    private static PrivateKey loadPrivateKey(String pem) throws Exception {
-        // Remove PEM header/footer
+    private static PrivateKey loadPrivateKey(String pemPath) throws Exception {
+        String pem = Files.readString(Paths.get(pemPath));
         String privateKeyContent = pem
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace("-----END PRIVATE KEY-----", "")
-                .replaceAll("\\s+", "");
+                .replaceAll("-----BEGIN PRIVATE KEY-----", "")
+                .replaceAll("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s+", ""); // removes all whitespace/newlines
+
         byte[] decoded = Base64.getDecoder().decode(privateKeyContent);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decoded);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        return kf.generatePrivate(keySpec);
+        return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
     }
 
     public static String getInstallationToken(String jwt, String installationId) {

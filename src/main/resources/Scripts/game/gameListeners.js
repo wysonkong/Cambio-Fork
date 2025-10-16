@@ -238,16 +238,18 @@ document.body.addEventListener("click", (card) => {
     }
 });
 
-async function submitIssue() {
+async function submitIssue(event) {
+    event.preventDefault();
 
+    console.log("issue func called")
     let page = document.getElementById("page").value;
     let type = document.getElementById("issueType").value;
     let issue = document.getElementById("issueText").value;
 
-    const res = await fetch("/api/create-issue", {
+    const res = await fetch("http://localhost:8080/api/create-issue", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ page, type, body: issue })
+        body: JSON.stringify({ page: page, type: type, issue: issue, username: currentUser.username })
     });
 
     const msg = await res.text();

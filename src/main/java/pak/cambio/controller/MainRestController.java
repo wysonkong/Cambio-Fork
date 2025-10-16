@@ -91,6 +91,10 @@ public class MainRestController {
         headers.setBearerAuth(installationToken);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
+        issueRequest.setTitle(issueRequest.getPage() + " - " + issueRequest.getType() + " - " + issueRequest.getUsername());
+        issueRequest.setBody(issueRequest.getIssue());
+
+
         Map<String, Object> body = Map.of(
                 "title", issueRequest.getTitle(),
                 "body", issueRequest.getBody()
@@ -104,6 +108,8 @@ public class MainRestController {
                 request,
                 String.class
         );
+
+        System.out.println(ResponseEntity.status(response.getStatusCode()).body(response.getBody()));
 
         return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
     }

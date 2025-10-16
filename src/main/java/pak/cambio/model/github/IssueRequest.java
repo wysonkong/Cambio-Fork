@@ -1,18 +1,44 @@
 package pak.cambio.model.github;
 
+import jakarta.annotation.PostConstruct;
+
 public class IssueRequest {
 
     private String title;
     private String body;
     private String owner = "tylerpak";
     private String repo = "Cambio";
+    private String type;
+    private String issue;
+    private String page;
+    private String username;
 
     public IssueRequest() {
     }
 
-    public IssueRequest(String page, String type, String issue, String username) {
-        this.title = page + " - " + type + " - " + username;
-        this.body = issue;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getOwner() {
@@ -31,19 +57,27 @@ public class IssueRequest {
         this.repo = repo;
     }
 
-    public String getTitle() {
-        return title;
+    public String getType() {
+        return type;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getBody() {
-        return body;
+    public String getIssue() {
+        return issue;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setIssue(String issue) {
+        this.issue = issue;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
     }
 }

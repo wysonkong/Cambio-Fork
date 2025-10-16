@@ -51,7 +51,8 @@ submit.addEventListener("click", async (e) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             username: userName.value,
-            password: password.value
+            password: password.value,
+            avatar: "dog",
         })
     });
 

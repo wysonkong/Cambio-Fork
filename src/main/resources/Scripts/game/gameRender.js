@@ -327,6 +327,7 @@ function renderPlayer(player, slotId) {
     player.hand.forEach((card, i) => {
         if (!card) return;
         const img = document.createElement("img");
+        const cardContainer
 
         if (card.visible.includes(currentUser.userId)) {
             img.src = `../images/cards/${card.rank}-${card.suit}.svg`;

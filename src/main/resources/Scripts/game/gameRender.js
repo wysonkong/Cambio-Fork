@@ -326,28 +326,48 @@ function renderPlayer(player, slotId) {
 
     player.hand.forEach((card, i) => {
         if (!card) return;
-        const img = document.createElement("img");
+        const cardWrapper = document.createElement("div");
+        cardWrapper.classList.add("card-wrapper");
+
+        const cardInner = document.createElement("div");
+        cardInner.classList.add("card-inner")
+
+        const front = document.createElement("div");
+        front.classList.add("card-front");
+        const frontImg = document.createElement("img");
+        frontImg.src = "../images/cards/card-back.svg";
+        frontImg.classList.add("w-24", "h-24", "object-contain", "m-1", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
+        frontImg.alt = "card";
+
+        const back = document.createElement("div");
+        back.classList.add("card-back");
+        const backImg = document.createElement("img");
+        backImg.src= `../images/cards/${card.rank}-${card.suit}.svg`;
+        backImg.classList.add("w-24", "h-24", "object-contain", "m-1", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
+        backImg.alt = "card";
 
 
         if (card.visible.includes(currentUser.userId)) {
-            img.src = `../images/cards/${card.rank}-${card.suit}.svg`;
+            cardInner.classList.add("flipped");
         }
         else if(player.userId === currentUser.userId) {
             if (card.visible.length > 0 && !card.visible.includes(currentUser.userId)) {
-                img.src = "../images/cards/card-back-peek.png";
-            } else {
-            img.src = "../images/cards/card-back.svg";
+                frontImg.src = "../images/cards/card-back-peek.png";
             }
         }
-        else {
-            img.src = "../images/cards/card-back.svg";
-        }
 
-        img.alt = "card";
-        img.id = `${player.userId}-${i}`;
-        img.tabIndex= i;
-        img.classList.add("w-24", "h-24", "object-contain", "m-1", "card", "hover:bg-violet-600", "focus:outline-2", "focus:outline-offset-2", "focus:outline-violet-500");
-        cardContainer.appendChild(img);
+        frontImg.id = `${player.userId}-${i}`;
+        backImg.id = `${player.userId}-${i}`;
+
+        front.appendChild(frontImg);
+        back.appendChild(backImg);
+        cardInner.appendChild(front);
+        cardInner.appendChild(back);
+        cardWrapper.appendChild(cardInner);
+
+        cardWrapper.tabIndex= i;
+
+        cardContainer.appendChild(cardWrapper);
     });
 }
 
@@ -407,6 +427,7 @@ function playSound(name) {
     sound.currentTime = 0;
     sound.play();
 }
+
 
 function animation(twoWay, o, d) {
     return new Promise(resolve => {

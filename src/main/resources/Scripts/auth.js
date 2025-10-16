@@ -62,7 +62,7 @@ async function submitIssue(event) {
     });
 
     const msg = await res.text();
-    alert(msg);
+    alert("Thank you for submitting your feedback!");
 }
 
 logoutLink.addEventListener('click', logout);

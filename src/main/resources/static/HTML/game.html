@@ -208,6 +208,87 @@
                             </dialog>
                         </el-dialog>
                     </div>
+                    <div>
+                        <button command="show-modal" commandfor="ruleDrawer" class="rounded-lg bg-white/10 px-4 py-2 font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Rules</button>
+                        <el-dialog>
+                            <dialog id="ruleDrawer" aria-labelledby="rule-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-hidden bg-transparent not-open:hidden backdrop:bg-transparent">
+                                <el-dialog-backdrop class="absolute inset-0 bg-gray-900/50 transition-opacity duration-500 ease-in-out data-closed:opacity-0"></el-dialog-backdrop>
+
+                                <div tabindex="0" class="absolute inset-0 pl-10 focus:outline-none sm:pl-16">
+                                    <el-dialog-panel class="group/dialog-panel relative ml-auto block size-full max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700">
+                                        <!-- Close button, show/hide based on slide-over state. -->
+                                        <div class="absolute top-0 left-0 -ml-8 flex pt-4 pr-2 duration-500 ease-in-out group-data-closed/dialog-panel:opacity-0 sm:-ml-10 sm:pr-4">
+                                            <button type="button" command="close" commandfor="actionDrawer" class="relative rounded-md text-gray-400 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                                                <span class="absolute -inset-2.5"></span>
+                                                <span class="sr-only">Close panel</span>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                                                    <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                        <div class="relative mt-6 flex-1 p-4 sm:p-6 text-white bg-gray-700 border border-gray-500 rounded-lg space-y-6">
+                                            <h3 class="text-xl font-semibold mb-2">Goal: Score the lowest amount of points in your hand</h3>
+
+                                            <!-- Points Table -->
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <table class="w-full table-auto border-separate border-spacing-2 border border-gray-500 rounded-md">
+                                                    <thead class="bg-gray-600">
+                                                    <tr>
+                                                        <th class="border border-gray-400 px-3 py-2 text-left">Card</th>
+                                                        <th class="border border-gray-400 px-3 py-2 text-left">Points</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="border border-gray-400 px-3 py-2">Face Cards</td>
+                                                        <td class="border border-gray-400 px-3 py-2">10</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="border border-gray-400 px-3 py-2">Ace</td>
+                                                        <td class="border border-gray-400 px-3 py-2">1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="border border-gray-400 px-3 py-2">Black Kings (♠️ ♣️)</td>
+                                                        <td class="border border-gray-400 px-3 py-2">-1</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- Trump Cards Table -->
+                                                <table class="w-full table-auto border-separate border-spacing-2 border border-gray-500 rounded-md">
+                                                    <thead class="bg-gray-600">
+                                                    <tr>
+                                                        <th class="border border-gray-400 px-3 py-2 text-left">Trump Card</th>
+                                                        <th class="border border-gray-400 px-3 py-2 text-left">Power</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="border border-gray-400 px-3 py-2">7 or 8</td>
+                                                        <td class="border border-gray-400 px-3 py-2">Look at your own card</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="border border-gray-400 px-3 py-2">9 or 10</td>
+                                                        <td class="border border-gray-400 px-3 py-2">Look at someone else’s card</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="border border-gray-400 px-3 py-2">Jack or Queen</td>
+                                                        <td class="border border-gray-400 px-3 py-2">Blind switch yours or someone else’s card with another</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="border border-gray-400 px-3 py-2">King</td>
+                                                        <td class="border border-gray-400 px-3 py-2">Look at anyone’s card and switch any cards</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </el-dialog-panel>
+                                </div>
+                            </dialog>
+                        </el-dialog>
+                    </div>
                         <dialog id="gameOver" aria-labelledby="gameOver" class="backdrop:bg-black/50 bg-transparent border-0 rounded-2xl shadow-2xl max-w-md w-full p-0 not-open:hidden backdrop:bg-transparent">
                             <div tabindex="0" class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl overflow-hidden">
                                 <el-dialog-panel class="relative w-full max-w-md transform transition duration-500 ease-in-out bg-gray-800 rounded-2xl shadow-xl">

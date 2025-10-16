@@ -24,10 +24,9 @@ public class Card {
        switch(rank) {
            case "A" -> value = 1;
            case "J", "Q", "K" -> value = 10;
-           case "Joker" -> value = 0;
            default -> value = Integer.parseInt(rank);
        };
-       if(rank.equals("K") && (suit.equals("Diamond") || suit.equals("heart"))) {
+       if(rank.equals("K") && (suit.equals("Spade") || suit.equals("Club"))) {
            value = -1;
        }
        return value;
@@ -42,8 +41,6 @@ public class Card {
                 deck.add(new Card(r, s));
             }
         }
-        deck.add(new Card("Joker", "Little"));
-        deck.add(new Card("Joker", "Big"));
         return deck;
     }
 

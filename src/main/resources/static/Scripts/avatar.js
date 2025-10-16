@@ -24,5 +24,5 @@ document.body.addEventListener("click", async (event) => {
         console.log("changed avatar to " + clickedImg.id);
         sessionStorage.setItem("avatar", clickedImg.id);
     }
-    window.location.href = "../HTML/profile.html?avatarUpdated=true"
+    window.location.href = "../HTML/profile.html"
 })

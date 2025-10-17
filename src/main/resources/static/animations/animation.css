@@ -1,4 +1,12 @@
-/* Movement-based animations (wrapper level) */
+/* outer wrapper: movement layer */
+.card-wrapper {
+    position: relative;
+    perspective: 1200px;
+    will-change: transform;
+    transform: translateZ(0); /* create separate layer for wrapper transforms */
+}
+
+/* movement transitions on wrapper */
 .swap {
     transition: transform 0.3s ease-in-out;
     z-index: 10;
@@ -9,46 +17,32 @@
     z-index: 10;
 }
 
-/* Each card wrapper gets its own 3D space */
-.card-wrapper {
-    perspective: 1200px; /* slightly deeper for more realistic depth */
-    transform-style: preserve-3d;
-    will-change: transform;
-}
-
-/* The flipping inner container */
+/* inner: flipping layer */
 .card-inner {
     position: relative;
-    width: 6rem; /* matches Tailwind w-24 */
-    height: 6rem;
+    width: 6rem;   /* matches w-24 */
+    height: 6rem;  /* matches h-24 */
     transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); /* smoother natural easing */
+    transition: transform 0.6s cubic-bezier(0.4,0.2,0.2,1);
     will-change: transform;
+    transform: translateZ(1px); /* important: isolate inner from wrapper transform */
 }
 
-/* When flipped, rotate the inner container */
 .card-inner.flipped {
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) translateZ(1px);
 }
 
-/* Faces (front/back) */
-.card-front,
-.card-back {
+/* faces */
+.card-front, .card-back {
     position: absolute;
     width: 100%;
     height: 100%;
-    backface-visibility: hidden;
     top: 0;
     left: 0;
-    border-radius: 0.5rem; /* optional, just visual polish */
+    backface-visibility: hidden;
+    border-radius: 0.5rem;
 }
 
-/* Back side rotated */
 .card-back {
     transform: rotateY(180deg);
-}
-
-/* (Optional) subtle scale for realism */
-.card-inner.flipped {
-    transform: rotateY(180deg) scale(1.02);
 }

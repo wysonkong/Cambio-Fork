@@ -465,15 +465,24 @@ function animation(twoWay, o, d) {
                 origin.classList.remove("swap");
                 origin.style.transform = "";
 
-                if (twoWay) {
-                    destination.classList.remove("swap");
-                    destination.style.transform = "";
+                if (!twoWay) {
+                    resolve();
                 }
-
-                resolve();
             },
             { once: true }
         );
+        if(twoWay) {
+            destination.addEventListener(
+                "transitionend",
+                () => {
+                    destination.classList.remove("swap");
+                    destination.style.transform = "";
+
+                    resolve();
+                },
+                { once: true}
+            );
+        }
     });
 }
 

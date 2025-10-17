@@ -3,10 +3,12 @@ package pak.cambio.controller;
 
 import pak.cambio.model.Game;
 import pak.cambio.model.GameState;
+import pak.cambio.model.Player;
 import pak.cambio.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,5 +33,10 @@ public class GameRestController {
         Long gameId = Long.parseLong(payload.get("gameId"));
 
         return gameService.joinGame(gameId, userId, username);
+    }
+
+    @GetMapping("/get-players-by-game-id/{i}")
+    public List<Player> getPlayersByGameId(@PathVariable Long gameId) throws Exception {
+        return gameService.getPlayersByGameId(gameId);
     }
 }

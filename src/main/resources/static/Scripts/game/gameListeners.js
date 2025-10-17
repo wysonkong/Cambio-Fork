@@ -1,5 +1,4 @@
-//This file handles user inputs (chat, event listeners)
-document.addEventListener("DOMContentLoaded", fetchUsers);
+
 
 // ===== Chat =====
 sendBtn.addEventListener('click', sendMessage);
@@ -94,23 +93,20 @@ stickBtn.addEventListener("click", () => {
 
 const usersMap = new Map();
 
-async function fetchUsers() {
+async function fetchAvatar(id) {
     try {
-        const response = await fetch("http://localhost:8080/api/standings", {
+        const response = await fetch("http://localhost:8080/api/getUser" + id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
         });
 
         if (!response.ok) throw new Error("Failed to fetch users");
 
-        const users = await response.json();
+        const user = await response.json();
 
-        usersMap.clear();
-        users.forEach(user => usersMap.set(user.id, user));
-
-        console.log("Fetched users:", users);
+        avatarsMap.set(id, user.avatar)
 
     } catch (err) {
         console.error("Error fetching users:", err);
@@ -119,7 +115,7 @@ async function fetchUsers() {
 
 
 start.addEventListener('click', async () => {
-    start.hidden = true;
+
 
         sendAction(gameId, currentUser.userId, currentUser.username, "START", {});
 

@@ -17,6 +17,7 @@ public class GameEngine {
     private int specialMove = 0;
     private boolean tempTurn = false;
     private int lastTurn;
+    private Player cambioPlayer;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
@@ -142,6 +143,7 @@ public class GameEngine {
 
             }
             case CALL_CAMBIO -> {
+                cambioPlayer = findPlayer(action.getUserId());
                 cambioCalled = true;
             }
             case GIVE -> {
@@ -250,7 +252,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winner, tempTurn, true);
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winner, tempTurn, true, cambioPlayer);
     }
 
 }

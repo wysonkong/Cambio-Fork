@@ -38,6 +38,8 @@ const drawBtn = document.getElementById("draw-btn");
 const playBtn = document.getElementById("play-btn");
 const discardBtn = document.getElementById("discard-btn");
 const start = document.getElementById('start-btn');
+start.classList.remove("bg-green-600", "text-white", "hover:bg-green-700");
+start.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
 const swapPendingBtn = document.getElementById("swap-pending-btn");
 const instructions = document.getElementById("instructions");
 

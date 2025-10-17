@@ -214,6 +214,9 @@ function displayTurn(state) {
 
 function renderHands(state) {
     start.hidden = true;
+    if (state.cambioPlayer !== null) {
+        cambioPlayerId = state.cambioPlayer.id;
+    }
 
     // Find your index
     if (myTurn == null) {

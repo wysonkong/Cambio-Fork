@@ -126,103 +126,100 @@ document.body.addEventListener("click", (card) => {
     let retry = false;
     if (card.target.matches("img.card")) {
         let raw = card.target.id.split("-");
-        if (swapModeActive) {
-            if (swapState.originIndex === null) {
-                swapState.originUserId = parseInt(raw[0], 10);
-                swapState.originIndex = parseInt(raw[1], 10);
-                console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
-                return;
-            } if (swapState.destinationIndex === null) {
-                swapState.destinationIndex = parseInt(raw[1], 10);
-                swapState.destinationUserId = parseInt(raw[0], 10);
-                console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
-
-                sendAction(gameId, currentUser.userId, currentUser.username, "SWAP", {
-                    origin: swapState.originIndex,
-                    originUserId: swapState.originUserId,
-                    destination: swapState.destinationIndex,
-                    destinationUserId: swapState.destinationUserId
-                });
-            }
+        if(parseInt(raw[0], 10) === cambioPlayerId) {
+            retry = true;
         }
-        else if(stickModeActive) {
-            if(swapState.originIndex === null) {
-                swapState.originUserId = parseInt(raw[0], 10);
-                swapState.originIndex = parseInt(raw[1], 10);
-                console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
-                lastStickPlayer = swapState.originUserId;
-                sendAction(gameId, currentUser.userId, currentUser.username, "STICK", {
-                    origin: swapState.originIndex,
-                    originUserId: swapState.originUserId
-                })
-            }
-        }
-        else if(giveModeActive) {
-            if(swapState.originIndex === null) {
-                swapState.originUserId = parseInt(raw[0], 10);
-                swapState.originIndex = parseInt(raw[1], 10);
-                swapState.destinationUserId =lastStickPlayer;
-                if(swapState.originUserId === currentUser.userId) {
+        if(retry === false) {
+            if (swapModeActive) {
+                if (swapState.originIndex === null) {
+                    swapState.originUserId = parseInt(raw[0], 10);
+                    swapState.originIndex = parseInt(raw[1], 10);
                     console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
-                    sendAction(gameId, currentUser.userId, currentUser.username, "GIVE", {
+                    return;
+                }
+                if (swapState.destinationIndex === null) {
+                    swapState.destinationIndex = parseInt(raw[1], 10);
+                    swapState.destinationUserId = parseInt(raw[0], 10);
+                    console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
+
+                    sendAction(gameId, currentUser.userId, currentUser.username, "SWAP", {
                         origin: swapState.originIndex,
                         originUserId: swapState.originUserId,
-                        destinationUserId: swapState.destinationUserId
-                    })
-                }
-                else {
-                    retry = true;
-                }
-            }
-        }
-        else if(swapPendingModeActive) {
-            if(swapState.destinationIndex === null) {
-                swapState.destinationIndex = parseInt(raw[1], 10);
-                swapState.destinationUserId = parseInt(raw[0], 10);
-                if(swapState.destinationUserId === currentUser.userId) {
-                    console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
-                    sendAction(gameId, currentUser.userId, currentUser.username, "SWAP_PENDING", {
                         destination: swapState.destinationIndex,
                         destinationUserId: swapState.destinationUserId
+                    });
+                }
+            } else if (stickModeActive) {
+                if (swapState.originIndex === null) {
+                    swapState.originUserId = parseInt(raw[0], 10);
+                    swapState.originIndex = parseInt(raw[1], 10);
+                    console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
+                    lastStickPlayer = swapState.originUserId;
+                    sendAction(gameId, currentUser.userId, currentUser.username, "STICK", {
+                        origin: swapState.originIndex,
+                        originUserId: swapState.originUserId
                     })
                 }
-                else {
-                    console.log("You can only swap your pending card with one of your cards, try again");
-                    retry = true;
+            } else if (giveModeActive) {
+                if (swapState.originIndex === null) {
+                    swapState.originUserId = parseInt(raw[0], 10);
+                    swapState.originIndex = parseInt(raw[1], 10);
+                    swapState.destinationUserId = lastStickPlayer;
+                    if (swapState.originUserId === currentUser.userId) {
+                        console.log("Origin card is " + swapState.originIndex + " and user Id is " + swapState.originUserId);
+                        sendAction(gameId, currentUser.userId, currentUser.username, "GIVE", {
+                            origin: swapState.originIndex,
+                            originUserId: swapState.originUserId,
+                            destinationUserId: swapState.destinationUserId
+                        })
+                    } else {
+                        retry = true;
+                    }
                 }
-            }
-        }
-        else if(peekMeActive) {
-            let ID = parseInt(raw[0], 10);
-            let IDX = parseInt(raw[1], 10);
-            if(ID === currentUser.userId) {
+            } else if (swapPendingModeActive) {
+                if (swapState.destinationIndex === null) {
+                    swapState.destinationIndex = parseInt(raw[1], 10);
+                    swapState.destinationUserId = parseInt(raw[0], 10);
+                    if (swapState.destinationUserId === currentUser.userId) {
+                        console.log("Destination card is " + swapState.destinationIndex + " and user Id is " + swapState.destinationUserId);
+                        sendAction(gameId, currentUser.userId, currentUser.username, "SWAP_PENDING", {
+                            destination: swapState.destinationIndex,
+                            destinationUserId: swapState.destinationUserId
+                        })
+                    } else {
+                        console.log("You can only swap your pending card with one of your cards, try again");
+                        retry = true;
+                    }
+                }
+            } else if (peekMeActive) {
+                let ID = parseInt(raw[0], 10);
+                let IDX = parseInt(raw[1], 10);
+                if (ID === currentUser.userId) {
+                    sendAction(gameId, currentUser.userId, currentUser.username, "PEEK", {
+                        id: ID,
+                        idx: IDX
+                    })
+                    console.log("Peeked card " + IDX + "for userId " + IDX);
+                } else {
+                    console.log("CAN ONLY SELECT ONE OF YOUR CARDS TO PEEK")
+                }
+            } else if (peekAnyActive) {
+                let ID = parseInt(raw[0], 10);
+                let IDX = parseInt(raw[1], 10);
                 sendAction(gameId, currentUser.userId, currentUser.username, "PEEK", {
                     id: ID,
                     idx: IDX
                 })
                 console.log("Peeked card " + IDX + "for userId " + IDX);
+            } else if (peekPlusActive) {
+                let ID = parseInt(raw[0], 10);
+                let IDX = parseInt(raw[1], 10);
+                sendAction(gameId, currentUser.userId, currentUser.username, "PEEK_PLUS", {
+                    id: ID,
+                    idx: IDX
+                })
+                console.log("Peeked card " + IDX + "for userId " + IDX);
             }
-            else {
-                console.log("CAN ONLY SELECT ONE OF YOUR CARDS TO PEEK")
-            }
-        }
-        else if(peekAnyActive) {
-            let ID = parseInt(raw[0], 10);
-            let IDX = parseInt(raw[1], 10);
-            sendAction(gameId, currentUser.userId, currentUser.username, "PEEK", {
-                id: ID,
-                idx: IDX
-            })
-            console.log("Peeked card " + IDX + "for userId " + IDX);
-        }
-        else if(peekPlusActive) {
-            let ID = parseInt(raw[0], 10);
-            let IDX = parseInt(raw[1], 10);
-            sendAction(gameId, currentUser.userId, currentUser.username, "PEEK_PLUS", {
-                id: ID,
-                idx: IDX
-            })
-            console.log("Peeked card " + IDX + "for userId " + IDX);
         }
 
         swapState = {
@@ -231,12 +228,16 @@ document.body.addEventListener("click", (card) => {
             destinationIndex: null,
             destinationUserId: null
         };
-        if(!peekPlusActive) {
-            endTurn();
+        if (!retry) {
+            if (!peekPlusActive) {
+                endTurn();
+            } else {
+                endTurn();
+                swapModeActive = true;
+            }
         }
-        else if (!retry) {
-            endTurn();
-            swapModeActive = true;
+        else {
+            instructions.innerText = "Illegal move try again";
         }
     }
 });

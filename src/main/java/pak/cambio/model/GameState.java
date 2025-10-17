@@ -15,8 +15,9 @@ public class GameState {
     private final Player winner;
     private final boolean tempTurn;
     private final boolean gameStarted;
+    private final Player cambioPlayer;
 
-    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork, int specialMove, Player winner, boolean tempTurn, boolean gameStarted) {
+    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork, int specialMove, Player winner, boolean tempTurn, boolean gameStarted, Player cambioPlayer) {
         this.players = players;
         this.prevCard = prevCard;
         this.currentTurn = currentTurn;
@@ -26,6 +27,11 @@ public class GameState {
         this.winner = winner;
         this.tempTurn = tempTurn;
         this.gameStarted = gameStarted;
+        this.cambioPlayer = cambioPlayer;
+    }
+
+    public Player getCambioPlayer() {
+        return cambioPlayer;
     }
 
     public boolean isGameStarted() {

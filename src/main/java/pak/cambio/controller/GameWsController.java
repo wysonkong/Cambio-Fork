@@ -94,6 +94,12 @@ public class GameWsController {
         messaging.convertAndSend("/topic/game." + gameId + ".state", updatedForRequester);
     }
 
+    @MessageMapping("/game/{gameId}/join")
+    public void joinGame(@DestinationVariable Long gameId, Long userId) {
+        GameState state = gameService.snapshotFor(gameId, userId);
+        messaging.convertAndSend("/topic/game" + gameId + ".state", state);
+    }
+
     @MessageMapping("/game/{gameId}/chat")
     public void handleChatMessage(@DestinationVariable Long gameId, ChatMessageDTO dto) {
         User user = userRepository.findById(dto.userId())

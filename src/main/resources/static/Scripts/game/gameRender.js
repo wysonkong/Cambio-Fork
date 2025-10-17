@@ -6,21 +6,26 @@ let animationInProgress = false;
 
 // ===== Subscriptions =====
 function subscribeGameState(gameId) {
-    stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
+    stompClient.subscribe(`/topic/game.${gameId}.state`, async msg => {
         const state = JSON.parse(msg.body);
-        playersIn.innerText = "Players in Game: " + (state.players?.length || 0);
         console.log(state);
-        if(animationInProgress) {
-            pendingState = state;
+        playersIn.innerText = "Players in Game: " + (state.players?.length || 0);
+        if (state.gameStarted === true) {
+            if (animationInProgress) {
+                pendingState = state;
+            } else {
+                renderHands(state);
+                displayTurn(state);
+                setButtonsEnabled(state);
+                winner(state);
+            }
         } else {
-            renderHands(state);
-            displayTurn(state);
-            setButtonsEnabled(state);
-            winner(state);
+            for (const p of state.players) {
+                players.push(p);
+                await fetchAvatar(p.userId);
+            }
         }
-        players.forEach(p => {
-            playersMap[p.userId] = p.userName;
-        });
+        console.log(players)
     });
 }
 
@@ -279,9 +284,9 @@ function renderPlayer(player, slotId) {
     const container = document.getElementById(slotId);
     container.classList.add("rounded-lg", "p-2", "bg-white", "border", "shadow", "flex", "flex-col", "items-center");
     if (!container) return;
-    const user = usersMap.get(player.userId);
+    const avatar = avatarsMap.get(player.userId);
 
-    const avatarFile = user?.avatar || "dog";
+    const avatarFile = avatar || "dog";
 
     container.innerHTML = `
     <div class="flex justify-center grid grid-flow-col grid-rows-1">

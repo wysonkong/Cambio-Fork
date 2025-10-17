@@ -1,5 +1,6 @@
 package pak.cambio.service;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pak.cambio.engine.GameEngine;
 import pak.cambio.model.*;
@@ -18,10 +19,13 @@ public class GameService {
     // map gameId -> list of players (useful to create PlayerState objects)
     private final ConcurrentHashMap<Long, List<Player>> playersByGame = new ConcurrentHashMap<>();
 
+    private final SimpMessagingTemplate messagingTemplate;
+
 //    private final AtomicLong gameIdCounter = new AtomicLong(1);
     private final GameRepository gameRepository;
 
-    public GameService(GameRepository gameRepository) {
+    public GameService(SimpMessagingTemplate messagingTemplate, GameRepository gameRepository) {
+        this.messagingTemplate = messagingTemplate;
         this.gameRepository = gameRepository;
     }
 
@@ -34,6 +38,11 @@ public class GameService {
         gameRepository.save(game);
         playersByGame.put(game.getId(), Collections.synchronizedList(new ArrayList<>()));
         return game.getId();
+    }
+
+    //get players by gameId or else throw exception
+    public List<Player> getPlayersByGameId(Long gameId) throws Exception{
+        return playersByGame.get(gameId);
     }
 
     /**
@@ -52,12 +61,13 @@ public class GameService {
         Player p = new Player(userId, displayName, 0, seat);
         playersByGame.get(gameId).add(p);
 
-
-
-        return new GameState(playersByGame.get(gameId).stream()
+        GameState state = new GameState(playersByGame.get(gameId).stream()
                 .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                         List.of(), -1, null)).toList(),
-                null, 0, false, false, 0, null, false);
+                null, 0, false, false, 0, null, false, false);
+
+        messagingTemplate.convertAndSend("/topic/game." + gameId + ".state", state);
+        return state;
     }
 
 
@@ -88,6 +98,12 @@ public class GameService {
      * Apply an action to the game's engine. Returns the engine snapshot for broadcasting.
      */
     public GameState applyAction(Long gameId, GameAction action) {
+        if(action.getType() == ActionType.JOIN) {
+            return new GameState(playersByGame.get(gameId).stream()
+                    .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
+                            List.of(), -1, null)).toList(),
+                    null, 0, false, false, 0, null, false, false);
+        }
         GameEngine engine = activeEngines.get(gameId);
         if (engine == null && action.getType() == ActionType.START) {
             startGame(gameId, action.getUserId());

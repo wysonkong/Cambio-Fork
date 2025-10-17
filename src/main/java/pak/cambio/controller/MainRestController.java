@@ -49,8 +49,8 @@ public class MainRestController {
         return Map.of("exists", exists);
     }
 
-    @GetMapping("/getUser")
-    public User getUser(@RequestParam Long userId) {
+    @GetMapping("/getUser{userId}")
+    public User getUser(@PathVariable("userId") Long userId) {
         return userService.getUserById(userId);
     }
 

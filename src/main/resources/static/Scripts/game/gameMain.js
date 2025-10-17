@@ -69,7 +69,7 @@ joinCode.innerText = "Join Code: " + gameId;
 
 // ===== Player State =====
 let players = [];
-const playersMap = {};
+let avatarsMap = new Map();
 
 let swapState = {
     originIndex: null,
@@ -97,6 +97,9 @@ function sendAction(gameId, userId, username, actionType, payload) {
         payload: payload
     };
     console.log(action);
+    if(action.type === "START") {
+        gameStarted = true;
+    }
     stompClient.send(`/app/game/${gameId}/action`, {}, JSON.stringify(action));
 }
 
@@ -124,9 +127,13 @@ function connectWebSocket(gameId) {
         subscribeGameState(gameId);
         subscribeActions(gameId);
         subscribeChat(gameId);
+
+        sendAction(gameId, currentUser.userId, currentUser.username, "JOIN", {});
     }, error => {
         console.error('STOMP connection error: ', error);
     });
-}
+
+};
 
 connectWebSocket(gameId);
+

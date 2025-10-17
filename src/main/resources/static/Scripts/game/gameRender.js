@@ -9,7 +9,12 @@ function subscribeGameState(gameId) {
     stompClient.subscribe(`/topic/game.${gameId}.state`, async msg => {
         const state = JSON.parse(msg.body);
         console.log(state);
-        playersIn.innerText = "Players in Game: " + (state.players?.length || 0);
+        playersIn.innerText = "Players in Game: " + (state.players?.length || 0) + " (must be at least 2)";
+        if(state.players.length >= 2) {
+            start.disabled = false;
+            start.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+            start.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
+        }
         if (state.gameStarted === true) {
             if (animationInProgress) {
                 pendingState = state;

@@ -31,6 +31,7 @@ const chatInput = document.getElementById('chat-input');
 const chat = document.getElementById('drawer');
 const sendBtn = document.getElementById('send-btn');
 const joinCode = document.getElementById("join-code");
+const playersIn = document.getElementById('players-in');
 const stickBtn = document.getElementById("stick-btn");
 const cambioBtn = document.getElementById("cambio-btn");
 const drawBtn = document.getElementById("draw-btn");
@@ -64,6 +65,7 @@ Object.values(sounds).forEach(sound => {
 
 
 joinCode.innerText = "Join Code: " + gameId;
+
 
 // ===== Player State =====
 let players = [];

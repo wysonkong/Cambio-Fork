@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const logoutDrop = document.getElementById("logoutDrop");
     const profile = document.getElementById("profile");
     const profileDrop = document.getElementById("profileDrop");
+    const joinGame = document.getElementById("joinGame");
+    const joinGameDrop = document.getElementById("joinGameDrop");
+    const playGame = document.getElementById("playGame");
 
     if (currentUser) {
         // User is logged in → hide login/signup, show logout
@@ -18,9 +21,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (signupDrop) signupDrop.classList.add("hidden");
         if (logout) logout.classList.remove("hidden");
         if (logoutDrop) logoutDrop.classList.remove("hidden");
-        if(profile) profile.classList.remove("hidden");
-        if(profileDrop) profileDrop.classList.remove("hidden");
-        profile.innerHTML = `<img src="../images/avatars/${sessionStorage.getItem("avatar")}.png" alt="profile" height="35" width="35"/>`
+        if (profile) profile.classList.remove("hidden");
+        if (profileDrop) profileDrop.classList.remove("hidden");
+        if (joinGame) joinGame.classList.remove("hidden");
+        if (joinGameDrop) joinGameDrop.classList.remove("hidden");
+
+        const path = window.location.pathname;
+
+        if (path.endsWith("/index.html")) {
+            playGame.href = 'HTML/joinGame.html';
+            profile.innerHTML = `<img src="images/avatars/${sessionStorage.getItem("avatar")}.png" alt="profile" height="35" width="35"/>`;
+        } else {
+            profile.innerHTML = `<img src="../images/avatars/${sessionStorage.getItem("avatar")}.png" alt="profile" height="35" width="35"/>`;
+        }
 
 
 

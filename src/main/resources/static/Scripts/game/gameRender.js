@@ -8,6 +8,7 @@ let animationInProgress = false;
 function subscribeGameState(gameId) {
     stompClient.subscribe(`/topic/game.${gameId}.state`, msg => {
         const state = JSON.parse(msg.body);
+        playersIn.innerText = "Players in Game: " + (state.players?.length || 0);
         console.log(state);
         if(animationInProgress) {
             pendingState = state;
@@ -198,6 +199,7 @@ function setButtonsEnabled(state) {
 
 function displayTurn(state) {
     displayMyTurn.innerText = state.currentTurn === myTurn ? "Your Turn!" : "";
+
 }
 
 function renderHands(state) {

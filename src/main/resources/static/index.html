@@ -27,12 +27,12 @@
             </div>
             <div class="hidden lg:flex lg:justify-center lg:gap-x-12">
                 <a href="HTML/rules.html" class="text-sm/6 font-semibold text-white">Rules</a>
-                <a href="HTML/joinGame.html" class="text-sm/6 font-semibold text-white">Join Game</a>
+                <a id="joinGame" href="HTML/joinGame.html" class="text-sm/6 font-semibold text-white hidden">Join Game</a>
                 <a href="HTML/playerStanding.html" class="text-sm/6 font-semibold text-white">Player Standing</a>
-                <a id="login" href="HTML/login.html" class="text-sm/6 font-semibold text-white">Login</a>
-                <a id="signUp" href="HTML/signUp.html" class="text-sm/6 font-semibold text-white">Sign Up</a>
-                <a id="logout" href="#" class="text-sm/6 font-semibold text-white">Log out</a>
-                <a id="profile" href="HTML/profile.html" class="text-sm/6 font-semibold text-white">Profile</a>
+                <a id="login" href="HTML/login.html" class="text-sm/6 font-semibold text-white hidden">Login</a>
+                <a id="signUp" href="HTML/signUp.html" class="text-sm/6 font-semibold text-white hidden">Sign Up</a>
+                <a id="logout" href="#" class="text-sm/6 font-semibold text-white hidden">Log out</a>
+                <a id="profile" href="HTML/profile.html" class="text-sm/6 font-semibold text-white hidden">Profile</a>
             </div>
         </nav>
         <el-dialog>
@@ -55,12 +55,12 @@
                             <div class="-my-6 divide-y divide-white/10">
                                 <div class="space-y-2 py-6">
                                     <a href="HTML/rules.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Rules</a>
-                                    <a href="HTML/joinGame.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Join Game</a>
+                                    <a id="joinGameDrop" href="HTML/joinGame.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Join Game</a>
                                     <a href="HTML/playerStanding.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Player Standing</a>
                                     <a id="loginDrop" href="HTML/login.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Login</a>
                                     <a id="signUpDrop" href="HTML/signUp.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Sign Up</a>
-                                    <a id="logoutDrop" href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Log out</a>
-                                    <a id="profileDrop" href="HTML/profile.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Profile</a>
+                                    <a id="logoutDrop" href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5 hidden">Log out</a>
+                                    <a id="profileDrop" href="HTML/profile.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5 hidden">Profile</a>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                 <h1 class="text-5xl font-semibold tracking-tight text-balance text-white sm:text-7xl">Cambio Card Game</h1>
                 <p class="mt-8 text-lg font-medium text-pretty text-gray-400 sm:text-xl/8">Welcome to our site Cambio site. Read the rules and enjoy a game.</p>
                 <div class="mt-10 flex items-center justify-center gap-x-6">
-                    <a href="HTML/joinGame.html" class="text-sm/6 font-semibold text-white">Play A Game<span aria-hidden="true"> →</span></a>
+                    <a id="playGame" href="HTML/login.html" class="text-sm/6 font-semibold text-white">Play A Game<span aria-hidden="true"> →</span></a>
                 </div>
             </div>
         </div>
@@ -159,6 +159,6 @@
 </div>
 
 
-<script src="/Scripts/auth.js"></script>
+<script src="/static/Scripts/auth.js"></script>
 </body>
 </html>

@@ -22,6 +22,7 @@ public class UserService {
     }
 
     public void saveNewUser(User user) {
+        user.setAvatar("dog");
         userRepository.save(user);
     }
 

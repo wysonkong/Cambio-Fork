@@ -91,6 +91,7 @@ submit.addEventListener("click", async (e) => {
 
     sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
     sessionStorage.setItem("sessionId", sessionId);
+    sessionStorage.setItem("avatar", user.avatar);
 
     // --- Redirect ---
     window.location.href = "../index.html";

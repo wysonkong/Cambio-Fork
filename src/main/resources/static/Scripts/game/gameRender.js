@@ -16,7 +16,7 @@ function subscribeGameState(gameId) {
             start.classList.add("bg-green-600", "text-white", "hover:bg-green-700");
         }
         if (state.gameStarted === true) {
-            if (animationInProgress) {
+            if (state.seq > lastSeq) {
                 pendingState = state;
             } else {
                 renderHands(state);
@@ -39,6 +39,8 @@ async function subscribeActions(gameId) {
     stompClient.subscribe(`/topic/game.${gameId}.action`, async msg => {
         const action = JSON.parse(msg.body);
         console.log(action);
+        sequence.push(action);
+        processSeq();
         appendAction(action);
         animationInProgress = true;
         await animationHandler(action);
@@ -59,6 +61,33 @@ function subscribeChat(gameId) {
         appendMessage(chatMsg);
     });
 }
+
+async function processSeq() {
+    if (animationInProgress || sequence.length === 0) return;
+
+    const action = sequence.shift();
+    animationInProgress = true;
+
+    // Animate action
+    await animationHandler(action);
+
+    lastSeq = action.seq;
+
+    // Apply pending state if it matches this sequence
+    if (pendingState && pendingState.seq <= lastSeq) {
+        renderHands(pendingState);
+        displayTurn(pendingState);
+        setButtonsEnabled(pendingState);
+        winner(pendingState);
+        pendingState = null;
+    }
+
+    animationInProgress = false;
+
+    // Process next in queue
+    processSeq();
+}
+
 
 // ===== Render Helpers =====
 function appendMessage(msg) {
@@ -453,8 +482,7 @@ async function animationHandler(action) {
 
         case "SWAP":
             playSound("slide");
-            await animation(false, `${action.payload.originUserId}-${action.payload.origin}`, `${action.payload.destinationUserId}-pending`);
-            await animation(false, `${action.payload.destinationUserId}-${action.payload.destination}`, `${action.payload.originUserId}-pending`);
+            await animation(true, `${action.payload.originUserId}-${action.payload.origin}`, `${action.payload.destinationUserId}-${action.payload.destination}`);
             break;
 
         case "SWAP_PENDING":
@@ -490,9 +518,11 @@ async function animationHandler(action) {
 function playSound(name) {
     const sound = sounds[name];
     if (!sound) return;
-    sound.pause();
-    sound.currentTime = 0;
-    sound.play();
+
+    const clone = sound.cloneNode();
+    clone.play().catch(err => {
+        if (err.name !== "AbortError") console.error(err);
+    });
 }
 
 
@@ -511,6 +541,9 @@ function animation(twoWay, o, d) {
         const xDiff = destRect.left - originRect.left;
         const yDiff = destRect.top - originRect.top;
 
+        const destDeltaX = originRect.left - destRect.left;
+        const destDeltaY = originRect.top - destRect.top;
+
         // Prepare both
         origin.classList.add("swap");
         destination.classList.add("swap");
@@ -521,11 +554,16 @@ function animation(twoWay, o, d) {
 
         // 🔧 Force reflow before applying new transforms
         origin.offsetWidth; // triggers reflow (important!)
+        origin.offsetHeight; // reflow
+        destination.offsetHeight; // reflow
+
 
         // Apply transforms
         origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
+        console.log(`origin: translate(${xDiff}px, ${yDiff}px)`)
         if (twoWay) {
             destination.style.transform = `translate(${-xDiff}px, ${-yDiff}px)`;
+            console.log(`destination: translate(${destDeltaX}px, ${destDeltaY}px)`)
         }
 
         // Handle completion

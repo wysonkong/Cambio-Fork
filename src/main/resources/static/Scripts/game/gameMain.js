@@ -74,6 +74,8 @@ joinCode.innerText = "Join Code: " + gameId;
 let players = [];
 let avatarsMap = new Map();
 let playerIndexMap = new Map();
+let sequence = [];
+let lastSeq = 0;
 
 let swapState = {
     originIndex: null,

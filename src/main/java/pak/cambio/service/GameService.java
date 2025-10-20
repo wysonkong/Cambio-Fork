@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -23,6 +24,8 @@ public class GameService {
 
 //    private final AtomicLong gameIdCounter = new AtomicLong(1);
     private final GameRepository gameRepository;
+
+    private final AtomicInteger seq = new AtomicInteger(0);
 
     public GameService(SimpMessagingTemplate messagingTemplate, GameRepository gameRepository) {
         this.messagingTemplate = messagingTemplate;
@@ -64,7 +67,7 @@ public class GameService {
         GameState state = new GameState(playersByGame.get(gameId).stream()
                 .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                         List.of(), -1, null)).toList(),
-                null, 0, false, false, 0, null, false, false, null);
+                null, 0, false, false, 0, null, false, false, null, 0);
 
         messagingTemplate.convertAndSend("/topic/game." + gameId + ".state", state);
         return state;
@@ -102,7 +105,7 @@ public class GameService {
             return new GameState(playersByGame.get(gameId).stream()
                     .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                             List.of(), -1, null)).toList(),
-                    null, 0, false, false, 0, null, false, false, null);
+                    null, 0, false, false, 0, null, false, false, null, 0);
         }
         GameEngine engine = activeEngines.get(gameId);
         if (engine == null && action.getType() == ActionType.START) {
@@ -129,5 +132,13 @@ public class GameService {
         GameEngine engine = activeEngines.get(gameId);
         if (engine == null) throw new IllegalStateException("Game not running: " + gameId);
         return engine.snapshotState(userId);
+    }
+
+    public AtomicInteger getSeq() {
+        return seq;
+    }
+
+    public int incrementSeq() {
+        return seq.incrementAndGet();
     }
 }

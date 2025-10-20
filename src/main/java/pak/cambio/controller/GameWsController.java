@@ -47,36 +47,37 @@ public class GameWsController {
     @MessageMapping("/game/{gameId}/action")
     public void handleAction(@DestinationVariable Long gameId, GameAction action) {
         // NOTE: In production, verify the principal (Principal) to ensure action.userId matches the authenticated user
-        if(!action.getType().equals(ActionType.STICK)) {
-            messaging.convertAndSend("/topic/game." + gameId + ".action", action);
-        }
-        GameState updatedForRequester = gameService.applyAction(gameId, action);
-        if(action.getType().equals(ActionType.STICK)) {
+        // Increment seq atomically in the service
+        int nextSeq = gameService.incrementSeq();
+        action.setSeq(nextSeq);
+
+        // Apply the action in the engine and get updated state
+        GameState updatedState = gameService.applyAction(gameId, action);
+        updatedState.setSeq(nextSeq);
+
+        // Special handling for STICK payload
+        if (action.getType() == ActionType.STICK) {
             Map<String, Object> newPayload = action.getPayload();
-            if(updatedForRequester.isDidStickWork()) {
-            newPayload.put("didStickWork", true);
-            }
-            else {
-                newPayload.put("didStickWork", false);
-            }
+            newPayload.put("didStickWork", updatedState.isDidStickWork());
             action.setPayload(newPayload);
-            messaging.convertAndSend("/topic/game." + gameId + ".action", action);
         }
 
-        // Broadcast full state to all players
-        // We broadcast the snapshot *as seen by the action initiator* for convenience.
-        // If you prefer to broadcast individualized states (hiding certain cards per player),
-        // you can iterate all players and messaging.convertAndSendToUser(...) accordingly.
-        //check if game is over, update players records and change game status if so
-        if(updatedForRequester.getWinner() != null) {
-            List<GameState.PlayerView> players = updatedForRequester.getPlayers();
+        // Broadcast action for animations
+        messaging.convertAndSend("/topic/game." + gameId + ".action", action);
+
+        // Broadcast updated state for rendering
+        messaging.convertAndSend("/topic/game." + gameId + ".state", updatedState);
+
+        //Update DB if game is over
+        if(updatedState.getWinner() != null) {
+            List<GameState.PlayerView> players = updatedState.getPlayers();
             ArrayList<Long> ids = new ArrayList<Long>();
             for(GameState.PlayerView p : players) {
                ids.add(p.getUserId());
             }
             List<User> users = userRepository.findAllById(ids);
             for(User u : users) {
-                if(u.getUsername().equals(updatedForRequester.getWinner().getUser())) {
+                if(u.getUsername().equals(updatedState.getWinner().getUser())) {
                     System.out.println("Adding win to " + u.getUsername());
                     u.setWins(u.getWins() + 1);
                 }
@@ -90,8 +91,6 @@ public class GameWsController {
             game.setStatus("Finished");
             gameRepository.save(game);
         }
-
-        messaging.convertAndSend("/topic/game." + gameId + ".state", updatedForRequester);
     }
 
     @MessageMapping("/game/{gameId}/join")

@@ -112,25 +112,25 @@
                         Start Game
                     </button>
                     <button id="draw-btn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none">
-                        Draw
+                        Draw (Space)
                     </button>
                     <button id="play-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">
                         Swap
                     </button>
                     <button id="discard-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none">
-                        Discard
+                        Discard (Space)
                     </button>
                     <button id="swap-pending-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none">
-                        Swap D
+                        Swap D (Shift)
                     </button>
                     <button id="cambio-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none">
-                        Cambio!
+                        Cambio! (C)
                     </button>
                     <button id="stick-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        Stick
+                        Stick (Shift)
                     </button>
                     <div>
-                        <button command="show-modal" commandfor="actionDrawer" class="rounded-lg bg-white/10 px-4 py-2 font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Action Log</button>
+                        <button command="show-modal" commandfor="actionDrawer" class="rounded-lg bg-white/10 px-4 py-2 font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Action Log (~)</button>
                         <el-dialog>
                             <dialog id="actionDrawer" aria-labelledby="drawer-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-hidden bg-transparent not-open:hidden backdrop:bg-transparent">
                                 <el-dialog-backdrop class="absolute inset-0 bg-gray-900/50 transition-opacity duration-500 ease-in-out data-closed:opacity-0"></el-dialog-backdrop>
@@ -165,7 +165,7 @@
                     </div>
                     <div>
                         <button id="chat-btn" command="show-modal" commandfor="drawer" class="relative rounded-lg bg-white/10 px-4 py-2 font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
-                            Chat
+                            Chat (Enter)
                             <span id="chat-badge" class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">
                                 0
                             </span>
@@ -210,7 +210,7 @@
                         </el-dialog>
                     </div>
                     <div>
-                        <button command="show-modal" commandfor="ruleDrawer" class="rounded-lg bg-white/10 px-4 py-2 font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Rules</button>
+                        <button command="show-modal" commandfor="ruleDrawer" class="rounded-lg bg-white/10 px-4 py-2 font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Rules (R)</button>
                         <el-dialog>
                             <dialog id="ruleDrawer" aria-labelledby="rule-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-hidden bg-transparent not-open:hidden backdrop:bg-transparent">
                                 <el-dialog-backdrop class="absolute inset-0 bg-gray-900/50 transition-opacity duration-500 ease-in-out data-closed:opacity-0"></el-dialog-backdrop>

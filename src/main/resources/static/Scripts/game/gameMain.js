@@ -73,6 +73,7 @@ joinCode.innerText = "Join Code: " + gameId;
 // ===== Player State =====
 let players = [];
 let avatarsMap = new Map();
+let playerIndexMap = new Map();
 
 let swapState = {
     originIndex: null,
@@ -137,6 +138,19 @@ function connectWebSocket(gameId) {
     });
 
 };
+
+function findPlayer(username) {
+    players.forEach((p) => {
+        if(p.userName === username) {
+            return p;
+        }
+    })
+    return null;
+}
+
+function getPlayerById(userId) {
+    return players.find(p => p.userId === userId) || null;
+}
 
 connectWebSocket(gameId);
 

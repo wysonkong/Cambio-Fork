@@ -7,20 +7,28 @@ public class GameAction {
     private String username;
     private ActionType type;
     private Map<String, Object> payload;
+    private int seq;
 
 
-    public GameAction(Long userId, String username, ActionType type, Map<String, Object> payload) {
+    public GameAction(Long userId, String username, ActionType type, Map<String, Object> payload, int seq) {
         this.userId = userId;
         this.username = username;
         this.type = type;
         this.payload = payload;
+        this.seq = seq;
     }
 
     public String getUsername() {
         return username;
     }
 
+    public int getSeq() {
+        return seq;
+    }
 
+    public void setSeq(int seq) {
+        this.seq = seq;
+    }
 
     public Long getUserId() {
         return userId;

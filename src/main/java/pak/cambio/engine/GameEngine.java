@@ -262,7 +262,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winner, tempTurn, true, cambioPlayer);
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winner, tempTurn, true, cambioPlayer, 0);
     }
 
 }

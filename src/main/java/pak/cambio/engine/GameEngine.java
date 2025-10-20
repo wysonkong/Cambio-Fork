@@ -64,7 +64,9 @@ public class GameEngine {
     public GameState applyAction(GameAction action) {
         Player player = findPlayer(action.getUserId());
         boolean pending = false;
-        specialMove = 0;
+        if (!action.getType().equals(ActionType.STICK)) {
+            specialMove = 0;
+        }
         didStickWork = false;
         if(tempTurn) {
             currentTurn = lastTurn;
@@ -120,12 +122,15 @@ public class GameEngine {
                     specialMove = 3;
                     pending = true;
                 }
-                else if(card.getRank().equals("K") && (card.getSuit().equals("Spade") || card.getSuit().equals("Club"))) {
+                else if(card.getRank().equals("K")) {
                     specialMove = 4;
                     pending = true;
                 }
                 discard.addFirst(card);
                 player.setPending(null);
+                if(player.getHand().isEmpty()) {
+                    pending = false;
+                }
             }
             case SWAP -> {
                 long originUserId = action.getLong("originUserId");
@@ -167,7 +172,7 @@ public class GameEngine {
                 int origin = action.getInt("origin");
                 Card card = originPlayer.getHand().get(origin);
                 Card prev = discard.getFirst();
-                if(card.getRank() == prev.getRank()) {
+                if(card.getRank().equals(prev.getRank())) {
                     originPlayer.getHand().remove(origin);
                     discard.addFirst(card);
                     didStickWork = true;
@@ -183,8 +188,13 @@ public class GameEngine {
                     actionPlayer.getHand().add(drawn);
                     didStickWork = false;
                 }
-                pending = true;
+                if(!player.getHand().isEmpty()) {
+                   pending = true;
+                }
             }
+        }
+        if(player.getHand().isEmpty()) {
+            specialMove = 0;
         }
         if(!pending) {
             advanceTurn();

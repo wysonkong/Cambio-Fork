@@ -130,7 +130,7 @@ document.body.addEventListener("click", (card) => {
             retry = true;
         }
         if(retry === false) {
-            if (swapModeActive) {
+            if (swapModeActive && !stickModeActive && !peekPlusActive) {
                 if (swapState.originIndex === null) {
                     swapState.originUserId = parseInt(raw[0], 10);
                     swapState.originIndex = parseInt(raw[1], 10);

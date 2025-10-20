@@ -1,17 +1,19 @@
-/* outer wrapper: movement layer */
+/* outer wrapper: handles position + movement */
 .card-wrapper {
     position: relative;
     perspective: 1200px;
+    /* Remove translateZ(0) — this can break transitionend timing */
     will-change: transform;
-    transform: translateZ(0); /* create separate layer for wrapper transforms */
 }
 
-/* movement transitions on wrapper */
+/* movement transitions */
 .swap {
     transition: transform 0.3s ease-in-out;
+    will-change: transform;
     z-index: 10;
 }
 
+/* discard animation */
 .discard {
     transition: transform 1.3s ease-in-out !important;
     z-index: 10;
@@ -20,16 +22,17 @@
 /* inner: flipping layer */
 .card-inner {
     position: relative;
-    width: 6rem;   /* matches w-24 */
-    height: 6rem;  /* matches h-24 */
+    width: 6rem;
+    height: 6rem;
     transform-style: preserve-3d;
     transition: transform 0.6s cubic-bezier(0.4,0.2,0.2,1);
     will-change: transform;
-    transform: translateZ(1px); /* important: isolate inner from wrapper transform */
+    /* remove translateZ(1px); it’s not needed and can conflict */
 }
 
+/* flip */
 .card-inner.flipped {
-    transform: rotateY(180deg) translateZ(1px);
+    transform: rotateY(180deg);
 }
 
 /* faces */
@@ -46,3 +49,51 @@
 .card-back {
     transform: rotateY(180deg);
 }
+
+
+
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 9999;
+}
+
+/* Toast base style */
+.toast {
+    background: white;
+    color: #1f2937;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: sans-serif;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Type styling */
+.toast-action {
+    border-left: 4px solid #facc15; /* yellow */
+    background: #fff8e1;
+}
+
+.toast-chat {
+    border-left: 4px solid #f87171; /* red */
+    background: #fff1f2;
+}
+
+/* Visible state */
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+

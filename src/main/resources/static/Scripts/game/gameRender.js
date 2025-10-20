@@ -29,6 +29,7 @@ function subscribeGameState(gameId) {
                 players.push(p);
                 await fetchAvatar(p.userId);
             }
+            setButtonsEnabled(state);
         }
         console.log(players)
     });
@@ -71,8 +72,11 @@ function appendMessage(msg) {
     }
 
     const time = new Date(msg.timestamp).toLocaleTimeString();
-    messageEl.innerText = `[${time}] ${msg.sender}: ${msg.content}`;
+    messageEl.innerText = `${msg.sender}: ${msg.content}`;
     chatBox.appendChild(messageEl);
+    if(msg.sender !== currentUser) {
+        showToast(`$${msg.content}`, "chat", findPlayer(msg.sender).userId)
+    }
 
     if (msg.sender !== currentUser && !chat.hasAttribute("open")) {
         unseenCount++;
@@ -103,26 +107,34 @@ function appendAction(msg) {
             cambioMusic.play().catch();
             break;
         case "DRAW_DECK":
-            messageEl.innerText = `${username}: ${msg.type}: ${username} drew from the deck`;
+            messageEl.innerText = `${username} drew from the deck`;
             break;
 
         case "SWAP":
-            messageEl.innerText = `${username}: ${msg.type}: ${username} swapped cards with ${msg.payload.destinationUserId.username}`;
+            messageEl.innerText = `${username} swapped cards with ${getPlayerById(msg.payload.destinationUserId).userName}`;
             break;
 
         case "SWAP_PENDING":
-            messageEl.innerText = `${username}: ${msg.type}: ${username} swapped his card to his hand`;
+            messageEl.innerText = `${username} swapped card to their hand`;
             break;
 
         case "DISCARD_PENDING":
-            messageEl.innerText = `${username}: ${msg.type}: ${username} discarded their card`;
+            messageEl.innerText = `${username} discarded their card`;
+            break;
+
+        case "PEEK":
+            messageEl.innerText = `${username} peeked at a card`
+            break;
+
+        case "PEEK_PLUS":
+            messageEl.innerText = `${username} peeked at a card`
             break;
 
         case "STICK":
             if(msg.payload?.didStickWork === true) {
-                messageEl.innerText = `${username}: ${msg.type}: ${username} matched a card from the discard`;
+                messageEl.innerText = `${username} made a correct stick on ${getPlayerById(msg.payload.originUserId).userName}`;
             } else {
-                messageEl.innerText = `${username}: ${msg.type}: ${username} did not match a card, they received a penalty!`;
+                messageEl.innerText = `did not match a card, they received a penalty!`;
             }// needs a condition for a match or a penalty
             break;
 
@@ -130,6 +142,7 @@ function appendAction(msg) {
         default:
             break;
     }
+    showToast(messageEl.innerText, "action", msg.userId);
     actionLog.appendChild(messageEl);
     actionLog.scrollTop = actionLog.scrollHeight;
 }
@@ -137,6 +150,11 @@ function appendAction(msg) {
 function setButtonsEnabled(state) {
     const isMyTurn = state.currentTurn === myTurn;
     Object.values(buttons).forEach(btn => {
+        if(!state.gameStarted && btn.id !== "start-btn") {
+            btn.disabled = true;
+            btn.classList.remove("bg-green-600", "text-white", "hover:bg-green-700");
+            btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
+        }
         if (isMyTurn) {
             if (!hasDrawn) {
                 if (btn.id === "draw-btn") {
@@ -198,7 +216,7 @@ function setButtonsEnabled(state) {
             btn.disabled = true;
             btn.classList.remove("bg-green-600", "bg-blue-600", "bg-indigo-600", "bg-red-600", "hover:bg-green-700", "hover:bg-blue-700", "hover:bg-indigo-700", "hover:bg-red-700", "text-white");
             btn.classList.add("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
-            if(btn.id === "stick-btn") {
+            if(btn.id === "stick-btn" && state.gameStarted) {
                 btn.disabled = false;
                 btn.classList.remove("bg-gray-500", "text-gray-300", "opacity-50", "cursor-not-allowed");
                 btn.classList.add("bg-red-600", "text-white", "hover:bg-red-700");
@@ -236,11 +254,13 @@ function renderHands(state) {
     ];
 
     // Render me (always bottom)
+    playerIndexMap.set(me.userId, "player-bottom-left");
     renderPlayer(me, "player-bottom-left");
 
     // Render opponents
     others.forEach((player, index) => {
         if (playerSlots[index]) {
+            playerIndexMap.set(player.userId, playerSlots[index]);
             renderPlayer(player, playerSlots[index]);
         }
     });
@@ -295,9 +315,9 @@ function renderPlayer(player, slotId) {
     const avatar = avatarsMap.get(player.userId);
 
     const avatarFile = avatar || "dog";
-
-    container.innerHTML = `
-    <div class="flex justify-center grid grid-flow-col grid-rows-1">
+    if(container.innerHTML === "") {
+        container.innerHTML = `
+    <div id="${player.userId}-head" class="flex justify-center grid grid-flow-col grid-rows-1">
         <img src="../images/avatars/${avatarFile}.png" alt="${player.userName}'s avatar" class="w-16 h-16 rounded-full mb-2" />
         <div id="${slotId}-username" class="text-center font-bold mb-2">${player.userName}</div>
     </div>
@@ -306,9 +326,12 @@ function renderPlayer(player, slotId) {
         <div id="${slotId}-draw" class="flex justify-center"></div>
     </div>
   `;
+    }
 
     const cardContainer = document.getElementById(`${slotId}-cards`);
+    cardContainer.innerHTML ="";
     const pendingContainer = document.getElementById(`${slotId}-draw`);
+    pendingContainer.innerHTML="";
 
     if (!player.hand) {
         cardContainer.textContent = "Waiting for game to start...";
@@ -390,6 +413,30 @@ function renderPlayer(player, slotId) {
     });
 }
 
+function showToast(message, type = "action", userId) {
+
+
+    const container = document.getElementById(`${userId}-head`);
+    if (!container) return;
+
+    const toast = document.createElement("div");
+    toast.className = `toast ${type === "chat" ? "toast-chat" : "toast-action"}`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add("show"));
+
+    // Stay visible for 3s, then fade out
+    setTimeout(() => {
+        toast.classList.remove("show"); // triggers fade-out
+        toast.addEventListener(
+            "transitionend",
+            () => toast.remove(),
+            { once: true }
+        );
+    }, 3000);
+}
+
 
 
 async function animationHandler(action) {
@@ -406,7 +453,8 @@ async function animationHandler(action) {
 
         case "SWAP":
             playSound("slide");
-            await animation(true, `${action.payload.originUserId}-${action.payload.origin}`, `${action.payload.destinationUserId}-${action.payload.destination}`);
+            await animation(false, `${action.payload.originUserId}-${action.payload.origin}`, `${action.payload.destinationUserId}-pending`);
+            await animation(false, `${action.payload.destinationUserId}-${action.payload.destination}`, `${action.payload.originUserId}-pending`);
             break;
 
         case "SWAP_PENDING":
@@ -463,41 +511,37 @@ function animation(twoWay, o, d) {
         const xDiff = destRect.left - originRect.left;
         const yDiff = destRect.top - originRect.top;
 
+        // Prepare both
         origin.classList.add("swap");
-        origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
+        destination.classList.add("swap");
 
+        // Reset previous transforms
+        origin.style.transform = "";
+        destination.style.transform = "";
+
+        // 🔧 Force reflow before applying new transforms
+        origin.offsetWidth; // triggers reflow (important!)
+
+        // Apply transforms
+        origin.style.transform = `translate(${xDiff}px, ${yDiff}px)`;
         if (twoWay) {
-            destination.classList.add("swap");
             destination.style.transform = `translate(${-xDiff}px, ${-yDiff}px)`;
         }
 
-        // When the transition ends, clean up and resolve
-        origin.addEventListener(
-            "transitionend",
-            () => {
-                origin.classList.remove("swap");
-                origin.style.transform = "";
+        // Handle completion
+        let done = 0;
+        const onEnd = (el) => {
+            el.classList.remove("swap");
+            el.style.transform = "";
+            if (++done === (twoWay ? 2 : 1)) resolve();
+        };
 
-                if (!twoWay) {
-                    resolve();
-                }
-            },
-            { once: true }
-        );
-        if(twoWay) {
-            destination.addEventListener(
-                "transitionend",
-                () => {
-                    destination.classList.remove("swap");
-                    destination.style.transform = "";
-
-                    resolve();
-                },
-                { once: true}
-            );
-        }
+        origin.addEventListener("transitionend", () => onEnd(origin), { once: true });
+        if (twoWay) destination.addEventListener("transitionend", () => onEnd(destination), { once: true });
     });
 }
+
+
 
 function winner(state) {
     let result = document.getElementById("gameOverTitle");

@@ -309,6 +309,9 @@ function renderHands(state) {
     //clear special move instructions
     instructions.innerText = "";
     if(myTurn === state.currentTurn) {
+        if(state.specialMove > 0) {
+            hasDrawn = true;
+        }
         switch (state.specialMove) {
             case 0 :
                 instructions.innerText = "";

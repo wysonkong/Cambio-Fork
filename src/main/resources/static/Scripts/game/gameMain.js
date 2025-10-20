@@ -19,6 +19,7 @@ let giveModeActive = false;
 let lastStickPlayer = null;
 let unseenCount = 0;
 let cambioPlayerId = null;
+let firstDraw = false;
 
 
 const displayMyTurn = document.getElementById("display-turn");

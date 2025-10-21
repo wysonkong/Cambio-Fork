@@ -9,6 +9,7 @@ import Rule from "@/pages/Rule.tsx"
 import {AuthProvider} from "@/components/AuthProvider.tsx";
 import Error from "@/pages/Error.tsx";
 import Joingame from "@/pages/Joingame.tsx";
+import Test from "@/pages/Test.tsx";
 
 function App() {
 
@@ -24,6 +25,8 @@ function App() {
                       {/*<Route path={"/Standings"} element={<Standings/>}/>*/}
                       {/*<Route path={"/Game"} element={<Game />}/>*/}
                       <Route path={"/JoinGame"} element={<Joingame/>}/>
+                      <Route path={"/Test"} element={<Test/>}/>
+
                       <Route path={"*"} element={<Error/>}/>
                       sada
                   </Routes>

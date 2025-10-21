@@ -1,7 +1,7 @@
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {Label} from "@/components/ui/label.tsx";
-import { Link } from "react-router";
+import {Button} from "@/components/ui/button.tsx";
 
 const Joingame = () => {
     return (
@@ -11,11 +11,11 @@ const Joingame = () => {
                     <div className={""}>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <button type="button"
-                                        className="w-full mt-3 rounded-md bg-accent py-2.5 text-center font-semibold hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 transition"
+                                <Button type="button"
+                                        className="mt-3 w-full rounded-md bg-accent py-2.5 text-center font-semibold hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 transition"
                                         id="join-game">
                                     Join a Game
-                                </button>
+                                </Button>
                             </PopoverTrigger>
                             <PopoverContent>
                                 <Label htmlFor="joinCode" className={"mb-2"}>Game code</Label>
@@ -24,23 +24,23 @@ const Joingame = () => {
                                     placeholder="Enter your code"
                                     className="col-span-2 h-8"
                                 />
-                                <button type="submit"
+                                <Button type="submit"
                                         className="mt-3 w-full rounded-md bg-accent py-2.5 text-center font-semibold hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 transition"
                                         id="join-submit"
                                         // onSubmit={}
                                 >
                                     Join
-                                </button>
+                                </Button>
                             </PopoverContent>
                         </Popover>
                     </div>
-                    <button type="button"
-                            className="w-full rounded-md bg-accent py-2.5 text-center font-semibold hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 transition"
+                    <Button type="button"
+                            className="mt-3 w-full rounded-md bg-accent py-2.5 text-center font-semibold hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 transition"
                             id="create-game"
                             // onClick={}
                     >
                         Create a Game
-                    </button>
+                    </Button>
                 </form>
             </div>
         </div>

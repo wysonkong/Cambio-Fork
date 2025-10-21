@@ -1,4 +1,5 @@
 import {Button} from "@/components/ui/button.tsx";
+import Chat from "@/components/game/Chat.tsx";
 
 const GameControls = () => {
     return (
@@ -25,6 +26,7 @@ const GameControls = () => {
             <Button id="stick-btn" className={"px-4 py-2 bg-accent rounded-lg hover:bg-accent/80 focus:bg-accent/50"}>
                 Stick
             </Button>
+            <Button><Chat/></Button>
         </div>
     );
 };

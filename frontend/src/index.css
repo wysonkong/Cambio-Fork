@@ -1,0 +1,118 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+    --radius: 0.625rem;
+
+    /* === Core Backgrounds & Foregrounds === */
+    --background: oklch(0.18 0.02 300);          /* Deep indigo-black */
+    --foreground: oklch(0.95 0.02 85);           /* Soft warm ivory */
+
+    /* === Cards / Surfaces === */
+    --card: oklch(0.23 0.03 310);                /* Dark plum-gray */
+    --card-foreground: oklch(0.96 0.02 85);      /* Ivory text */
+
+    /* === Popovers / Drawers === */
+    --popover: oklch(0.22 0.03 310);
+    --popover-foreground: oklch(0.96 0.02 85);
+
+    /* === Primary (Main Halloween Accent) === */
+    --primary: oklch(0.65 0.15 55);              /* Burnt pumpkin orange */
+    --primary-foreground: oklch(0.1 0 0);        /* Near black text for contrast */
+
+    /* === Secondary (Violet Shadow Tone) === */
+    --secondary: oklch(0.3 0.05 290);            /* Muted purple-gray */
+    --secondary-foreground: oklch(0.93 0.02 85);
+
+    /* === Muted / Neutral Text === */
+    --muted: oklch(0.35 0.02 290);               /* Desaturated cool gray */
+    --muted-foreground: oklch(0.7 0.02 85);      /* Muted ivory text */
+
+    /* === Accent (Highlight Pop, e.g. buttons or links) === */
+    --accent: oklch(0.55 0.12 90);               /* Amber-gold */
+    --accent-foreground: oklch(0.1 0 0);
+
+    /* === Destructive (Red tone, but darker and cinematic) === */
+    --destructive: oklch(0.48 0.18 30);          /* Deep blood red */
+    --destructive-foreground: oklch(0.98 0 0);
+
+    /* === Inputs, Borders, and Rings === */
+    --border: oklch(0.3 0.02 290);
+    --input: oklch(0.3 0.02 290);
+    --ring: oklch(0.65 0.15 55);                 /* Subtle orange ring */
+
+    /* === Chart / Highlight Colors === */
+    --chart-1: oklch(0.65 0.15 55);              /* Pumpkin */
+    --chart-2: oklch(0.5 0.1 300);               /* Purple */
+    --chart-3: oklch(0.55 0.12 130);             /* Olive green */
+    --chart-4: oklch(0.6 0.14 90);               /* Amber */
+    --chart-5: oklch(0.48 0.18 30);              /* Blood red */
+
+    /* === Sidebar / Mobile Drawer === */
+    --sidebar: oklch(0.15 0.02 290);             /* Deep plum-black */
+    --sidebar-foreground: oklch(0.95 0.02 85);
+    --sidebar-primary: oklch(0.65 0.15 55);      /* Burnt orange */
+    --sidebar-primary-foreground: oklch(0.1 0 0);
+    --sidebar-accent: oklch(0.55 0.12 90);       /* Amber accent */
+    --sidebar-accent-foreground: oklch(0.1 0 0);
+    --sidebar-border: oklch(0.28 0.02 290);
+    --sidebar-ring: oklch(0.65 0.15 55);
+}
+
+.dark {
+    --background: oklch(0.1 0.02 290);
+    --foreground: oklch(0.96 0.02 85);
+    --card: oklch(0.15 0.02 300);
+    --primary: oklch(0.65 0.18 55);              /* Brighter burnt orange */
+    --accent: oklch(0.55 0.15 90);               /* Rich gold accent */
+}

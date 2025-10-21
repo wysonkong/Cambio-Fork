@@ -7,6 +7,7 @@ import {
 import {Link} from "react-router"
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/AuthProvider.tsx";
+import logo from "/images/logo.png";
 
 const Navbar = () => {
     const {isLoggedIn, logout} = useAuth();
@@ -23,8 +24,7 @@ const Navbar = () => {
         >
             <NavigationMenuList className={"flex items-center justify-between px-8 py-3 w-full"}>
                 <NavigationMenuItem>
-                    <Link to={"/"}
-                          className={"text-xl font-bold text-primary-foreground hover:text-blue-400 transition-colors"}>Cambio</Link>
+                    <Link to={"/"}><img src={logo} alt={"Cambio logo"} className={"h-14 w-14"}/></Link>
                 </NavigationMenuItem>
             </NavigationMenuList>
 

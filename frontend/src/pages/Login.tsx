@@ -13,7 +13,7 @@ const Login = () => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        const res = await fetch("http://localhost:8080/api/user/user", {
+        const res = await fetch("/api/user", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({username, password}),
@@ -38,32 +38,34 @@ const Login = () => {
                     <FieldSet className={""}>
                         <FieldGroup>
                             <Field>
-                                <FieldLabel htmlFor="username">Username</FieldLabel>
+                                <FieldLabel htmlFor="username" className={"text-card-foreground"}>Username</FieldLabel>
                                 <Input
                                     id="username"
                                     type="text"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="user123"/>
+                                    placeholder="user123"
+                                    className={"text-card-foreground"}/>
                                 <FieldDescription>
                                     Enter your username for your account.
                                 </FieldDescription>
                             </Field>
                             <Field>
-                                <FieldLabel htmlFor="password">Password</FieldLabel>
+                                <FieldLabel htmlFor="password" className={"text-card-foreground"}>Password</FieldLabel>
                                 <Input
                                     id="password"
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="********"/>
+                                    placeholder="********"
+                                    className={"text-card-foreground"}/>
                                 <FieldDescription>
                                     Enter your password.
                                 </FieldDescription>
                             </Field>
                             <Field orientation="horizontal">
-                                <Button type="submit">Submit</Button>
-                                <Button variant="outline" type="button">Cancel</Button>
+                                <Button type="submit" className={"bg-accent text-accent-foreground"}>Submit</Button>
+                                <Button variant="outline" type="button" className={"bg-foreground text-background"}>Cancel</Button>
                             </Field>
                         </FieldGroup>
                     </FieldSet>

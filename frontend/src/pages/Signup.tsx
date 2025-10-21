@@ -15,7 +15,6 @@ const Signup = () => {
     const {login} = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [passcode, setPasscode] = useState("");
     const [feedback, setFeedback] = useState("");
     const [isValid, setIsValid] = useState(false);
     const navigate = useNavigate();
@@ -45,10 +44,6 @@ const Signup = () => {
             }
         }
 
-        if (passcode !== "admin") {
-            setIsValid(false);
-        }
-
         setIsValid(true)
     };
 
@@ -57,7 +52,7 @@ const Signup = () => {
         if (!isValid) return;
 
         try {
-            const response = await fetch("http://localhost:8080/api/user/new_user", {
+            const response = await fetch("/api/new_user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -76,7 +71,7 @@ const Signup = () => {
             setPassword("");
             setFeedback("Sign up successful!");
 
-            const loginRes = await fetch("http://localhost:8080/api/user/user", {
+            const loginRes = await fetch("/api/user", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({username, password}),
@@ -101,7 +96,7 @@ const Signup = () => {
 
     useEffect(() => {
         validateForm();
-    }, [username, passcode]);
+    }, [username]);
 
     return (
         <div className="w-screen h-screen flex items-center justify-center">
@@ -110,44 +105,36 @@ const Signup = () => {
                     <FieldSet className={""}>
                         <FieldGroup>
                             <Field>
-                                <FieldLabel htmlFor="username">Username</FieldLabel>
+                                <FieldLabel htmlFor="username" className={"text-card-foreground"}>Username</FieldLabel>
                                 <Input
                                     id="username"
                                     type="text"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="newuser123"/>
+                                    placeholder="newuser123"
+                                    className={"text-card-foreground"}
+                                />
                                 <FieldDescription>
                                     {feedback}
                                 </FieldDescription>
                             </Field>
                             <Field>
-                                <FieldLabel htmlFor="password">Password</FieldLabel>
+                                <FieldLabel htmlFor="password" className={"text-card-foreground"}>Password</FieldLabel>
                                 <Input
                                     id="password"
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="********"/>
+                                    placeholder="********"
+                                    className={"text-card-foreground"}
+                                />
                                 <FieldDescription>
                                     Must be at least 8 characters long.
                                 </FieldDescription>
                             </Field>
-                            <Field>
-                                <FieldLabel htmlFor="signUpCode">Sign Up Code</FieldLabel>
-                                <FieldDescription>
-                                    Please enter your sign up code.
-                                </FieldDescription>
-                                <Input
-                                    id="signUpCode"
-                                    type="password"
-                                    value={passcode}
-                                    onChange={(e) => setPasscode(e.target.value)}
-                                    placeholder="********"/>
-                            </Field>
                             <Field orientation="horizontal">
-                                <Button type="submit" disabled={!isValid}>Submit</Button>
-                                <Button variant="outline" type="reset">Reset</Button>
+                                <Button type="submit" disabled={!isValid} className={"bg-accent text-accent-foreground"}>Submit</Button>
+                                <Button variant="outline" type="reset" className={"bg-foreground text-background"}>Reset</Button>
                             </Field>
                         </FieldGroup>
                     </FieldSet>

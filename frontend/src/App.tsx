@@ -25,6 +25,7 @@ function App() {
                       {/*<Route path={"/Game"} element={<Game />}/>*/}
                       <Route path={"/JoinGame"} element={<Joingame/>}/>
                       <Route path={"*"} element={<Error/>}/>
+                      sada
                   </Routes>
               </Layout>
           </Router>

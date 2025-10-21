@@ -29,8 +29,7 @@ public class GitHubAuthUtils {
                 .compact();
     }
 
-    private static PrivateKey loadPrivateKey(String pemPath) throws Exception {
-        String pem = Files.readString(Paths.get(pemPath));
+    private static PrivateKey loadPrivateKey(String pem) throws Exception {
         String privateKeyContent = pem
                 .replaceAll("-----BEGIN PRIVATE KEY-----", "")
                 .replaceAll("-----END PRIVATE KEY-----", "")

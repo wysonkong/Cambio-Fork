@@ -11,7 +11,7 @@ joinBtn.addEventListener("click", () => {
 let createBtn = document.getElementById("create-game");
 
 createBtn.addEventListener("click", async() => {
-    const response = await fetch("http://localhost:8080/api/games/create", {
+    const response = await fetch("/api/games/create", {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
         body: JSON.stringify({userId: currentUser.userId})
@@ -22,7 +22,7 @@ createBtn.addEventListener("click", async() => {
     console.log("created game with id of: " + gameId);
     sessionStorage.setItem("currentGame", gameId);
 
-    await fetch("http://localhost:8080/api/games/join", {
+    await fetch("/api/games/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -37,7 +37,7 @@ createBtn.addEventListener("click", async() => {
 joinSubmit.addEventListener("click", async (e) => {
     e.preventDefault();
     const gameId = joinInput.value;
-    const response = await fetch("http://localhost:8080/api/games/join", {
+    const response = await fetch("/api/games/join", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({

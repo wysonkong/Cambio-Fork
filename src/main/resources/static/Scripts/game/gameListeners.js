@@ -9,7 +9,19 @@ chatBtn.addEventListener('click', () => {
     unseenCount = 0;
     chatBadge.classList.add("hidden");
 })
+
+chatInput.addEventListener("focus", () => {
+    chatMode = true;
+})
+
+chatInput.addEventListener("blur", () => {
+    chatMode = false;
+})
+
 window.addEventListener('keydown', e => {
+    if(chatMode) {
+        return;
+    }
     if (e.key === 'Enter') {
         chat.showModal();
         chatInput.focus();
@@ -114,7 +126,7 @@ const usersMap = new Map();
 
 async function fetchAvatar(id) {
     try {
-        const response = await fetch("http://localhost:8080/api/getUser" + id, {
+        const response = await fetch("/api/getUser" + id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

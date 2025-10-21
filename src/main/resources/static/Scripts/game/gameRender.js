@@ -104,7 +104,7 @@ function appendMessage(msg) {
     messageEl.innerText = `${msg.sender}: ${msg.content}`;
     chatBox.appendChild(messageEl);
     if(msg.sender !== currentUser) {
-        showToast(`$${msg.content}`, "chat", findPlayer(msg.sender).userId)
+        showToast(`${msg.content}`, "chat", findPlayer(msg.sender).userId)
     }
 
     if (msg.sender !== currentUser && !chat.hasAttribute("open")) {

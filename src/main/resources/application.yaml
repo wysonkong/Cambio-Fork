@@ -25,11 +25,12 @@ spring:
     app:
       id: ${GITHUB_APP_ID}
       installationId: ${GITHUB_INSTALLATION_ID}
-      privateKeyPath: ${GITHUB_PRIVATE_KEY_PATH}
+      privateKey: ${GITHUB_PRIVATE_KEY}
       owner: ${GITHUB_OWNER}
       repo: ${GITHUB_REPO}
 
 server:
+  address: 0.0.0.0
   port: 8080
 
 

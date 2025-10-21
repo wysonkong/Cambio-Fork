@@ -1,6 +1,6 @@
 
 document.body.addEventListener("click", async (event) => {
-    const response1 = await fetch("http://localhost:8080/api/me", {
+    const response1 = await fetch("/api/me", {
         method: "GET",
         headers: {
             "X-Session-Id": sessionStorage.getItem("sessionId"),
@@ -12,7 +12,7 @@ document.body.addEventListener("click", async (event) => {
     const clickedImg = event.target;
     me.avatar = clickedImg.id
 
-    const response = await fetch("http://localhost:8080/api/new_user", {
+    const response = await fetch("/api/new_user", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(me)

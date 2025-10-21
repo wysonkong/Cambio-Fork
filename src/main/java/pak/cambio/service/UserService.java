@@ -22,7 +22,9 @@ public class UserService {
     }
 
     public void saveNewUser(User user) {
-        user.setAvatar("dog");
+        if(user.getAvatar() == null) {
+            user.setAvatar("dog");
+        }
         userRepository.save(user);
     }
 

@@ -68,7 +68,7 @@ async function submitIssue(event) {
     let type = document.getElementById("issueType").value;
     let issue = document.getElementById("issueText").value;
 
-    const res = await fetch("http://localhost:8080/api/create-issue", {
+    const res = await fetch("/api/create-issue", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ page: page, type: type, issue: issue, username: sessionStorage.currentUser.username })

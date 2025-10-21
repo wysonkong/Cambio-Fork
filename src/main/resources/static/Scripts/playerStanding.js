@@ -1,7 +1,7 @@
 async function loadItems() {
     try {
         // Fetch the standings data from the server
-        const response = await fetch("http://localhost:8080/api/standings");
+        const response = await fetch("/api/standings");
         const items = await response.json();
 
         // Calculate win percentage for each player and rank them

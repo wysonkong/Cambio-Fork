@@ -27,7 +27,7 @@ public class MainRestController {
     @Value("${spring.github.app.installationId}")
     private String installationId;
 
-    @Value("${spring.github.app.privateKeyPath}")
+    @Value("${spring.github.app.privateKey}")
     private String privateKeyPem;
 
     private final UserService userService;

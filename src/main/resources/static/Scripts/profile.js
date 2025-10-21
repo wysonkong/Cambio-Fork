@@ -6,7 +6,7 @@ const avatarBtn = document.getElementById("avatar-button")
 async function loadItems() {
     try {
         // Fetch the standings data from the server
-        const response = await fetch("http://localhost:8080/api/me", {
+        const response = await fetch("/api/me", {
             method: "GET",
             headers: {
                 "X-Session-Id": sessionStorage.getItem("sessionId"),

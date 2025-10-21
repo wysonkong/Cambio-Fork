@@ -7,7 +7,7 @@ let avatar = null;
 
 submit.addEventListener("click", async(e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8080/api/user", {
+    const response = await fetch("/api/user", {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
         body : JSON.stringify({username : userName.value, password : password.value})

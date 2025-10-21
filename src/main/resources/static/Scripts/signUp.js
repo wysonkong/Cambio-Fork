@@ -16,7 +16,7 @@ userName.addEventListener("input", async () => {
 
     debounceTimeout = setTimeout(async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/findUser?username=${encodeURIComponent(input)}`);
+            const response = await fetch(`/api/findUser?username=${encodeURIComponent(input)}`);
             const data = await response.json();
 
             if(data.exists) {
@@ -46,7 +46,7 @@ submit.addEventListener("click", async (e) => {
     e.preventDefault();
 
     // --- Sign Up ---
-    const response = await fetch("http://localhost:8080/api/new_user", {
+    const response = await fetch("/api/new_user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,7 +64,7 @@ submit.addEventListener("click", async (e) => {
     console.log("Successfully signed up");
 
     // --- Log In Immediately After ---
-    const loginResponse = await fetch("http://localhost:8080/api/user", {
+    const loginResponse = await fetch("/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

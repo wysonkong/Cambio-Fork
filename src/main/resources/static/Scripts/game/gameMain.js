@@ -19,7 +19,7 @@ let giveModeActive = false;
 let lastStickPlayer = null;
 let unseenCount = 0;
 let cambioPlayerId = null;
-let firstDraw = false;
+let chatMode = false;
 
 
 const displayMyTurn = document.getElementById("display-turn");
@@ -123,7 +123,7 @@ function endTurn() {
 }
 
 function connectWebSocket(gameId) {
-    const socket = new SockJS('http://localhost:8080/ws');
+    const socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
     stompClient.debug = null;
 
@@ -143,11 +143,13 @@ function connectWebSocket(gameId) {
 };
 
 function findPlayer(username) {
-    players.forEach((p) => {
-        if(p.userName === username) {
-            return p;
+    console.log(username);
+    for (const p of players) {
+        if (p.userName === username) {
+            console.log(p);
+            return p; // returns from findPlayer
         }
-    })
+    }
     return null;
 }
 

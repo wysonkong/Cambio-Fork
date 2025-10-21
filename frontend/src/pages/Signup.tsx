@@ -27,7 +27,7 @@ const Signup = () => {
         } else {
             try {
                 const res = await fetch(
-                    `http://localhost:8080/api/user/findUser?username=${encodeURIComponent(username)}`
+                    `http://localhost:8080/api/findUser?username=${encodeURIComponent(username)}`
                 );
                 const data = await res.json();
 
@@ -52,7 +52,7 @@ const Signup = () => {
         if (!isValid) return;
 
         try {
-            const response = await fetch("/api/new_user", {
+            const response = await fetch("http://localhost:8080/api/new_user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -71,7 +71,7 @@ const Signup = () => {
             setPassword("");
             setFeedback("Sign up successful!");
 
-            const loginRes = await fetch("/api/user", {
+            const loginRes = await fetch("http://localhost:8080/api/user", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({username, password}),

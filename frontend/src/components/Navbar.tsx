@@ -33,7 +33,7 @@ const Navbar = () => {
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild>
                             <Link
-                                to={"#"}
+                                to={"/Rules"}
                                 className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
                             >
                                 Rules

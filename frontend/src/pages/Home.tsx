@@ -9,7 +9,7 @@ const Home = () => {
             <div className={"rounded-lg text-center text-white opacity-75"}>
                 <div className="sm:mb-8 sm:flex sm:justify-center">
                     <Button asChild className="relative rounded-full px-3 py-1 text-sm/6 text-primary-foreground ring-1 ring-white/10 hover:ring-white/20">
-                        <Link to={"#"}>Don't know how to play?</Link>
+                        <Link to={"/Rules"}>Don't know how to play?</Link>
                     </Button>
                 </div>
                 <h1 className={"text-6xl font-bold mb-4 text-primary"}>Cambio Card Game</h1>

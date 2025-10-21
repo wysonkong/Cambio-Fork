@@ -5,17 +5,17 @@ import {
     NavigationMenuList,
 } from "@/components/ui/navigation-menu"
 import {Link} from "react-router"
-// import {useNavigate} from "react-router-dom";
-// import {useAuth} from "@/components/AuthProvider.tsx";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "@/components/AuthProvider.tsx";
 
 const Navbar = () => {
-    //const {isLoggedIn, logout} = useAuth();
-    //const navigate = useNavigate();
+    const {isLoggedIn, logout} = useAuth();
+    const navigate = useNavigate();
 
-    // const handleLogout = () => {
-    //     logout();
-    //     navigate("/");
-    // }
+    const handleLogout = () => {
+        logout();
+        navigate("/");
+    }
 
     return (
         <NavigationMenu
@@ -52,51 +52,49 @@ const Navbar = () => {
                         </NavigationMenuLink>
                     </NavigationMenuItem>
 
-                    <NavigationMenuItem>
-                        <NavigationMenuLink asChild>
-                            <Link
-                                to="#"
-                                className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
-                            >
-                                Join Game
-                            </Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-
-                    <NavigationMenuItem>
-                        <NavigationMenuLink asChild>
-                            <Link
-                                to="#"
-                                //onClick={handleLogout}
-                                className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
-                            >
-                                Log Out
-                            </Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-
-
-                    <NavigationMenuItem>
-                        <NavigationMenuLink asChild>
-                            <Link
-                                to={"/Login"}
-                                className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
-                            >
-                                Log In
-                            </Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-
-                    <NavigationMenuItem>
-                        <NavigationMenuLink asChild>
-                            <Link
-                                to={"/Signup"}
-                                className={"px-3 py-2 rounded-md bg-accent font-semibold hover:bg-secondary hover:text-secondary-foreground transition-colors"}
-                            >
-                                Sign Up
-                            </Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
+                    {isLoggedIn ? (
+                            <><NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        to="#"
+                                        className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
+                                    >
+                                        Join Game
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem><NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        to="#"
+                                        //onClick={handleLogout}
+                                        className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
+                                    >
+                                        Log Out
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem></>
+                        ) :
+                        (
+                            <><NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        to={"/Login"}
+                                        className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
+                                    >
+                                        Log In
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem><NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        to={"/Signup"}
+                                        className={"px-3 py-2 rounded-md bg-accent font-semibold hover:bg-secondary hover:text-secondary-foreground transition-colors"}
+                                    >
+                                        Sign Up
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem></>
+                    )}
 
 
                 </div>

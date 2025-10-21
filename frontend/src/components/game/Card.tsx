@@ -5,7 +5,7 @@ const Card = () => {
     const [isVisible, setIsVisible] = useState(false);
 
     return(
-        <div >
+        <div>
             <img src={card} alt={card} className={"h-28 w-20"}/>
         </div>
     );

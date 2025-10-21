@@ -67,7 +67,7 @@ public class GameService {
         GameState state = new GameState(playersByGame.get(gameId).stream()
                 .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                         List.of(), -1, null)).toList(),
-                null, 0, false, false, 0, null, false, false, null, 0);
+                null, 0, null);
 
         messagingTemplate.convertAndSend("/topic/game." + gameId + ".state", state);
         return state;
@@ -105,7 +105,7 @@ public class GameService {
             return new GameState(playersByGame.get(gameId).stream()
                     .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                             List.of(), -1, null)).toList(),
-                    null, 0, false, false, 0, null, false, false, null, 0);
+                    null, 0, null);
         }
         GameEngine engine = activeEngines.get(gameId);
         if (engine == null && action.getType() == ActionType.START) {
@@ -118,10 +118,10 @@ public class GameService {
         // engine.applyAction will mutate engine and return snapshot for the requesting player
         System.out.println("Applying action " + action.getType() + " for game " + gameId);
         GameState result = engine.applyAction(action);
-        if(result.getWinner() != null) {
-            this.activeEngines.remove(gameId);
-            this.playersByGame.remove(gameId);
-        }
+//        if(result.getWinner() != null) {
+//            this.activeEngines.remove(gameId);
+//            this.playersByGame.remove(gameId);
+//        }
         return result;
     }
 

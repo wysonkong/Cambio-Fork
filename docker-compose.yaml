@@ -2,16 +2,16 @@ version: "3.8"
 
 services:
   postgres-db:
-    container_name: cambio
+    container_name: cambioReact
     image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: acc_dev
       POSTGRES_PASSWORD: acc_dev12
-      POSTGRES_DB: cambio_db
+      POSTGRES_DB: cambioReact_db
       POSTGRES_HOST_AUTH_METHOD: password
     ports:
-      - "5428:5432"
+      - "5419:5432"
     volumes:
       - postgresql_data:/var/lib/postgresql/data
 
@@ -19,7 +19,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: cambio-backend
+    container_name: cambioReact-backend
     ports:
       - "8080:8080"
     env_file:

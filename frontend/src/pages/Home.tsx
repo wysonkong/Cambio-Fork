@@ -1,8 +1,11 @@
 import {Button} from "@/components/ui/button.tsx";
 import {Link} from "react-router";
+import {useAuth} from "@/components/AuthProvider.tsx";
 
 
 const Home = () => {
+    const {isLoggedIn} = useAuth();
+
     return (
 
         <div className={"bg-no-repeat bg-center bg-cover h-screen flex items-center justify-center"}>
@@ -16,7 +19,7 @@ const Home = () => {
                 <p className={"text-xl text-background-foreground mb-4"}>Welcome to our Cambio site. Read the rules and enjoy a game</p>
                 <div className={"flex flex-wrap items-center justify-center gap-2 mb-32"}>
                     <Button asChild className={"bg-primary"}>
-                        <Link to={"#"} className={"text-primary-foreground"}>Play a Game</Link>
+                        <Link to={isLoggedIn ? "/JoinGame" : "/Login"} className={"text-primary-foreground"}>Play a Game</Link>
                     </Button>
                 </div>
             </div>

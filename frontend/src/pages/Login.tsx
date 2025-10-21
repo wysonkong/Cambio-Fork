@@ -34,6 +34,7 @@ const Login = () => {
     return (
         <div className="w-screen h-screen flex items-center justify-center">
             <div className="w-full max-w-md bg-card p-6 rounded-lg">
+                <h2 className="text-2xl text-card-foreground font-bold text-center mb-6">Log In To Your Account</h2>
                 <form onSubmit={handleLogin}>
                     <FieldSet className={""}>
                         <FieldGroup>
@@ -65,7 +66,8 @@ const Login = () => {
                             </Field>
                             <Field orientation="horizontal">
                                 <Button type="submit" className={"bg-accent text-accent-foreground"}>Submit</Button>
-                                <Button variant="outline" type="button" className={"bg-foreground text-background"}>Cancel</Button>
+                                <Button variant="outline" type="button"
+                                        className={"bg-foreground text-background"}>Cancel</Button>
                             </Field>
                         </FieldGroup>
                     </FieldSet>

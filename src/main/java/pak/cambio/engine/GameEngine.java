@@ -18,6 +18,7 @@ public class GameEngine {
     private boolean tempTurn = false;
     private int lastTurn;
     private Player cambioPlayer;
+    private Map<String, Object> payload;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
@@ -48,7 +49,6 @@ public class GameEngine {
         }
         discard.clear();
         discard.add(deck.removeLast());
-        cambioCalled = false;
         cambioCountDown = players.size();
     }
 
@@ -62,6 +62,7 @@ public class GameEngine {
     }
 
     public GameState applyAction(GameAction action) {
+        payload = new HashMap<String, Object>();
         Player player = findPlayer(action.getUserId());
         boolean pending = false;
         if (!action.getType().equals(ActionType.STICK)) {
@@ -80,7 +81,6 @@ public class GameEngine {
             case DRAW_DECK -> {
                 Card drawn = deck.removeFirst();
                 player.setPending(drawn);
-                pending = true;
             }
             case DRAW_DISCARD -> {
                 player.getHand().add(discard.removeFirst());
@@ -111,19 +111,20 @@ public class GameEngine {
             case DISCARD_PENDING -> {
                 Card card = player.getPending();
                 if(card.getRank().equals("7") || card.getRank().equals("8")) {
-                    specialMove = 1;
+                    payload.put("peekOwn", player.getId());
                     pending = true;
                 }
                 else if(card.getRank().equals("9") || card.getRank().equals("10")) {
-                    specialMove = 2;
+                    payload.put("peekElse", player.getId());
                     pending = true;
                 }
                 else if(card.getRank().equals("J") || card.getRank().equals("Q")) {
-                    specialMove = 3;
+                    payload.put("blindSwap", player.getId());
                     pending = true;
                 }
                 else if(card.getRank().equals("K")) {
-                    specialMove = 4;
+                    payload.put("peekAny", player.getId());
+                    payload.put("swap", player.getId());
                     pending = true;
                 }
                 discard.addFirst(card);
@@ -149,7 +150,7 @@ public class GameEngine {
             }
             case CALL_CAMBIO -> {
                 cambioPlayer = findPlayer(action.getUserId());
-                cambioCalled = true;
+                payload.put("cambioCalled", player.getId());
             }
             case GIVE -> {
                 long originUserId = action.getLong("originUserId");
@@ -160,7 +161,7 @@ public class GameEngine {
                 originPlayer.getHand().remove(origin);
                 Player destinationPlayer = findPlayer(destinationUserId);
                 destinationPlayer.getHand().add(card);
-                tempTurn = false;
+                payload.put("give", player.getId());
                 pending = true;
             }
             case START -> {
@@ -175,7 +176,8 @@ public class GameEngine {
                 if(card.getRank().equals(prev.getRank())) {
                     originPlayer.getHand().remove(origin);
                     discard.addFirst(card);
-                    didStickWork = true;
+                    payload.put("stickWorked", player.getId());
+                    payload.put("stuckPlayer", originPlayer.getId());
                     if(originUserId != action.getUserId()) {
                         tempTurn = true;
                         nextTurn = players.indexOf(findPlayer(action.getUserId()));
@@ -186,7 +188,7 @@ public class GameEngine {
                     Player actionPlayer = findPlayer(actionUserId);
                     Card drawn = deck.removeFirst();
                     actionPlayer.getHand().add(drawn);
-                    didStickWork = false;
+                    payload.put("stickFailed", player.getId());
                 }
                 if(!player.getHand().isEmpty()) {
                    pending = true;
@@ -262,7 +264,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winner, tempTurn, true, cambioPlayer, 0);
+        return new GameState(views, discard.peekFirst(), currentTurn, payload);
     }
 
 }

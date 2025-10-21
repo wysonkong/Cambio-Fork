@@ -53,14 +53,14 @@ public class GameWsController {
 
         // Apply the action in the engine and get updated state
         GameState updatedState = gameService.applyAction(gameId, action);
-        updatedState.setSeq(nextSeq);
-
-        // Special handling for STICK payload
-        if (action.getType() == ActionType.STICK) {
-            Map<String, Object> newPayload = action.getPayload();
-            newPayload.put("didStickWork", updatedState.isDidStickWork());
-            action.setPayload(newPayload);
-        }
+//        updatedState.setSeq(nextSeq);
+//
+//        // Special handling for STICK payload
+//        if (action.getType() == ActionType.STICK) {
+//            Map<String, Object> newPayload = action.getPayload();
+//            newPayload.put("didStickWork", updatedState.isDidStickWork());
+//            action.setPayload(newPayload);
+//        }
 
         // Broadcast action for animations
         messaging.convertAndSend("/topic/game." + gameId + ".action", action);
@@ -69,28 +69,28 @@ public class GameWsController {
         messaging.convertAndSend("/topic/game." + gameId + ".state", updatedState);
 
         //Update DB if game is over
-        if(updatedState.getWinner() != null) {
-            List<GameState.PlayerView> players = updatedState.getPlayers();
-            ArrayList<Long> ids = new ArrayList<Long>();
-            for(GameState.PlayerView p : players) {
-               ids.add(p.getUserId());
-            }
-            List<User> users = userRepository.findAllById(ids);
-            for(User u : users) {
-                if(u.getUsername().equals(updatedState.getWinner().getUser())) {
-                    System.out.println("Adding win to " + u.getUsername());
-                    u.setWins(u.getWins() + 1);
-                }
-                else {
-                    System.out.println("Adding loss to " + u.getUsername());
-                    u.setLoses(u.getLoses() + 1);
-                }
-                userRepository.save(u);
-            }
-            Game game = gameRepository.findById(gameId).orElseThrow();
-            game.setStatus("Finished");
-            gameRepository.save(game);
-        }
+//        if(updatedState.getWinner() != null) {
+//            List<GameState.PlayerView> players = updatedState.getPlayers();
+//            ArrayList<Long> ids = new ArrayList<Long>();
+//            for(GameState.PlayerView p : players) {
+//               ids.add(p.getUserId());
+//            }
+//            List<User> users = userRepository.findAllById(ids);
+//            for(User u : users) {
+//                if(u.getUsername().equals(updatedState.getWinner().getUser())) {
+//                    System.out.println("Adding win to " + u.getUsername());
+//                    u.setWins(u.getWins() + 1);
+//                }
+//                else {
+//                    System.out.println("Adding loss to " + u.getUsername());
+//                    u.setLoses(u.getLoses() + 1);
+//                }
+//                userRepository.save(u);
+//            }
+//            Game game = gameRepository.findById(gameId).orElseThrow();
+//            game.setStatus("Finished");
+//            gameRepository.save(game);
+//        }
     }
 
     @MessageMapping("/game/{gameId}/join")

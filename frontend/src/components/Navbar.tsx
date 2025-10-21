@@ -66,7 +66,7 @@ const Navbar = () => {
                                 <NavigationMenuLink asChild>
                                     <Link
                                         to="#"
-                                        //onClick={handleLogout}
+                                        onClick={handleLogout}
                                         className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
                                     >
                                         Log Out

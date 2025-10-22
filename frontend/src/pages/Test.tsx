@@ -1,12 +1,13 @@
-import DeckArea from "@/components/game/DeckArea.tsx";
+import DeckArea from "@/components/game/cards/DeckArea.tsx";
 import BottomPlayers from "@/components/game/BottomPlayers.tsx";
 import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
 import {useState} from 'react';
 
 const Test = () => {
-    const [players, setPlayers] = useState([1, 2, 3, 4, 5, 6]);
-    const [chatOpen, setChatOpen] = useState(false);
+    const [players, setPlayers] = useState([]);
+
+
 
     const middleIndex = Math.ceil(players.length / 2);
     const topPlayers = players.slice(0, middleIndex);
@@ -36,7 +37,6 @@ const Test = () => {
                     ))}
 
                 </div>
-
 
 
                 <div className={""}><GameControls/></div>

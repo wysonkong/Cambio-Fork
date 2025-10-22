@@ -1,4 +1,4 @@
-import Card from "@/components/game/Card.tsx";
+import Card from "@/components/game/cards/Card.tsx";
 import {useState} from 'react';
 
 const CardHand = () => {

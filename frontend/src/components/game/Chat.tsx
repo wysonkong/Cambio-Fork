@@ -3,23 +3,35 @@ import {Input} from "@/components/ui/input.tsx";
 import {
     Sheet,
     SheetClose,
-    SheetContent,
+    SheetContent, SheetDescription,
     SheetFooter,
     SheetHeader,
     SheetTitle,
     SheetTrigger
 } from "@/components/ui/sheet.tsx";
+import {useState} from "react";
 
 const Chat = () => {
+    const [chatOpen, setChatOpen] = useState(false);
+
     return (
-        <Sheet>
+        <Sheet open={chatOpen} onOpenChange={setChatOpen}>
             <SheetTrigger asChild>
-                <Button>Chat</Button>
+                <Button
+                    onClick={() => setChatOpen(prev => !prev)}
+                >
+                    Chat
+                </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent aria-describedby={"chat-description"}>
                 <SheetHeader>
                     <SheetTitle>Chat</SheetTitle>
                 </SheetHeader>
+                <SheetDescription/>
+                <div id="chat-description" className="sr-only">
+                    Logs all recent user's messages.
+                </div>
+
                 <div className="bg-muted p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
                     <div id="chat-text" className="overflow-y-auto space-y-2 text-muted-foreground">
                         <p>Yes</p>

@@ -1,15 +1,14 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from "react";
 
-const AvatarList = () => {
+export function useAvatarList() {
     const [avatars, setAvatars] = useState<string[]>([]);
 
     useEffect(() => {
-        fetch("/avatars/manifest.json")
-            .then(res => res.json())
-            .then(setAvatars);
+        fetch("/images/avatars/manifest.json")
+            .then((res) => res.json())
+            .then(setAvatars)
+            .catch((err) => console.error("Error loading avatars:", err));
     }, []);
 
-    return avatars
-};
-
-export default AvatarList;
+    return avatars;
+}

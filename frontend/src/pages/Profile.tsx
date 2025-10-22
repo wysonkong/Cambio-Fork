@@ -16,8 +16,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {Button} from "@/components/ui/button.tsx";
-
+import Avatar from "@/components/player/avatar.tsx";
 
 export default function Profile() {
     const [user, setUser] = useState<User | null>(null);
@@ -44,7 +43,7 @@ export default function Profile() {
 
     return (
 
-            <><div className={"h-screen flex items-center"}>
+            <div className={"h-screen flex items-center"}>
                 {user && <Card className="overflow-hidden rounded-md border bg-foreground text-background w-1/3 mx-auto margin flex items-center">
                     <CardHeader className={"flex justify-center"}><CardTitle>{user.username}</CardTitle>
                     </CardHeader>
@@ -73,11 +72,10 @@ export default function Profile() {
                         </Table>
                     </CardContent>
                     <CardAction>
-                        <Button variant="link">Change Avatar</Button>
+                        <Avatar/>
                     </CardAction>
-                </Card>}</div>
-
-            </>
+                </Card>}
+            </div>
 
 
 

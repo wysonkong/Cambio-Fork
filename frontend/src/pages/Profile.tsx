@@ -25,31 +25,33 @@ export default function Profile() {
 
 
     useEffect(() => {
-        const sessionId = localStorage.getItem("sessionId");
-        fetch("http://localhost:8080/api/me", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Session-Id": sessionId || "",
-                }
-            })
-            .then(res => res.json())
-            .then(setUser)
-            .catch(console.error);
-    }, [])
+        const userId = localStorage.getItem("userId");
+        async function fetchProfile() {
+            try {
+                const response = await fetch("http://localhost:8080/api/getUser" + userId, {
+                    method: "GET",
+                    });
+                const item = await response.json();
+                setUser(item);
+            } catch (err) {
+                console.error("Error fetching items:", err);
+            }
+        }
+
+        fetchProfile();
+    }, []);
 
 
 
     return (
 
-            <>
-                {user && <Card>
-                    <CardHeader>
-                        <CardTitle>{user.username}</CardTitle>
+            <><div className={"h-screen flex items-center"}>
+                {user && <Card className="overflow-hidden rounded-md border bg-foreground text-background w-1/3 mx-auto margin flex items-center">
+                    <CardHeader className={"flex justify-center"}><CardTitle>{user.username}</CardTitle>
                     </CardHeader>
                     <img src={`/images/avatars/${user.avatar}.png`} height={200} width={200}/>
                     <CardContent>
-                        <Table>
+                        <Table className={"bg-foreground text-background"}>
                             <TableCaption>Player Record</TableCaption>
                             <TableHeader>
                                 <TableRow>
@@ -59,16 +61,22 @@ export default function Profile() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableCell>{user.wins}</TableCell>
-                                <TableCell>{user.loses}</TableCell>
-                                <TableCell>{user.wins / (user.loses + user.wins)}</TableCell>
+                                <TableRow>
+                                    <TableCell>{user.wins}</TableCell>
+                                    <TableCell>{user.loses}</TableCell>
+                                    <TableCell>
+                                        {user.wins + user.loses === 0
+                                            ? 0
+                                            : ((user.wins / (user.wins + user.loses)) * 100).toFixed(2) + "%"}
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </CardContent>
                     <CardAction>
                         <Button variant="link">Change Avatar</Button>
                     </CardAction>
-                </Card>}
+                </Card>}</div>
 
             </>
 

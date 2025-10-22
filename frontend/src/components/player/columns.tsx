@@ -1,16 +1,10 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import {Button} from "@/components/ui/button.tsx";
+import type {User} from "@/components/Interfaces";
 
-export type Standing = {
-    id: string
-    username: string
-    wins: number
-    loses: number
-    rank?: number
-}
 
-function calculateRank(id: string, data: Standing[]): number {
+function calculateRank(id: number, data: User[]): number {
     const sorted = [...data].sort((a, b) => {
         const totalA = a.wins + a.loses
         const totalB = b.wins + b.loses
@@ -25,7 +19,7 @@ function calculateRank(id: string, data: Standing[]): number {
     return sorted.findIndex((player) => player.id === id) + 1
 }
 
-export const createdColumns = (data: Standing[]): ColumnDef<Standing>[] => [
+export const createdColumns = (data: User[]): ColumnDef<User>[] => [
     {
         id: "rank",
         header: ({column}) => {

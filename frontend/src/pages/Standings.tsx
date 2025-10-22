@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { DataTable } from "@/components/playerStandings/data-table";
-import { createdColumns, type Standing } from "@/components/playerStandings/columns";
+import { DataTable } from "@/components/player/data-table";
+import { createdColumns} from "@/components/player/columns";
+import type {User} from "@/components/Interfaces.tsx";
 
 export default function Standings() {
-    const [data, setData] = useState<Standing[]>([]);
+    const [data, setData] = useState<User[]>([]);
     const columns = createdColumns(data)
 
     useEffect(() => {

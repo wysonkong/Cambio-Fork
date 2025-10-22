@@ -17,27 +17,12 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import Avatar from "@/components/player/avatar.tsx";
+import { useUser} from "@/components/providers/UserProvider.tsx";
 
 export default function Profile() {
-    const [user, setUser] = useState<User | null>(null);
+    // @ts-ignore
+    const {user} = useUser();
 
-
-    useEffect(() => {
-        const userId = localStorage.getItem("userId");
-        async function fetchProfile() {
-            try {
-                const response = await fetch("http://localhost:8080/api/getUser" + userId, {
-                    method: "GET",
-                    });
-                const item = await response.json();
-                setUser(item);
-            } catch (err) {
-                console.error("Error fetching items:", err);
-            }
-        }
-
-        fetchProfile();
-    }, []);
 
 
 

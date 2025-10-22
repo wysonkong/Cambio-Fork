@@ -1,9 +1,10 @@
 import {Button} from "@/components/ui/button.tsx";
 import Chat from "@/components/game/Chat.tsx";
+import ActionLog from "@/components/game/ActionLog.tsx";
 
 const GameControls = () => {
     return (
-        <div id="bottom" className={"mt-4 gap-4 p-8 bg-foreground text-black text-center h-16 flex items-center justify-center w-full"}>
+        <div id="bottom" className={"mt-4 gap-4 p-8 bg-foreground text-black text-center h-16 flex items-center justify-center w-full rounded-md"}>
             <span id="display-turn"></span>
             <Button id="start-btn" className={"px-4 py-2 bg-chart-1  rounded-lg hover:bg-chart-1/80 focus:ring-chart-1/50"}>
                 Start Game
@@ -26,7 +27,8 @@ const GameControls = () => {
             <Button id="stick-btn" className={"px-4 py-2 bg-accent rounded-lg hover:bg-accent/80 focus:bg-accent/50"}>
                 Stick
             </Button>
-            <Button><Chat/></Button>
+            <ActionLog/>
+            <Chat/>
         </div>
     );
 };

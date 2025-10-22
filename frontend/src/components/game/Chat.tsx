@@ -1,38 +1,41 @@
-import {
-    Drawer, DrawerClose,
-    DrawerContent,
-    DrawerDescription, DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger
-} from "@/components/ui/drawer.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Input} from "@/components/ui/input.tsx";
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger
+} from "@/components/ui/sheet.tsx";
 
 const Chat = () => {
     return (
-        <Drawer>
-            <DrawerTrigger asChild>
-                <Button>Open Drawer</Button>
-            </DrawerTrigger>
-            <DrawerContent className={"bg-foreground"}>
-                <div className=" mx-auto h-full max-w-sm">
-                    <DrawerHeader>
-                        <DrawerTitle className={"text-background"}>Chat</DrawerTitle>
-                    </DrawerHeader>
-                    <DrawerFooter className={"flex"}>
-                        <Input type={"text"} className={""}></Input>
-                        <div className={"gap-4"}>
-                            <Button>Submit</Button>
-                            <DrawerClose asChild>
-                                <Button className={"bg-accent"}>Cancel</Button>
-                            </DrawerClose>
-                        </div>
-                    </DrawerFooter>
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button>Chat</Button>
+            </SheetTrigger>
+            <SheetContent>
+                <SheetHeader>
+                    <SheetTitle>Chat</SheetTitle>
+                </SheetHeader>
+                <div className="bg-muted p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
+                    <div id="chat-text" className="overflow-y-auto space-y-2 text-muted-foreground">
+                        <p>Yes</p>
+                    </div>
                 </div>
-            </DrawerContent>
-
-        </Drawer>
+                <SheetFooter className={"flex"}>
+                    <Input type={"text"} className={"bg-foreground"}></Input>
+                    <div className={"gap-4"}>
+                        <Button>Submit</Button>
+                        <SheetClose asChild>
+                            <Button className={"bg-accent"}>Cancel</Button>
+                        </SheetClose>
+                    </div>
+                </SheetFooter>
+            </SheetContent>
+        </Sheet>
     );
 };
 

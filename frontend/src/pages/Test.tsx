@@ -17,7 +17,7 @@ const Test = () => {
         <div className="w-screen h-screen flex items-center justify-center">
             <div className={"flex-1 flex flex-col items-center justify-start overflow-y-auto relative"}>
                 <div className={"flex justify-center gap-8"}>
-                    {topPlayers.map((player, index) => (
+                    {topPlayers.map((_player, index) => (
                         <div className={""}>
                             <TopPlayers key={index}/>
                         </div>
@@ -29,7 +29,7 @@ const Test = () => {
                 </div>
 
                 <div className={"flex justify-center gap-8"}>
-                    {bottomPlayers.map((player, index) => (
+                    {bottomPlayers.map((_player, index) => (
                         <div className={""}>
                             <BottomPlayers key={index}/>
                         </div>

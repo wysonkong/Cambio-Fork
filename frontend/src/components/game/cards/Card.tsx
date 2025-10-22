@@ -1,8 +1,8 @@
 import card from "/images/svgtopng/card-back.png"
-import {useState} from 'react';
+// import {useState} from 'react';
 
 const Card = () => {
-    const [isVisible, setIsVisible] = useState(false);
+    // const [isVisible, setIsVisible] = useState(false);
 
     return(
         <div>

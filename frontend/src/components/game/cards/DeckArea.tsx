@@ -1,7 +1,7 @@
-import {useState} from "react";
-import Card from "@/components/game/Card.tsx";
+// import {useState} from "react";
+import Card from "@/components/game/cards/Card.tsx";
 const DeckArea = () => {
-    const [showDiscard, setShowDiscard] = useState(false);
+    // const [showDiscard, setShowDiscard] = useState(false);
 
 
     return (

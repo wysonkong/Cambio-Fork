@@ -1,4 +1,4 @@
-import CardHand from "@/components/game/CardHand.tsx";
+import CardHand from "@/components/game/cards/CardHand.tsx";
 
 const TopPlayers = () => {
     return (

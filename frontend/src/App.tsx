@@ -11,6 +11,7 @@ import Error from "@/pages/Error.tsx";
 import Joingame from "@/pages/Joingame.tsx";
 import Standings from "@/pages/Standings.tsx"
 import Test from "@/pages/Test.tsx";
+import Profile from "@/pages/Profile.tsx";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
                       {/*<Route path={"/Game"} element={<Game />}/>*/}
                       <Route path={"/JoinGame"} element={<Joingame/>}/>
                       <Route path={"/Test"} element={<Test/>}/>
+                      <Route path={"/Profile"} element={<Profile/>}/>
 
                       <Route path={"*"} element={<Error/>}/>
                       sada

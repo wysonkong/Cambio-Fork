@@ -62,7 +62,8 @@ const Navbar = () => {
                                         Join Game
                                     </Link>
                                 </NavigationMenuLink>
-                            </NavigationMenuItem><NavigationMenuItem>
+                            </NavigationMenuItem>
+                                <NavigationMenuItem>
                                 <NavigationMenuLink asChild>
                                     <Link
                                         to="#"
@@ -72,7 +73,17 @@ const Navbar = () => {
                                         Log Out
                                     </Link>
                                 </NavigationMenuLink>
-                            </NavigationMenuItem></>
+                            </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild>
+                                        <Link
+                                            to={"/Profile"}
+                                            className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
+                                        >
+                                            Profile
+                                        </Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem></>
                         ) :
                         (
                             <><NavigationMenuItem>

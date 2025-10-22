@@ -6,14 +6,14 @@ export type Standing = {
     id: string
     username: string
     wins: number
-    losses: number
+    loses: number
     rank?: number
 }
 
 function calculateRank(id: string, data: Standing[]): number {
     const sorted = [...data].sort((a, b) => {
-        const totalA = a.wins + a.losses
-        const totalB = b.wins + b.losses
+        const totalA = a.wins + a.loses
+        const totalB = b.wins + b.loses
         const aPct = totalA > 0 ? a.wins / totalA : 0
         const bPct = totalB > 0 ? b.wins / totalB : 0
 
@@ -58,14 +58,14 @@ export const createdColumns = (data: Standing[]): ColumnDef<Standing>[] => [
         header: "Wins",
     },
     {
-        accessorKey: "losses",
+        accessorKey: "loses",
         header: "Losses",
     },
     {
         id: "percentage",
         header: "Win Rate",
         accessorFn: (row) => {
-            const total = row.wins + row.losses
+            const total = row.wins + row.loses
             return total > 0 ? (row.wins / total) * 100 : 0
         },
         cell: ({ getValue }) => `${getValue<number>().toFixed(1)} %`,

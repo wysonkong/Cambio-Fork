@@ -3,14 +3,14 @@ import { ArrowUpDown } from "lucide-react"
 import {Button} from "@/components/ui/button.tsx";
 
 export type Standing = {
-    id: string
+    id: number
     username: string
     wins: number
     loses: number
     rank?: number
 }
 
-function calculateRank(id: string, data: Standing[]): number {
+function calculateRank(id: number, data: Standing[]): number {
     const sorted = [...data].sort((a, b) => {
         const totalA = a.wins + a.loses
         const totalB = b.wins + b.loses

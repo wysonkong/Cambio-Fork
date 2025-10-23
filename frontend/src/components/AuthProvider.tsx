@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const sessionId = localStorage.getItem("sessionId");
-        const storedUserId = localStorage.getItem("userId");
+        const storedUserId: string | null = localStorage.getItem("userId");
         setUserId(storedUserId);
         setIsLoggedIn(!!sessionId);
     }, []);
@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("sessionId", sessionId);
         localStorage.setItem("userId", userId);
         setIsLoggedIn(true);
+        console.log(userId)
         setUserId(userId);
     };
 

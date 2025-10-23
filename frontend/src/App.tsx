@@ -12,11 +12,13 @@ import Joingame from "@/pages/Joingame.tsx";
 import Standings from "@/pages/Standings.tsx"
 import Test from "@/pages/Test.tsx";
 import Profile from "@/pages/Profile.tsx";
+import {UserProvider} from "@/components/providers/UserProvider.tsx";
 
 function App() {
 
   return (
       <AuthProvider>
+          <UserProvider>
           <Router>
               <Layout>
                   <Routes>
@@ -35,6 +37,7 @@ function App() {
                   </Routes>
               </Layout>
           </Router>
+          </UserProvider>
       </AuthProvider>
   )
 }

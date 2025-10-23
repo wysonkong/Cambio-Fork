@@ -12,9 +12,10 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins("https://cambio-api.fly.dev")
-                        .allowedMethods("GET","POST","PUT","DELETE");
+                registry.addMapping("/**")   // allow all paths
+                        .allowedOrigins("http://localhost:5174","http://localhost:5173") // your frontend
+                        .allowedMethods("*")   // allow GET, POST, etc.
+                        .allowCredentials(true);
             }
         };
     }

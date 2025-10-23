@@ -19,7 +19,7 @@ export const UserProvider = ({children}:{children: React.ReactNode}) => {
 
     useEffect(() => {
 
-        if (!userId || isNaN(Number(userId))) {
+        if (!userId) {
             console.log("User ID not ready yet:", userId);
             return;
         }
@@ -36,7 +36,7 @@ export const UserProvider = ({children}:{children: React.ReactNode}) => {
                 return null;
             }
         }
-        fetchUser(Number(userId)).then(setUser);
+        fetchUser(Number(userId)).then((data) => setUser(data))
     }, [userId]);
 
     return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
@@ -47,5 +47,5 @@ export const useUser = () => {
     if (!context) {
         throw new Error("useUser must be used within a UserProvider");
     }
-    return context; // returns { user, setUser }
+    return context;
 };

@@ -1,7 +1,5 @@
 package pak.cambio.model.github;
 
-import jakarta.annotation.PostConstruct;
-
 public class IssueRequest {
 
     private String title;

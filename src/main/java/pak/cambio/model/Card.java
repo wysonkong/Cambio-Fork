@@ -1,5 +1,4 @@
 package pak.cambio.model;
-import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;

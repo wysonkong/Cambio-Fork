@@ -28,7 +28,8 @@ const Navbar = () => {
                 </NavigationMenuItem>
             </NavigationMenuList>
 
-            <NavigationMenuList className={"flex items-center justify-between px-8 py-3 text-primary-foreground w-full"}>
+            <NavigationMenuList
+                className={"flex items-center justify-between px-8 py-3 text-primary-foreground w-full"}>
                 <div className={"ml-auto flex items-center space-x-4"}>
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild>
@@ -53,27 +54,28 @@ const Navbar = () => {
                     </NavigationMenuItem>
 
                     {isLoggedIn ? (
-                            <><NavigationMenuItem>
-                                <NavigationMenuLink asChild>
-                                    <Link
-                                        to={"/JoinGame"}
-                                        className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
-                                    >
-                                        Join Game
-                                    </Link>
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
+                            <>
                                 <NavigationMenuItem>
-                                <NavigationMenuLink asChild>
-                                    <Link
-                                        to="#"
-                                        onClick={handleLogout}
-                                        className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
-                                    >
-                                        Log Out
-                                    </Link>
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
+                                    <NavigationMenuLink asChild>
+                                        <Link
+                                            to={"/JoinGame"}
+                                            className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
+                                        >
+                                            Join Game
+                                        </Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild>
+                                        <Link
+                                            to="#"
+                                            onClick={handleLogout}
+                                            className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
+                                        >
+                                            Log Out
+                                        </Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
                                 <NavigationMenuItem>
                                     <NavigationMenuLink asChild>
                                         <Link
@@ -83,7 +85,8 @@ const Navbar = () => {
                                             Profile
                                         </Link>
                                     </NavigationMenuLink>
-                                </NavigationMenuItem></>
+                                </NavigationMenuItem>
+                            </>
                         ) :
                         (
                             <><NavigationMenuItem>
@@ -105,7 +108,7 @@ const Navbar = () => {
                                     </Link>
                                 </NavigationMenuLink>
                             </NavigationMenuItem></>
-                    )}
+                        )}
 
 
                 </div>

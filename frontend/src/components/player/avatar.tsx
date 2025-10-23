@@ -33,7 +33,7 @@ const Avatar = () => {
                 console.error("Error fetching items:", err);
             }
         }
-        if(user) fetchProfile();
+        fetchProfile();
     }, []);
 
     async function handleNewAvatar(){

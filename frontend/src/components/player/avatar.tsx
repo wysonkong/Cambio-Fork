@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Edit2} from "lucide-react";
 import {Button} from "@/components/ui/button.tsx";
 import {
@@ -11,12 +11,11 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {Label} from "@/components/ui/label.tsx";
 import {useAvatarList} from "@/components/player/avatarList.tsx";
-import type {User} from "@/components/Interfaces.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
 const Avatar = () => {
     const avatars = useAvatarList();
-    const [newAvatar, setNewAvatar] = useState<string | null>(null);
+    const [newAvatar] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const {user, setUser} = useUser();
 

@@ -8,9 +8,11 @@ import {Link} from "react-router"
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/providers/AuthProvider.tsx";
 import logo from "/images/logo.png";
+import {useUser} from "@/components/providers/UserProvider.tsx";
 
 const Navbar = () => {
     const {isLoggedIn, logout} = useAuth();
+    const {user} = useUser();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -82,7 +84,7 @@ const Navbar = () => {
                                             to={"/Profile"}
                                             className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
                                         >
-                                            Profile
+                                            {isLoggedIn && user ? (<img src={`/images/avatars/${user.avatar}.png`} alt={user.avatar} className={"h-14 w-14"}/>) : (<div>Profile</div>)}
                                         </Link>
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>

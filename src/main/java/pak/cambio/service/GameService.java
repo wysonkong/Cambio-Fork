@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class GameService {
@@ -67,7 +66,7 @@ public class GameService {
         GameState state = new GameState(playersByGame.get(gameId).stream()
                 .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                         List.of(), -1, null)).toList(),
-                null, 0, null);
+                null, 0, false, false, 0, null, false, false, null, 0);
 
         messagingTemplate.convertAndSend("/topic/game." + gameId + ".state", state);
         return state;
@@ -105,7 +104,7 @@ public class GameService {
             return new GameState(playersByGame.get(gameId).stream()
                     .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                             List.of(), -1, null)).toList(),
-                    null, 0, null);
+                    null, 0, false, false, 0, null, false, false, null, 0);
         }
         GameEngine engine = activeEngines.get(gameId);
         if (engine == null && action.getType() == ActionType.START) {
@@ -118,10 +117,10 @@ public class GameService {
         // engine.applyAction will mutate engine and return snapshot for the requesting player
         System.out.println("Applying action " + action.getType() + " for game " + gameId);
         GameState result = engine.applyAction(action);
-//        if(result.getWinner() != null) {
-//            this.activeEngines.remove(gameId);
-//            this.playersByGame.remove(gameId);
-//        }
+        if(result.getWinners() != null) {
+            this.activeEngines.remove(gameId);
+            this.playersByGame.remove(gameId);
+        }
         return result;
     }
 

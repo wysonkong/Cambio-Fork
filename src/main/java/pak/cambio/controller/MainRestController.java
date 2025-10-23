@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import pak.cambio.dto.LoginDTO;
 import pak.cambio.model.User;
 import pak.cambio.model.github.GitHubAuthUtils;
 import pak.cambio.model.github.IssueRequest;
@@ -13,9 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import pak.cambio.dto.LoginDTO;
-
-import static io.micrometer.common.KeyValues.of;
 
 @RestController
 @RequestMapping("/api")

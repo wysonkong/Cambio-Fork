@@ -13,12 +13,11 @@ public class GameEngine {
     private boolean end = false;
     private int currentTurn = 0;
     private boolean didStickWork;
-    private Player winner;
+    private ArrayList<Player> winners;
     private int specialMove = 0;
     private boolean tempTurn = false;
     private int lastTurn;
     private Player cambioPlayer;
-    private Map<String, Object> payload;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
@@ -49,6 +48,7 @@ public class GameEngine {
         }
         discard.clear();
         discard.add(deck.removeLast());
+        cambioCalled = false;
         cambioCountDown = players.size();
     }
 
@@ -62,7 +62,6 @@ public class GameEngine {
     }
 
     public GameState applyAction(GameAction action) {
-        payload = new HashMap<String, Object>();
         Player player = findPlayer(action.getUserId());
         boolean pending = false;
         if (!action.getType().equals(ActionType.STICK)) {
@@ -81,50 +80,65 @@ public class GameEngine {
             case DRAW_DECK -> {
                 Card drawn = deck.removeFirst();
                 player.setPending(drawn);
+                pending = true;
             }
             case DRAW_DISCARD -> {
                 player.getHand().add(discard.removeFirst());
             }
             case PEEK -> {
-                int idx = action.getInt("idx");
-                long id = action.getLong("id");
-                Player peeked = findPlayer(id);
-                peeked.getHand().get(idx).makeVisibleTo(player.getId());
+                try {
+                    int idx = action.getInt("idx");
+                    long id = action.getLong("id");
+                    Player peeked = findPlayer(id);
+                    peeked.getHand().get(idx).makeVisibleTo(player.getId());
+                } catch(Exception e) {
+                    pending = true;
+                    break;
+                }
             }
             case PEEK_PLUS -> {
-                int idx = action.getInt("idx");
-                long id = action.getLong("id");
-                Player peeked = findPlayer(id);
-                peeked.getHand().get(idx).makeVisibleTo(player.getId());
-                pending = true;
+                try {
+                    int idx = action.getInt("idx");
+                    long id = action.getLong("id");
+                    Player peeked = findPlayer(id);
+                    peeked.getHand().get(idx).makeVisibleTo(player.getId());
+                    pending = true;
+                } catch(Exception e) {
+                    pending = true;
+                    break;
+                }
             }
             case SWAP_PENDING -> {
                 Card newCard = player.getPending();
-                int idx = action.getInt("destination");
-                System.out.println("SWAP_PENDING userId " + player.getId() + "with index" + idx);
-                Card old = player.getHand().get(idx);
-                newCard.makeVisibleTo(player.getId());
-                player.getHand().set(idx, newCard);
-                discard.addFirst(old);
-                player.setPending(null);
+                try {
+                    int idx = action.getInt("destination");
+                    System.out.println("SWAP_PENDING userId " + player.getId() + "with index" + idx);
+                    Card old = player.getHand().get(idx);
+                    newCard.makeVisibleTo(player.getId());
+                    player.getHand().set(idx, newCard);
+                    discard.addFirst(old);
+                    player.setPending(null);
+                } catch(Exception e) {
+                    pending = true;
+                    break;
+                }
             }
             case DISCARD_PENDING -> {
                 Card card = player.getPending();
                 if(card.getRank().equals("7") || card.getRank().equals("8")) {
-                    payload.put("peekOwn", player.getId());
+                    specialMove = 1;
                     pending = true;
                 }
                 else if(card.getRank().equals("9") || card.getRank().equals("10")) {
-                    payload.put("peekElse", player.getId());
+                    specialMove = 2;
                     pending = true;
                 }
                 else if(card.getRank().equals("J") || card.getRank().equals("Q")) {
-                    payload.put("blindSwap", player.getId());
+                    specialMove = 3;
                     pending = true;
                 }
                 else if(card.getRank().equals("K")) {
-                    payload.put("peekAny", player.getId());
-                    payload.put("swap", player.getId());
+                    specialMove = 4;
                     pending = true;
                 }
                 discard.addFirst(card);
@@ -134,64 +148,79 @@ public class GameEngine {
                 }
             }
             case SWAP -> {
-                long originUserId = action.getLong("originUserId");
-                Player originPlayer = findPlayer(originUserId);
-                long destinationUserId = action.getLong("destinationUserId");
-                Player destinationPlayer = findPlayer(destinationUserId);
-                int origin = action.getInt("origin");
-                int destination = action.getInt("destination");
-                Card newCard = destinationPlayer.getHand().get(destination);
-                Card old = originPlayer.getHand().get(origin);
-                originPlayer.getHand().set(origin, newCard);
-                destinationPlayer.getHand().set(destination, old);
+                try {
+                    long originUserId = action.getLong("originUserId");
+                    long destinationUserId = action.getLong("destinationUserId");
+                    int origin = action.getInt("origin");
+                    int destination = action.getInt("destination");
+                    Player originPlayer = findPlayer(originUserId);
+                    Player destinationPlayer = findPlayer(destinationUserId);
+                    Card newCard = destinationPlayer.getHand().get(destination);
+                    Card old = originPlayer.getHand().get(origin);
+                    originPlayer.getHand().set(origin, newCard);
+                    destinationPlayer.getHand().set(destination, old);
+                }catch(Exception e) {
+                    pending = true;
+                    break;
+                }
+
             }
             case DISCARD -> {
 
             }
             case CALL_CAMBIO -> {
                 cambioPlayer = findPlayer(action.getUserId());
-                payload.put("cambioCalled", player.getId());
+                cambioCalled = true;
             }
             case GIVE -> {
-                long originUserId = action.getLong("originUserId");
-                Player originPlayer = findPlayer(originUserId);
-                int origin = action.getInt("origin");
-                long destinationUserId = action.getLong("destinationUserId");
-                Card card = originPlayer.getHand().get(origin);
-                originPlayer.getHand().remove(origin);
-                Player destinationPlayer = findPlayer(destinationUserId);
-                destinationPlayer.getHand().add(card);
-                payload.put("give", player.getId());
-                pending = true;
+                try {
+                    long originUserId = action.getLong("originUserId");
+                    Player originPlayer = findPlayer(originUserId);
+                    int origin = action.getInt("origin");
+                    long destinationUserId = action.getLong("destinationUserId");
+                    Card card = originPlayer.getHand().get(origin);
+                    originPlayer.getHand().remove(origin);
+                    Player destinationPlayer = findPlayer(destinationUserId);
+                    destinationPlayer.getHand().add(card);
+                    tempTurn = false;
+                    pending = true;
+                }
+                catch(Exception e) {
+                    pending = true;
+                    break;
+                }
             }
             case START -> {
                 startNewGame();
             }
             case STICK -> {
-                long originUserId = action.getLong("originUserId");
-                Player originPlayer = findPlayer(originUserId);
-                int origin = action.getInt("origin");
-                Card card = originPlayer.getHand().get(origin);
-                Card prev = discard.getFirst();
-                if(card.getRank().equals(prev.getRank())) {
-                    originPlayer.getHand().remove(origin);
-                    discard.addFirst(card);
-                    payload.put("stickWorked", player.getId());
-                    payload.put("stuckPlayer", originPlayer.getId());
-                    if(originUserId != action.getUserId()) {
-                        tempTurn = true;
-                        nextTurn = players.indexOf(findPlayer(action.getUserId()));
+                try {
+                    long originUserId = action.getLong("originUserId");
+                    Player originPlayer = findPlayer(originUserId);
+                    int origin = action.getInt("origin");
+                    Card card = originPlayer.getHand().get(origin);
+                    Card prev = discard.getFirst();
+                    if (card.getRank().equals(prev.getRank())) {
+                        originPlayer.getHand().remove(origin);
+                        discard.addFirst(card);
+                        didStickWork = true;
+                        if (originUserId != action.getUserId()) {
+                            tempTurn = true;
+                            nextTurn = players.indexOf(findPlayer(action.getUserId()));
+                        }
+                    } else {
+                        long actionUserId = action.getUserId();
+                        Player actionPlayer = findPlayer(actionUserId);
+                        Card drawn = deck.removeFirst();
+                        actionPlayer.getHand().add(drawn);
+                        didStickWork = false;
                     }
-                }
-                else {
-                    long actionUserId = action.getUserId();
-                    Player actionPlayer = findPlayer(actionUserId);
-                    Card drawn = deck.removeFirst();
-                    actionPlayer.getHand().add(drawn);
-                    payload.put("stickFailed", player.getId());
-                }
-                if(!player.getHand().isEmpty()) {
-                   pending = true;
+                    if (!player.getHand().isEmpty()) {
+                        pending = true;
+                    }
+                }catch(Exception e) {
+                    pending = true;
+                    break;
                 }
             }
         }
@@ -230,15 +259,31 @@ public class GameEngine {
     }
 
     public void endGame() {
+        ArrayList<Player> possibleWinners = new ArrayList<Player>();
         end = true;
         int min = players.get(0).getScore();
-        winner = players.get(0);
         for(Player p : players) {
             if(p.getScore() < min) {
-                winner = p;
+                min = p.getScore();
             }
         }
-        System.out.println("Game is over, winner is " + winner.getUser());
+        for(Player p: players) {
+            if(p.getScore() == min) {
+                possibleWinners.add(p);
+            }
+        }
+        if(possibleWinners.size() == 1) {
+            winners = possibleWinners;
+        }
+        else {
+            winners = new ArrayList<Player>();
+            for(Player p : possibleWinners) {
+                if(!p.equals(cambioPlayer)) {
+                    winners.add(p);
+                }
+            }
+        }
+        System.out.println("Game is over, winner is " + winners.toString());
     }
 
 
@@ -264,7 +309,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, payload);
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winners, tempTurn, true, cambioPlayer, 0);
     }
 
 }

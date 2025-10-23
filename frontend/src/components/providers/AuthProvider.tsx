@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 
 
 
@@ -12,19 +12,33 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const storedSessionId = localStorage.getItem("sessionId");
-    const storedUserId: string | null = localStorage.getItem("userId");
-
-    const [isLoggedIn, setIsLoggedIn] = useState(!!storedSessionId);
-    const [userId, setUserId] = useState<string | null>(storedUserId);
 
 
-    const login = (sessionId: string, userId: string) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+        return !!localStorage.getItem("sessionId")
+    });
+    const [userId, setUserId] = useState<string | null>(() => {
+        return localStorage.getItem("userId");
+    });
+
+    useEffect(() => {
+        const storedSessionId = localStorage.getItem("sessionId");
+        const storedUserId: string | null = localStorage.getItem("userId");
+
+        if (storedSessionId && storedUserId) {
+            setIsLoggedIn(true);
+            setUserId(storedUserId);
+        }
+
+    }, []);
+
+
+    const login = (sessionId: string, newUserId: string) => {
         localStorage.setItem("sessionId", sessionId);
-        localStorage.setItem("userId", userId);
+        localStorage.setItem("userId", newUserId);
         setIsLoggedIn(true);
-        console.log(userId)
-        setUserId(userId);
+        setUserId(newUserId);
+        console.log(newUserId)
     };
 
     const logout = () => {

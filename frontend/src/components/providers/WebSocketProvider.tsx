@@ -1,23 +1,78 @@
-import {Client} from "@stomp/stompjs";
-import React, {createContext, useRef, useState} from "react";
+import React, { createContext, useContext, useRef, useState} from "react";
+import { Client, type Frame } from "@stomp/stompjs";
+import SockJS from "sockjs-client/dist/sockjs";
+import { useUser } from "@/components/providers/UserProvider.tsx";
 
 interface WebSocketContextType {
-    stompClient: Client | null;
     connect: (gameId: string) => void;
-    sendAction :(gameId: string, userId: string, username: string, type: string, payload: any) => void;
+    sendAction: (gameId: string, type: string, payload: any) => void;
     isConnected: boolean;
 }
 
 const WebSocketContext = createContext<WebSocketContextType>({
-    stompClient: null,
     connect: () => {},
     sendAction: () => {},
     isConnected: false,
 });
 
-export const WebSocketProvider = ({children} : {children: React.ReactNode}) => {
-    const [isConnected, setIsConnected] = useState(false);
+export const WebSocketProvider = ({ children }: { children: React.ReactNode }) => {
+    const { user } = useUser();
     const stompClientRef = useRef<Client | null>(null);
+    const [isConnected, setIsConnected] = useState(false);
 
+    // Connect to WebSocket and send JOIN
+    const connect = (gameId: string) => {
+        if (!user) return;
 
-}
+        const client = new Client({
+            webSocketFactory: () => new SockJS("/ws"),
+            debug: () => {}, // Disable console spam
+        });
+
+        client.onConnect = (frame: Frame) => {
+            console.log("Connected:", frame);
+            setIsConnected(true);
+            stompClientRef.current = client;
+
+            // Automatically send JOIN when connected
+            sendAction(gameId, "JOIN", {});
+        };
+
+        client.onStompError = (frame: Frame) => {
+            console.error("STOMP error:", frame);
+            setIsConnected(false);
+        };
+
+        client.activate();
+    };
+
+    // Send an action via WebSocket
+    const sendAction = (gameId: string, type: string, payload: any) => {
+        if (!user) {
+            console.warn("No user loaded yet, cannot send action");
+            return;
+        }
+
+        if (stompClientRef.current?.connected) {
+            stompClientRef.current.publish({
+                destination: `/app/game/${gameId}/action`,
+                body: JSON.stringify({
+                    userId: user.id,
+                    username: user.username,
+                    type,
+                    payload,
+                }),
+            });
+        } else {
+            console.warn("STOMP not connected yet, action not sent");
+        }
+    };
+
+    return (
+        <WebSocketContext.Provider value={{ connect, sendAction, isConnected }}>
+            {children}
+        </WebSocketContext.Provider>
+    );
+};
+
+export const useWebSocket = () => useContext(WebSocketContext);

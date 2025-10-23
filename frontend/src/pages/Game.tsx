@@ -4,7 +4,7 @@ import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
 import {useState} from 'react';
 
-const Test = () => {
+const Game = () => {
     const [players, setPlayers] = useState([1,2]);
 
 
@@ -46,4 +46,4 @@ const Test = () => {
     );
 };
 
-export default Test;
+export default Game;

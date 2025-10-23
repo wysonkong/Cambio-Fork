@@ -13,7 +13,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5173", "http://localhost:5174")
+                        .allowedOrigins("https://cambio-api.fly.dev")
                         .allowedMethods("GET","POST","PUT","DELETE");
             }
         };

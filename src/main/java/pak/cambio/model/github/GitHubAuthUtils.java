@@ -5,9 +5,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;

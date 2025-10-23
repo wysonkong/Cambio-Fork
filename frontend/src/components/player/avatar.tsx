@@ -12,45 +12,31 @@ import {
 import {Label} from "@/components/ui/label.tsx";
 import {useAvatarList} from "@/components/player/avatarList.tsx";
 import type {User} from "@/components/Interfaces.tsx";
+import {useUser} from "@/components/providers/UserProvider.tsx";
 
 const Avatar = () => {
     const avatars = useAvatarList();
-    const userId = localStorage.getItem("userId")
     const [newAvatar, setNewAvatar] = useState<string | null>(null);
-    const [user, setUser] = useState<User | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const {user, setUser} = useUser();
 
 
-    useEffect(() => {
-        async function fetchProfile() {
+    async function handleNewAvatar(selectedAvatar: string){
+        if (!user) return null;
+
             try {
-                const response = await fetch("http://localhost:8080/api/getUser" + userId, {
-                    method: "GET",
-                });
-                const item = await response.json();
-                setUser(item);
-            } catch (err) {
-                console.error("Error fetching items:", err);
-            }
-        }
-        fetchProfile();
-    }, []);
-
-    async function handleNewAvatar(){
-        if (newAvatar && user) {
-            user.avatar = newAvatar
-            try {
+                const updatedUser = {...user, avatar: selectedAvatar}
+                setUser(updatedUser)
                 await fetch("http://localhost:8080/api/new_user", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(user)
+                    body: JSON.stringify(updatedUser)
                 })
-                window.location.reload();
             } catch (err) {
                 console.error(err)
             }
             setEditDialogOpen(false);
-        }
+
     }
 
 
@@ -62,7 +48,6 @@ const Avatar = () => {
                 size="sm"
                 onClick={(e) => {
                     e.stopPropagation();
-                    //setNewAvatar(avatar);
                     setEditDialogOpen(true);
                 }}
                 className="gap-2"
@@ -86,8 +71,7 @@ const Avatar = () => {
                                             <img
                                                 key={index}
                                                 onClick={() => {
-                                                    setNewAvatar(src);
-                                                    handleNewAvatar();
+                                                    handleNewAvatar(src);
                                                 }}
                                                 src={`/images/avatars/${src}.png`}
                                                 alt={`Avatar ${index + 1}`}

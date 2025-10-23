@@ -1,6 +1,6 @@
 import type {User} from "@/components/Interfaces.tsx";
 import React, {createContext, useContext, useEffect, useState} from "react";
-import {useAuth} from "@/components/AuthProvider.tsx";
+import {useAuth} from "@/components/providers/AuthProvider.tsx";
 
 interface UserContextType {
     user: User | null;
@@ -18,7 +18,12 @@ export const UserProvider = ({children}:{children: React.ReactNode}) => {
 
 
     useEffect(() => {
-        console.log(userId)
+
+        if (!userId || isNaN(Number(userId))) {
+            console.log("User ID not ready yet:", userId);
+            return;
+        }
+
         async function fetchUser(userId: number): Promise<User | null> {
             try {
                 const res = await fetch("http://localhost:8080/api/getUser" + userId, {

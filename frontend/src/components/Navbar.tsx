@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import {Link} from "react-router"
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "@/components/AuthProvider.tsx";
+import {useAuth} from "@/components/providers/AuthProvider.tsx";
 import logo from "/images/logo.png";
 
 const Navbar = () => {

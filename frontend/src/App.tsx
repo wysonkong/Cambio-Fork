@@ -6,7 +6,7 @@ import Home from "@/pages/Home.tsx";
 import Login from "@/pages/Login.tsx";
 import Signup from "@/pages/Signup.tsx";
 import Rule from "@/pages/Rule.tsx"
-import {AuthProvider} from "@/components/AuthProvider.tsx";
+import {AuthProvider} from "@/components/providers/AuthProvider.tsx";
 import Error from "@/pages/Error.tsx";
 import Joingame from "@/pages/Joingame.tsx";
 import Standings from "@/pages/Standings.tsx"

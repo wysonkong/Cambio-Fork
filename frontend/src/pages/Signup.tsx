@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import {Button} from "@/components/ui/button.tsx";
 import React, {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "@/components/AuthProvider.tsx";
+import {useAuth} from "@/components/providers/AuthProvider.tsx";
 
 const Signup = () => {
     const {login} = useAuth();

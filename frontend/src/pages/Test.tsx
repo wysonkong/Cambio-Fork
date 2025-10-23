@@ -5,7 +5,7 @@ import TopPlayers from "@/components/game/TopPlayers.tsx";
 import {useState} from 'react';
 
 const Test = () => {
-    const [players, setPlayers] = useState([]);
+    const [players, setPlayers] = useState([1,2]);
 
 
 

@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button.tsx";
 import {Link} from "react-router";
-import {useAuth} from "@/components/AuthProvider.tsx";
+import {useAuth} from "@/components/providers/AuthProvider.tsx";
 
 
 const Home = () => {

@@ -2,7 +2,7 @@ import {Field, FieldDescription, FieldGroup, FieldLabel, FieldSet} from "@/compo
 import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "@/components/AuthProvider.tsx";
+import {useAuth} from "@/components/providers/AuthProvider.tsx";
 import {useState} from "react";
 
 const Login = () => {
@@ -25,7 +25,7 @@ const Login = () => {
         }
 
         const data = await res.json();
-        login(data.sessionId, data.userId);
+        login(data.sessionId, data.user);
         console.log("Successfully logged in " + data.userId);
         console.log("Session ID: ", data.sessionId);
         navigate("/");

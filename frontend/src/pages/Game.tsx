@@ -4,9 +4,11 @@ import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
 import {useState} from 'react';
 
+
 const Game = () => {
     const [players, setPlayers] = useState([1,2]);
-
+    const gameId = sessionStorage.getItem("currentGame");
+    console.log("joined gameId of " + gameId);
 
 
     const middleIndex = Math.ceil(players.length / 2);
@@ -39,7 +41,7 @@ const Game = () => {
                 </div>
 
 
-                <div className={""}><GameControls/></div>
+                <div className={""}><GameControls gameId={gameId}/></div>
             </div>
 
         </div>

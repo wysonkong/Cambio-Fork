@@ -1,37 +1,32 @@
-import type {Card, User} from "@/components/Interfaces.tsx";
-import {createContext, useEffect, useState} from 'react';
+import type {Card} from "@/components/Interfaces.tsx";
+import {useEffect, useState} from 'react';
+import {useUser} from "@/components/providers/UserProvider.tsx";
 
-interface CardContextType {
-    card: Card | null;
-    setCard: (card: Card) => void;
+
+
+
+interface CardProp {
+    card: Card | null,
 }
 
-const CardContext = createContext<CardContextType>({
-    card: null,
-    setCard: () => {}
-})
-
-const test: Card = {
-    rank: "K",
-    suit: "Spade",
-    isVisible: [0,2],
-}
-
-const currentPlayerId = 1
-
-const Card = () => {
-    const [card, setCard] = useState<Card | null>(null);
+const Card = ({card} : CardProp) => {
+    const[imgSrc, setImgSrc] = useState<string> ("/images/svgtopng/card-back.png");
+    const {user} = useUser();
 
     useEffect(() => {
-        setCard(test)
+        if(!card) return;
+
+        if(!user) return;
+
+        if(card?.isVisible.includes(user.id)) {
+            setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}.png`);
+        }
     }, []);
 
 
     return(
         <div>
-            <img src={card?.isVisible.includes(currentPlayerId)
-                ? `/images/svgtopng/${card?.rank}-${card?.suit}.png`
-                : "/images/svgtopng/card-back.png"}
+            <img src={imgSrc}
                  alt={`${card?.rank} + ${card?.suit}`}
                  className={"h-28 w-20"}/>
         </div>

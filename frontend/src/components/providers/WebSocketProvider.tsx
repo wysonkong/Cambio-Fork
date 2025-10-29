@@ -49,13 +49,16 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
     };
 
     // Send an action via WebSocket
-    const sendAction = (gameId: number, type: string, payload: any) => {
+    const sendAction = (gameId: string | number, type: string, payload: any) => {
+        console.log("Attempting to send action:", { gameId, type, payload });
+
         if (!user) {
             console.warn("No user loaded yet, cannot send action");
             return;
         }
 
         if (stompClientRef.current?.connected) {
+            console.log("STOMP connected, sending...");
             stompClientRef.current.publish({
                 destination: `/app/game/${gameId}/action`,
                 body: JSON.stringify({
@@ -69,6 +72,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
             console.warn("STOMP not connected yet, action not sent");
         }
     };
+
 
     return (
         <WebSocketContext.Provider value={{ connect, sendAction, stompClient: stompClientRef.current, isConnected }}>

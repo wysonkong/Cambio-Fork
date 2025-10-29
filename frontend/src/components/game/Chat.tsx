@@ -14,9 +14,8 @@ import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
 interface ChatMessage {
-    id: number;
-    sender: number;
-    message: string;
+    sender: string;
+    content: string;
     timestamp?: Date;
 }
 
@@ -28,8 +27,10 @@ const Chat = ({gameId}: ChatProps) => {
     const [chatOpen, setChatOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState("");
-    const {stompClient, sendAction} = useWebSocket();
+    const {stompClient} = useWebSocket();
     const {user} = useUser();
+
+    console.log(gameId)
 
     useEffect(() => {
         if (!stompClient) return;
@@ -42,11 +43,21 @@ const Chat = ({gameId}: ChatProps) => {
         return () => sub.unsubscribe();
     }, [stompClient, gameId]);
 
+    // Chat.tsx
     const handleInput = () => {
-        if (!stompClient || !input.trim()) return;
-        console.log(input);
-        sendAction(gameId, "CHAT", {message: input})
-    }
+        if (!stompClient || !input.trim() || !gameId) return;
+
+        stompClient.publish({
+            destination: `/app/game/${gameId}/chat`,
+            body: JSON.stringify({
+                userId: user?.id,
+                message: input,
+            }),
+        });
+
+        setInput("");
+    };
+
 
 
     return (
@@ -70,7 +81,9 @@ const Chat = ({gameId}: ChatProps) => {
                 <div className="bg-muted p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
                     <div id="chat-text" className="overflow-y-auto space-y-2 text-muted-foreground">
                         {messages.map((msg, index) => (
-                            <p key={index}>{msg.sender === user?.id ? `You` : `${msg.sender}: `} {msg.message}</p>
+                            <p key={index}>
+                                {msg.sender === user?.username ? "You: " : `${msg.sender}: `}{msg.content}
+                            </p>
                         ))}
                     </div>
                 </div>

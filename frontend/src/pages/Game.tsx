@@ -8,7 +8,6 @@ import {useState} from 'react';
 const Game = () => {
     const [players, setPlayers] = useState([1,2]);
     const gameId = sessionStorage.getItem("currentGame");
-    console.log("joined gameId of " + gameId);
 
 
     const middleIndex = Math.ceil(players.length / 2);

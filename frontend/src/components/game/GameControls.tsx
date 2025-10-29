@@ -7,7 +7,6 @@ interface GameControlsProps {
 }
 
 const GameControls = ({gameId}: GameControlsProps) => {
-    console.log("GameControls Id " + gameId)
 
     return (
         <div id="bottom"

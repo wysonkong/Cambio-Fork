@@ -9,10 +9,56 @@ import {
     SheetTitle,
     SheetTrigger
 } from "@/components/ui/sheet.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
+import {useUser} from "@/components/providers/UserProvider.tsx";
 
-const Chat = () => {
+interface ChatMessage {
+    sender: string;
+    content: string;
+    timestamp?: Date;
+}
+
+interface ChatProps {
+    gameId?: number | null
+}
+
+const Chat = ({gameId}: ChatProps) => {
     const [chatOpen, setChatOpen] = useState(false);
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [input, setInput] = useState("");
+    const {stompClient} = useWebSocket();
+    const {user} = useUser();
+
+    console.log(gameId)
+
+    useEffect(() => {
+        if (!stompClient) return;
+
+        const sub = stompClient.subscribe(`/topic/game.${gameId}.chat`, (message) => {
+            const chatMsg: ChatMessage = JSON.parse(message.body);
+            setMessages((prev) => [...prev, chatMsg])
+        });
+
+        return () => sub.unsubscribe();
+    }, [stompClient, gameId]);
+
+    // Chat.tsx
+    const handleInput = () => {
+        if (!stompClient || !input.trim() || !gameId) return;
+
+        stompClient.publish({
+            destination: `/app/game/${gameId}/chat`,
+            body: JSON.stringify({
+                userId: user?.id,
+                message: input,
+            }),
+        });
+
+        setInput("");
+    };
+
+
 
     return (
         <Sheet open={chatOpen} onOpenChange={setChatOpen}>
@@ -34,13 +80,22 @@ const Chat = () => {
 
                 <div className="bg-muted p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
                     <div id="chat-text" className="overflow-y-auto space-y-2 text-muted-foreground">
-                        <p>Yes</p>
+                        {messages.map((msg, index) => (
+                            <p key={index}>
+                                {msg.sender === user?.username ? "You: " : `${msg.sender}: `}{msg.content}
+                            </p>
+                        ))}
                     </div>
                 </div>
                 <SheetFooter className={"flex"}>
-                    <Input type={"text"} className={"bg-foreground"}></Input>
+                    <Input
+                        type={"text"}
+                        className={"bg-foreground"}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                    ></Input>
                     <div className={"gap-4"}>
-                        <Button>Submit</Button>
+                        <Button onClick={handleInput}>Submit</Button>
                         <SheetClose asChild>
                             <Button className={"bg-accent"}>Cancel</Button>
                         </SheetClose>

@@ -20,7 +20,6 @@ import Avatar from "@/components/player/avatar.tsx";
 import { useUser} from "@/components/providers/UserProvider.tsx";
 
 export default function Profile() {
-    // @ts-ignore
     const {user} = useUser();
 
 

@@ -12,12 +12,8 @@ import {
 import {useEffect, useState} from "react";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
+import type {ChatMessage} from "@/components/Interfaces.tsx";
 
-interface ChatMessage {
-    sender: string;
-    content: string;
-    timestamp?: Date;
-}
 
 interface ChatProps {
     gameId?: number | null
@@ -29,31 +25,22 @@ const Chat = ({gameId}: ChatProps) => {
     const [input, setInput] = useState("");
     const {stompClient} = useWebSocket();
     const {user} = useUser();
-
-    console.log(gameId)
+    const {chatMessages, sendMessage} = useWebSocket();
 
     useEffect(() => {
         if (!stompClient) return;
 
-        const sub = stompClient.subscribe(`/topic/game.${gameId}.chat`, (message) => {
-            const chatMsg: ChatMessage = JSON.parse(message.body);
-            setMessages((prev) => [...prev, chatMsg])
-        });
 
-        return () => sub.unsubscribe();
-    }, [stompClient, gameId]);
+        setMessages(chatMessages)
+
+
+    }, [chatMessages]);
 
     // Chat.tsx
     const handleInput = () => {
         if (!stompClient || !input.trim() || !gameId) return;
 
-        stompClient.publish({
-            destination: `/app/game/${gameId}/chat`,
-            body: JSON.stringify({
-                userId: user?.id,
-                message: input,
-            }),
-        });
+        sendMessage(gameId, input);
 
         setInput("");
     };
@@ -80,7 +67,7 @@ const Chat = ({gameId}: ChatProps) => {
 
                 <div className="bg-muted p-4 rounded-2xl shadow-lg flex-1 overflow-y-auto">
                     <div id="chat-text" className="overflow-y-auto space-y-2 text-muted-foreground">
-                        {messages.map((msg, index) => (
+                        {messages?.map((msg, index) => (
                             <p key={index}>
                                 {msg.sender === user?.username ? "You: " : `${msg.sender}: `}{msg.content}
                             </p>

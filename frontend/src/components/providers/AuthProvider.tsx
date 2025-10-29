@@ -15,15 +15,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 
     const [isLoggedIn, setIsLoggedIn] = useState(() => {
-        return !!localStorage.getItem("sessionId")
+        return !!sessionStorage.getItem("sessionId")
     });
     const [userId, setUserId] = useState<string | null>(() => {
-        return localStorage.getItem("userId");
+        return sessionStorage.getItem("userId");
     });
 
     useEffect(() => {
-        const storedSessionId = localStorage.getItem("sessionId");
-        const storedUserId: string | null = localStorage.getItem("userId");
+        const storedSessionId = sessionStorage.getItem("sessionId");
+        const storedUserId: string | null = sessionStorage.getItem("userId");
 
         if (storedSessionId && storedUserId) {
             setIsLoggedIn(true);
@@ -34,16 +34,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 
     const login = (sessionId: string, newUserId: string) => {
-        localStorage.setItem("sessionId", sessionId);
-        localStorage.setItem("userId", newUserId);
+        sessionStorage.setItem("sessionId", sessionId);
+        sessionStorage.setItem("userId", newUserId);
         setIsLoggedIn(true);
         setUserId(newUserId);
         console.log(newUserId)
     };
 
     const logout = () => {
-        localStorage.removeItem("sessionId");
-        localStorage.removeItem("userId");
+        sessionStorage.removeItem("sessionId");
+        sessionStorage.removeItem("userId");
         setIsLoggedIn(false);
         setUserId(null);
     };

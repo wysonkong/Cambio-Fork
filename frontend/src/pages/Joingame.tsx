@@ -5,11 +5,13 @@ import {Button} from "@/components/ui/button.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import {useNavigate} from "react-router-dom";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
+import {useState} from "react";
 
 const Joingame = () => {
     const {user} = useUser();
     const {connect} = useWebSocket();
     const navigate = useNavigate();
+    const [input, setInput] = useState("");
 
     async function handleCreateGame() {
         if (!user) {
@@ -45,6 +47,31 @@ const Joingame = () => {
         }
     }
 
+    async function handleJoinGame(gameId: string) {
+        if (!user) {
+            console.log("User not ready");
+            return;
+        }
+        try {
+            await fetch("http://localhost:8080/api/games/join", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: user.id,
+                    username: user.username,
+                    gameId: gameId
+                })
+            })
+            connect(gameId)
+            navigate(`/Game?gameId=${gameId}`)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            sessionStorage.setItem("currentGame", gameId);
+            console.log("Joined game: " + gameId);
+        }
+    }
+
     return (
         <div className="w-screen h-screen flex items-center justify-center">
             <div className="w-full max-w-md bg-card p-6 rounded-lg">
@@ -54,7 +81,8 @@ const Joingame = () => {
                             <PopoverTrigger asChild>
                                 <Button type="button"
                                         className="mt-3 w-full rounded-md bg-accent py-2.5 text-center font-semibold hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 transition"
-                                        id="join-game">
+                                        id="join-game"
+                                >
                                     Join a Game
                                 </Button>
                             </PopoverTrigger>
@@ -64,11 +92,16 @@ const Joingame = () => {
                                     id="joinCode"
                                     placeholder="Enter your code"
                                     className="col-span-2 h-8"
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
                                 />
-                                <Button type="submit"
+                                <Button
                                         className="mt-3 w-full rounded-md bg-accent py-2.5 text-center font-semibold hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 transition"
                                         id="join-submit"
-                                        // onSubmit={}
+                                        onClick={ async () => {
+                                            console.log("clicked")
+                                            await handleJoinGame(input)}
+                                        }
                                 >
                                     Join
                                 </Button>

@@ -102,7 +102,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
     };
 
     // Send an action via WebSocket
-    const sendAction = (gameId: number, type: string, payload: any) => {
+    const sendAction = (gameId: number, type: string, payload: Map<string, Object>) => {
         console.log("Attempting to send action:", { gameId, type, payload });
 
         if (!user) {

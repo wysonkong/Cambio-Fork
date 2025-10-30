@@ -7,11 +7,12 @@ export interface User {
     avatar: string;
 }
 
-export interface Card {
+export interface CardType {
     rank: string
     suit: string
     isVisible: number[]
 }
+
 
 export interface Player {
     userId : number,

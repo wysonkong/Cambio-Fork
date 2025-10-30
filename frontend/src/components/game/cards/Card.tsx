@@ -1,4 +1,4 @@
-import type {Card} from "@/components/Interfaces.tsx";
+import type {CardType} from "@/components/Interfaces.tsx";
 import {useEffect, useState} from 'react';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
@@ -6,10 +6,10 @@ import {useUser} from "@/components/providers/UserProvider.tsx";
 
 
 interface CardProp {
-    card: Card | null,
+    card: CardType | null,
 }
 
-const Card = ({card} : CardProp) => {
+export const Card = ({card} : CardProp) => {
     const[imgSrc, setImgSrc] = useState<string> ("/images/svgtopng/card-back.png");
     const {user} = useUser();
 
@@ -17,11 +17,12 @@ const Card = ({card} : CardProp) => {
         if(!card) return;
 
         if(!user) return;
-
-        if(card?.isVisible.includes(user.id)) {
+        console.log("useEffect of card")
+        if(card?.isVisible?.includes(user.id)) {
+            console.log("card is visible")
             setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}.png`);
         }
-    }, []);
+    }, [card]);
 
 
     return(
@@ -33,4 +34,3 @@ const Card = ({card} : CardProp) => {
     );
 };
 
-export default Card;

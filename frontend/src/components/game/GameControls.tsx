@@ -22,17 +22,13 @@ const GameControls = ({gameId, handleStart}: GameControlsProps) => {
                     className={"px-4 py-2 bg-chart-2 rounded-lg hover:bg-chart-2/80 focus:ring-chart-2/50"}>
                 Draw
             </Button>
-            <Button id="play-btn"
-                    className={"px-4 py-2 bg-chart-3  rounded-lg hover:bg-chart-3/80 focus:ring-chart-3/50"}>
-                Swap
-            </Button>
             <Button id="discard-btn"
                     className={"px-4 py-2 bg-chart-4  rounded-lg hover:bg-chart-4/80 focus:ring-chart-4/50"}>
                 Discard
             </Button>
             <Button id="swap-pending-btn"
                     className={"px-4 py-2 bg-chart-5 rounded-lg hover:bg-chart-5/80 focus:ring-chart-5/50"}>
-                Swap D
+                Swap
             </Button>
             <Button id="cambio-btn"
                     className={"px-4 py-2 bg-primary rounded-lg hover:bg-primary/80 focus:ring-primary/50"}>

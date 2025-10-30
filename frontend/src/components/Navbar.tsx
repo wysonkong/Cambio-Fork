@@ -9,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/providers/AuthProvider.tsx";
 import logo from "/images/logo.png";
 import {useUser} from "@/components/providers/UserProvider.tsx";
+import {Button} from "@/components/ui/button.tsx";
 
 const Navbar = () => {
     const {isLoggedIn, logout} = useAuth();
@@ -26,7 +27,7 @@ const Navbar = () => {
         >
             <NavigationMenuList className={"flex items-center justify-between px-8 py-3 w-full"}>
                 <NavigationMenuItem>
-                    <Link to={"/"}><img src={logo} alt={"Cambio logo"} className={"h-14 w-14"}/></Link>
+                    <img src={logo} alt={"Cambio logo"} className={"h-14 w-14"} onClick={() => navigate("/")}/>
                 </NavigationMenuItem>
             </NavigationMenuList>
 
@@ -35,23 +36,23 @@ const Navbar = () => {
                 <div className={"ml-auto flex items-center space-x-4"}>
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild>
-                            <Link
-                                to={"/Rules"}
+                            <Button
+                                onClick={() => navigate("/Rules")}
                                 className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
                             >
                                 Rules
-                            </Link>
+                            </Button>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild>
-                            <Link
-                                to={"/Standings"}
+                            <Button
+                                onClick={() => navigate("/Standings")}
                                 className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
                             >
                                 Player Standings
-                            </Link>
+                            </Button>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
 
@@ -59,33 +60,32 @@ const Navbar = () => {
                             <>
                                 <NavigationMenuItem>
                                     <NavigationMenuLink asChild>
-                                        <Link
-                                            to={"/JoinGame"}
+                                        <Button
+                                            onClick={() => navigate("/JoinGame")}
                                             className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
                                         >
                                             Join Game
-                                        </Link>
+                                        </Button>
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>
                                 <NavigationMenuItem>
                                     <NavigationMenuLink asChild>
-                                        <Link
-                                            to="#"
+                                        <Button
                                             onClick={handleLogout}
                                             className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
                                         >
                                             Log Out
-                                        </Link>
+                                        </Button>
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>
                                 <NavigationMenuItem>
                                     <NavigationMenuLink asChild>
-                                        <Link
-                                            to={"/Profile"}
+                                        <Button
+                                            onClick={() => navigate("/Profile")}
                                             className={"px-3 py-2 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors"}
                                         >
                                             {isLoggedIn && user ? (<img src={`/images/avatars/${user.avatar}.png`} alt={user.avatar} className={"h-14 w-14"}/>) : (<div>Profile</div>)}
-                                        </Link>
+                                        </Button>
                                     </NavigationMenuLink>
                                 </NavigationMenuItem>
                             </>

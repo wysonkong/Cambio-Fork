@@ -19,7 +19,7 @@ const DeckArea = ({discard, gameId} : DeckAreaProps) => {
         if (discard) {
             const updatedDiscard = {
                 ...discard,
-                isVisible: [...(discard.isVisible ?? []), user?.id ?? -1]
+                visible: [...(discard.visible ?? []), user?.id ?? -1]
             };
             setShowDiscard(updatedDiscard);
         } else {

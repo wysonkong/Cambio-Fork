@@ -10,7 +10,7 @@ export interface User {
 export interface CardType {
     rank: string
     suit: string
-    isVisible: number[]
+    visible: number[]
 }
 
 
@@ -18,14 +18,14 @@ export interface Player {
     userId : number,
     userName : string,
     index: number,
-    hand: Card[],
+    hand: CardType[],
     score: number,
-    pending: Card
+    pending: CardType
 }
 
 export interface GameState {
     players: Player[],
-    prevCard: Card,
+    prevCard: CardType,
     currentTurn: number,
     cambioCalled: boolean,
     didStickWork: boolean,

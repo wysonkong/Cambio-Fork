@@ -13,13 +13,16 @@ export const Card = ({card} : CardProp) => {
     const[imgSrc, setImgSrc] = useState<string> ("/images/svgtopng/card-back.png");
     const {user} = useUser();
 
+    const me = user?.id;
+
     useEffect(() => {
         if(!card) return;
 
         if(!user) return;
         console.log("useEffect of card")
-        if(card?.isVisible?.includes(user.id)) {
+        if(card?.visible?.includes(me)) {
             console.log("card is visible")
+            console.log("userId of " + me);
             setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}.png`);
         }
     }, [card]);

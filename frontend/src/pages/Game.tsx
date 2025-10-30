@@ -34,22 +34,26 @@ const Game = () => {
         let players = gameState.players;
         let myIndex = null;
         let me = null;
-        gameState.players.forEach((p : Player, index: number) => {
+        players.forEach((p : Player, index: number) => {
           if(p.userId === user?.id) {
               myIndex = index;
           }
         })
-        if(myIndex) {
+        if(myIndex !== null && myIndex !== undefined) {
             me = players[myIndex];
             players.splice(myIndex,1)
         }
-        const middleIndex = Math.ceil(players.length / 2);
-        let tPlayers = players.slice(0, middleIndex);
-        let bPlayers = players.slice(middleIndex);
+        let tPlayers: Player[] = [];
+        let bPlayers: Player[] = [];
         if(me) bPlayers.push(me);
+        let selector = true;
+        players.forEach((p : Player)=> {
+            if(selector) tPlayers.push(p);
+            if(!selector) bPlayers.push(p);
+            selector = !selector;
+        })
         setTopPlayers(tPlayers);
         setBottomPlayers(bPlayers);
-
         console.log(gameState)
     }
 
@@ -60,13 +64,15 @@ const Game = () => {
     }
 
 
+
+
     return (
         <div className="w-screen h-screen flex items-center justify-center">
             <div className={"flex-1 flex flex-col items-center justify-start overflow-y-auto relative"}>
                 <div className={"flex justify-center gap-8"}>
                     {topPlayers?.map((player, index) => (
                         <div className={""}>
-                            <TopPlayers key={index} player={player} hand={gameState?.players[index].hand}/>
+                            <TopPlayers key={index} player={player} hand={topPlayers[index].hand}/>
                         </div>
                     ))}
                 </div>
@@ -78,7 +84,7 @@ const Game = () => {
                 <div className={"flex justify-center gap-8"}>
                     {bottomPlayers?.map((player, index) => (
                         <div className={""}>
-                            <BottomPlayers key={index} player={player} hand={gameState?.players[index].hand}/>
+                            <BottomPlayers key={index} player={player} hand={bottomPlayers[index].hand}/>
                         </div>
                     ))}
 

@@ -4,16 +4,18 @@ import ActionLog from "@/components/game/ActionLog.tsx";
 
 interface GameControlsProps {
     gameId?: number | null
+    handleStart?: () => void,
 }
 
-const GameControls = ({gameId}: GameControlsProps) => {
+const GameControls = ({gameId, handleStart}: GameControlsProps) => {
 
     return (
         <div id="bottom"
              className={"mt-4 gap-4 p-8 bg-foreground text-black text-center h-16 flex items-center justify-center w-full rounded-md"}>
             <span id="display-turn"></span>
             <Button id="start-btn"
-                    className={"px-4 py-2 bg-chart-1  rounded-lg hover:bg-chart-1/80 focus:ring-chart-1/50"}>
+                    className={"px-4 py-2 bg-chart-1  rounded-lg hover:bg-chart-1/80 focus:ring-chart-1/50"}
+                    onClick={handleStart}>
                 Start Game
             </Button>
             <Button id="draw-btn"

@@ -3,14 +3,14 @@ import BottomPlayers from "@/components/game/BottomPlayers.tsx";
 import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
 import {useEffect, useState} from 'react';
-import type {Card, GameState, Player} from "@/components/Interfaces.tsx";
+import type {GameState, Player} from "@/components/Interfaces.tsx";
 import { useWebSocket } from '@/components/providers/WebSocketProvider';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
 
 const Game = () => {
 
-    const { gameState, sendAction, isConnected } = useWebSocket();
+    const { gameState, sendAction} = useWebSocket();
     const gameId = sessionStorage.getItem("currentGame");
     const [topPlayers, setTopPlayers] = useState<Player[]>();
     const [bottomPlayers, setBottomPlayers] = useState<Player[]> ();
@@ -25,42 +25,46 @@ const Game = () => {
     }, [gameState]);
 
 
-    const handleAction = (actionType: string, payload: any) => {
-
-
-
+    const handleAction = (actionType: string, payload: Map<string, Object>) => {
         sendAction(Number(gameId), actionType, payload);
     };
-    if (!isConnected) {
 
-        return <div>Connecting to game...</div>;
-    }
-    if (!gameState) {
 
-        return <div>Loading game state...</div>;
-    }
     const render = (gameState: GameState) => {
         let players = gameState.players;
         let myIndex = null;
         let me = null;
-        gameState.players.forEach((p : Player, index: number) => {
+        players.forEach((p : Player, index: number) => {
           if(p.userId === user?.id) {
               myIndex = index;
           }
         })
-        if(myIndex) {
+        if(myIndex !== null && myIndex !== undefined) {
             me = players[myIndex];
             players.splice(myIndex,1)
         }
-        const middleIndex = Math.ceil(players.length / 2);
-        let tPlayers = players.slice(0, middleIndex);
-        let bPlayers = players.slice(middleIndex);
+        let tPlayers: Player[] = [];
+        let bPlayers: Player[] = [];
         if(me) bPlayers.push(me);
+        let selector = true;
+        players.forEach((p : Player)=> {
+            if(selector) tPlayers.push(p);
+            if(!selector) bPlayers.push(p);
+            selector = !selector;
+        })
         setTopPlayers(tPlayers);
         setBottomPlayers(bPlayers);
-
         console.log(gameState)
     }
+
+    const handleStart = () => {
+        console.log("Start game pushed");
+        const payload = new Map<string, Object>();
+        handleAction("START", payload);
+    }
+
+
+
 
     return (
         <div className="w-screen h-screen flex items-center justify-center">
@@ -68,26 +72,26 @@ const Game = () => {
                 <div className={"flex justify-center gap-8"}>
                     {topPlayers?.map((player, index) => (
                         <div className={""}>
-                            <TopPlayers key={index} player={player}/>
+                            <TopPlayers key={index} player={player} hand={topPlayers[index].hand}/>
                         </div>
                     ))}
                 </div>
 
                 <div className={"relative flex justify-center items-center flex-1 m-8"}>
-                    <DeckArea discard={gameState.prevCard}/>
+                    <DeckArea discard={gameState?.gameStarted ? gameState?.prevCard : null} gameId={Number(gameId)}/>
                 </div>
 
                 <div className={"flex justify-center gap-8"}>
                     {bottomPlayers?.map((player, index) => (
                         <div className={""}>
-                            <BottomPlayers key={index} player={player}/>
+                            <BottomPlayers key={index} player={player} hand={bottomPlayers[index].hand}/>
                         </div>
                     ))}
 
                 </div>
 
 
-                <div className={""}><GameControls gameId={gameId}/></div>
+                <div className={""}><GameControls gameId={Number(gameId)} handleStart={handleStart}/></div>
             </div>
 
         </div>

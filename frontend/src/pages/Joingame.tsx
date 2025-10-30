@@ -62,7 +62,7 @@ const Joingame = () => {
                     gameId: gameId
                 })
             })
-            connect(gameId)
+            connect(Number(gameId))
             navigate(`/Game?gameId=${gameId}`)
         } catch (err) {
             console.error(err)

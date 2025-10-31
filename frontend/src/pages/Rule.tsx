@@ -1,7 +1,9 @@
+
+
 const Rule = () => {
     return (
 
-        <>
+        <div className={"p-6"}>
             <div className="mx-auto grid max-w-2xl gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-1 lg:gap-y-10">
 
                 <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
@@ -53,13 +55,13 @@ const Rule = () => {
                             action.</p>
                     </div>
                     <div className="lg:w-1/4">
-                        <img className="w-full object-contain" src="../img/refcard.png" alt="Trump cards"/>
+                        <img className="w-full object-contain" src="/images/rules/trump.jpeg" alt="Trump cards"/>
                     </div>
                 </div>
 
                 <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
                     <div className="lg:w-1/2 flex justify-center">
-                        <img className="lg:w-1/2 w-auto object-contain" src="../img/pairs.jpeg" alt="Pair cards"/>
+                        <img className="lg:w-1/2 w-auto object-contain" src="/images/rules/pairs.jpeg" alt="Pair cards"/>
                     </div>
                     <div className="lg:w-1/2">
                         <p className="mt-6 text-xl/8 font-semibold text-white">Matching Pairs, oh the same?</p>
@@ -97,7 +99,7 @@ const Rule = () => {
                 </div>
 
             </div>
-        </>
+        </div>
     )
 }
 

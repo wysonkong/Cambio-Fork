@@ -11,7 +11,7 @@ export const Card = ({card}: CardProp) => {
     const [imgSrc, setImgSrc] = useState<string>("/images/svgtopng/card-back.png");
     const {user} = useUser();
 
-    const me = user?.id;
+    const me = Number(user?.id);
 
     useEffect(() => {
         if (!card) return;

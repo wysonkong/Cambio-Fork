@@ -55,64 +55,64 @@
     --radius: 0.625rem;
 
     /* === Core Backgrounds & Foregrounds === */
-    --background: oklch(0.18 0.02 300);          /* Deep indigo-black */
-    --foreground: oklch(0.95 0.02 85);           /* Soft warm ivory */
+    --background: oklch(0.15 0.02 160);          /* Deep forest green */
+    --foreground: oklch(0.97 0.01 60);           /* Crisp snow white */
 
     /* === Cards / Surfaces === */
-    --card: oklch(0.23 0.03 310);                /* Dark plum-gray */
-    --card-foreground: oklch(0.96 0.02 85);      /* Ivory text */
+    --card: oklch(0.2 0.03 155);                 /* Rich evergreen */
+    --card-foreground: oklch(0.97 0.01 60);      /* Snow white text */
 
     /* === Popovers / Drawers === */
-    --popover: oklch(0.22 0.03 310);
-    --popover-foreground: oklch(0.96 0.02 85);
+    --popover: oklch(0.19 0.03 155);
+    --popover-foreground: oklch(0.97 0.01 60);
 
-    /* === Primary (Main Halloween Accent) === */
-    --primary: oklch(0.65 0.15 55);              /* Burnt pumpkin orange */
-    --primary-foreground: oklch(0.1 0 0);        /* Near black text for contrast */
+    /* === Primary (Classic Christmas Red) === */
+    --primary: oklch(0.55 0.22 25);              /* Rich cranberry red */
+    --primary-foreground: oklch(0.98 0.01 60);   /* Pure white text */
 
-    /* === Secondary (Violet Shadow Tone) === */
-    --secondary: oklch(0.3 0.05 290);            /* Muted purple-gray */
-    --secondary-foreground: oklch(0.93 0.02 85);
+    /* === Secondary (Winter Pine) === */
+    --secondary: oklch(0.35 0.08 165);           /* Deep pine green */
+    --secondary-foreground: oklch(0.95 0.01 60);
 
     /* === Muted / Neutral Text === */
-    --muted: oklch(0.35 0.02 290);               /* Desaturated cool gray */
-    --muted-foreground: oklch(0.7 0.02 85);      /* Muted ivory text */
+    --muted: oklch(0.3 0.03 160);                /* Muted forest */
+    --muted-foreground: oklch(0.75 0.02 60);     /* Soft ivory */
 
-    /* === Accent (Highlight Pop, e.g. buttons or links) === */
-    --accent: oklch(0.55 0.12 90);               /* Amber-gold */
-    --accent-foreground: oklch(0.1 0 0);
+    /* === Accent (Festive Gold) === */
+    --accent: oklch(0.75 0.15 85);               /* Warm golden ornament */
+    --accent-foreground: oklch(0.15 0.02 160);   /* Dark green text */
 
-    /* === Destructive (Red tone, but darker and cinematic) === */
-    --destructive: oklch(0.48 0.18 30);          /* Deep blood red */
-    --destructive-foreground: oklch(0.98 0 0);
+    /* === Destructive (Holly Berry Red) === */
+    --destructive: oklch(0.5 0.25 20);           /* Bright holly red */
+    --destructive-foreground: oklch(0.98 0.01 60);
 
     /* === Inputs, Borders, and Rings === */
-    --border: oklch(0.3 0.02 290);
-    --input: oklch(0.3 0.02 290);
-    --ring: oklch(0.65 0.15 55);                 /* Subtle orange ring */
+    --border: oklch(0.3 0.04 160);
+    --input: oklch(0.3 0.04 160);
+    --ring: oklch(0.55 0.22 25);                 /* Cranberry ring */
 
     /* === Chart / Highlight Colors === */
-    --chart-1: oklch(0.65 0.15 55);              /* Pumpkin */
-    --chart-2: oklch(0.5 0.1 300);               /* Purple */
-    --chart-3: oklch(0.55 0.12 130);             /* Olive green */
-    --chart-4: oklch(0.6 0.14 90);               /* Amber */
-    --chart-5: oklch(0.48 0.18 30);              /* Blood red */
+    --chart-1: oklch(0.55 0.22 25);              /* Cranberry red */
+    --chart-2: oklch(0.35 0.08 165);             /* Pine green */
+    --chart-3: oklch(0.75 0.15 85);              /* Golden */
+    --chart-4: oklch(0.92 0.02 60);              /* Snow white */
+    --chart-5: oklch(0.45 0.12 200);             /* Icy blue */
 
     /* === Sidebar / Mobile Drawer === */
-    --sidebar: oklch(0.15 0.02 290);             /* Deep plum-black */
-    --sidebar-foreground: oklch(0.95 0.02 85);
-    --sidebar-primary: oklch(0.65 0.15 55);      /* Burnt orange */
-    --sidebar-primary-foreground: oklch(0.1 0 0);
-    --sidebar-accent: oklch(0.55 0.12 90);       /* Amber accent */
-    --sidebar-accent-foreground: oklch(0.1 0 0);
-    --sidebar-border: oklch(0.28 0.02 290);
-    --sidebar-ring: oklch(0.65 0.15 55);
+    --sidebar: oklch(0.12 0.02 155);             /* Deep winter night */
+    --sidebar-foreground: oklch(0.97 0.01 60);
+    --sidebar-primary: oklch(0.55 0.22 25);      /* Cranberry */
+    --sidebar-primary-foreground: oklch(0.98 0.01 60);
+    --sidebar-accent: oklch(0.75 0.15 85);       /* Gold accent */
+    --sidebar-accent-foreground: oklch(0.15 0.02 160);
+    --sidebar-border: oklch(0.25 0.03 160);
+    --sidebar-ring: oklch(0.55 0.22 25);
 }
 
 .dark {
-    --background: oklch(0.1 0.02 290);
-    --foreground: oklch(0.96 0.02 85);
-    --card: oklch(0.15 0.02 300);
-    --primary: oklch(0.65 0.18 55);              /* Brighter burnt orange */
-    --accent: oklch(0.55 0.15 90);               /* Rich gold accent */
+    --background: oklch(0.08 0.02 155);          /* Midnight forest */
+    --foreground: oklch(0.98 0.01 60);
+    --card: oklch(0.12 0.02 160);
+    --primary: oklch(0.6 0.25 25);               /* Brighter festive red */
+    --accent: oklch(0.8 0.18 85);                /* Luminous gold */
 }

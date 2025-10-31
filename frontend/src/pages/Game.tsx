@@ -45,7 +45,13 @@ const Game = () => {
         }
         let tPlayers: Player[] = [];
         let bPlayers: Player[] = [];
-        if(me) bPlayers.push(me);
+        if (players.length >= 5) {
+            const middleIndex = bPlayers.length % 2
+            if(me) bPlayers.splice(middleIndex, 0);
+        } else {
+            if(me) bPlayers.push(me);
+        }
+
         let selector = true;
         players.forEach((p : Player)=> {
             if(selector) tPlayers.push(p);

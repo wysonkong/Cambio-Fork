@@ -34,30 +34,33 @@ const Game = () => {
         let players = gameState.players;
         let myIndex = null;
         let me = null;
-        players.forEach((p : Player, index: number) => {
-          if(p.userId === user?.id) {
-              myIndex = index;
-          }
+        players.forEach((p: Player, index: number) => {
+            if (p.userId === user?.id) {
+                myIndex = index;
+            }
         })
-        if(myIndex !== null && myIndex !== undefined) {
+        if (myIndex !== null && myIndex !== undefined && players.length < 6) {
             me = players[myIndex];
-            players.splice(myIndex,1)
         }
         let tPlayers: Player[] = [];
         let bPlayers: Player[] = [];
-        if (players.length >= 5) {
-            const middleIndex = bPlayers.length % 2
-            if(me) bPlayers.splice(middleIndex, 0);
+        if (gameState.players.length === 6) {
+            if (myIndex !== null) {
+                bPlayers = [gameState.players[(myIndex - 1) % 6], gameState.players[myIndex], gameState.players[(myIndex + 1) % 6]]
+                tPlayers = [gameState.players[(myIndex + 4) % 6], gameState.players[(myIndex + 3) % 6], gameState.players[(myIndex + 2) % 6]]
+            }
         } else {
-            if(me) bPlayers.push(me);
+            if (myIndex) bPlayers.push(players[myIndex]);
         }
-
-        let selector = true;
-        players.forEach((p : Player)=> {
-            if(selector) tPlayers.push(p);
-            if(!selector) bPlayers.push(p);
-            selector = !selector;
-        })
+        if (players.length < 6) {
+            let selector = true;
+            players.forEach((p: Player) => {
+                if (selector) tPlayers.push(p);
+                if (!selector) bPlayers.push(p);
+                selector = !selector;
+            })
+        }
+        console.log("bottom players" + bPlayers)
         setTopPlayers(tPlayers);
         setBottomPlayers(bPlayers);
         console.log(gameState)

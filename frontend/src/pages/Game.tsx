@@ -4,16 +4,16 @@ import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
 import {useEffect, useState} from 'react';
 import type {GameState, Player} from "@/components/Interfaces.tsx";
-import { useWebSocket } from '@/components/providers/WebSocketProvider';
+import {useWebSocket} from '@/components/providers/WebSocketProvider';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
 
 const Game = () => {
 
-    const { gameState, sendAction} = useWebSocket();
+    const {gameState, sendAction} = useWebSocket();
     const gameId = sessionStorage.getItem("currentGame");
     const [topPlayers, setTopPlayers] = useState<Player[]>();
-    const [bottomPlayers, setBottomPlayers] = useState<Player[]> ();
+    const [bottomPlayers, setBottomPlayers] = useState<Player[]>();
     const {user} = useUser();
 
 
@@ -72,7 +72,31 @@ const Game = () => {
         handleAction("START", payload);
     }
 
+    const handleDraw = () => {
+        console.log(user?.username + " drew a card");
+        const payload = new Map<string, Object>();
+        handleAction("DRAW_DECK", payload);
+    }
 
+    const handleSwap = () => {
+
+    }
+
+    const handleDiscard = () => {
+        console.log(user?.username + " discarded");
+        const payload = new Map<string, Object>();
+        handleAction("DISCARD_PENDING", payload);
+    }
+
+    const handleCambio = () => {
+        console.log(user?.username + " called Cambio!");
+        const payload = new Map<string, Object>();
+        handleAction("CALL_CAMBIO", payload);
+    }
+
+    const handleStick = () => {
+
+    }
 
 
     return (
@@ -100,7 +124,15 @@ const Game = () => {
                 </div>
 
 
-                <div className={""}><GameControls gameId={Number(gameId)} handleStart={handleStart}/></div>
+                <div className={""}>
+                    <GameControls gameId={Number(gameId)}
+                                  handleStart={handleStart}
+                                  handleDraw={handleDraw}
+                                  handleDiscard={handleDiscard}
+                                  handleSwap={handleSwap}
+                                  handleCambio={handleCambio}
+                                  handleStick={handleStick}/>
+                </div>
             </div>
 
         </div>

@@ -81,6 +81,7 @@ public class GameEngine {
         switch (action.getType()) {
             case DRAW_DECK -> {
                 Card drawn = deck.removeFirst();
+                drawn.makeVisibleTo(player.getId());
                 player.setPending(drawn);
                 pending = true;
                 hasDrawn = true;

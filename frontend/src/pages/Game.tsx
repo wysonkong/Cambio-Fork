@@ -4,16 +4,19 @@ import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
 import {useEffect, useState} from 'react';
 import type {GameState, Player} from "@/components/Interfaces.tsx";
-import {useWebSocket} from '@/components/providers/WebSocketProvider';
+import { useWebSocket } from '@/components/providers/WebSocketProvider';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
 
 const Game = () => {
 
-    const {gameState, sendAction} = useWebSocket();
+    const { gameState, sendAction} = useWebSocket();
     const gameId = sessionStorage.getItem("currentGame");
     const [topPlayers, setTopPlayers] = useState<Player[]>();
-    const [bottomPlayers, setBottomPlayers] = useState<Player[]>();
+    const [bottomRightPlayers, setBottomRightPlayers] = useState<Player[]> ();
+    const [bottomLeftPlayers, setBottomLeftPlayers] = useState<Player[]> ();
+    const [currentPlayer, setCurrentPlayer] = useState<Player> ();
+
     const {user} = useUser();
 
 
@@ -32,38 +35,64 @@ const Game = () => {
 
     const render = (gameState: GameState) => {
         let players = gameState.players;
-        let myIndex = null;
+        let playersSorted = [];
+        let bRPlayers = [];
+        let bLPlayers = []
+        let tPlayers = [];
         let me = null;
-        players.forEach((p: Player, index: number) => {
-            if (p.userId === user?.id) {
-                myIndex = index;
+        let myIndex = 0;
+        players.forEach((p : Player, index ) => {
+            if(p.userId === user?.id) {
+                myIndex = index
             }
         })
-        if (myIndex !== null && myIndex !== undefined && players.length < 6) {
-            me = players[myIndex];
-        }
-        let tPlayers: Player[] = [];
-        let bPlayers: Player[] = [];
-        if (gameState.players.length === 6) {
-            if (myIndex !== null) {
-                bPlayers = [gameState.players[(myIndex - 1) % 6], gameState.players[myIndex], gameState.players[(myIndex + 1) % 6]]
-                tPlayers = [gameState.players[(myIndex + 4) % 6], gameState.players[(myIndex + 3) % 6], gameState.players[(myIndex + 2) % 6]]
+        players.forEach((p : Player, index) => {
+            if(index >= myIndex) {
+                playersSorted.push(p);
             }
-        } else {
-            if (myIndex) bPlayers.push(players[myIndex]);
+        })
+        players.forEach((p : Player, index ) => {
+           if(index < myIndex) {
+               playersSorted.push(p)
+           }
+        });
+
+        me = playersSorted[0];
+        playersSorted.splice(0, 1);
+        console.log(me);
+        console.log(playersSorted);
+        switch(playersSorted.length) {
+            case 1:
+                tPlayers.push(playersSorted[0]);
+                break;
+            case 2:
+                tPlayers.push(playersSorted[0]);
+                tPlayers.push(playersSorted[1]);
+                break;
+            case 3:
+                tPlayers.push(playersSorted[0]);
+                tPlayers.push(playersSorted[1]);
+                bRPlayers.push(playersSorted[2]);
+                break;
+            case 4:
+                tPlayers.push(playersSorted[0]);
+                tPlayers.push(playersSorted[1]);
+                tPlayers.push(playersSorted[2]);
+                bRPlayers.push(playersSorted[3]);
+                break;
+            case 5:
+                bLPlayers.push(playersSorted[0]);
+                tPlayers.push(playersSorted[1]);
+                tPlayers.push(playersSorted[2]);
+                tPlayers.push(playersSorted[3]);
+                bRPlayers.push(playersSorted[4]);
+                break;
         }
-        if (players.length < 6) {
-            let selector = true;
-            players.forEach((p: Player) => {
-                if (selector) tPlayers.push(p);
-                if (!selector) bPlayers.push(p);
-                selector = !selector;
-            })
-        }
-        console.log("bottom players" + bPlayers)
+        console.log(me);
         setTopPlayers(tPlayers);
-        setBottomPlayers(bPlayers);
-        console.log(gameState)
+        setBottomRightPlayers(bRPlayers);
+        setBottomLeftPlayers(bLPlayers);
+        setCurrentPlayer(me);
     }
 
     const handleStart = () => {
@@ -72,31 +101,7 @@ const Game = () => {
         handleAction("START", payload);
     }
 
-    const handleDraw = () => {
-        console.log(user?.username + " drew a card");
-        const payload = new Map<string, Object>();
-        handleAction("DRAW_DECK", payload);
-    }
 
-    const handleSwap = () => {
-
-    }
-
-    const handleDiscard = () => {
-        console.log(user?.username + " discarded");
-        const payload = new Map<string, Object>();
-        handleAction("DISCARD_PENDING", payload);
-    }
-
-    const handleCambio = () => {
-        console.log(user?.username + " called Cambio!");
-        const payload = new Map<string, Object>();
-        handleAction("CALL_CAMBIO", payload);
-    }
-
-    const handleStick = () => {
-
-    }
 
 
     return (
@@ -113,26 +118,34 @@ const Game = () => {
                 <div className={"relative flex justify-center items-center flex-1 m-8"}>
                     <DeckArea discard={gameState?.gameStarted ? gameState?.prevCard : null} gameId={Number(gameId)}/>
                 </div>
-
                 <div className={"flex justify-center gap-8"}>
-                    {bottomPlayers?.map((player, index) => (
-                        <div className={""}>
-                            <BottomPlayers key={index} player={player} hand={bottomPlayers[index].hand}/>
-                        </div>
-                    ))}
+                    <div className={"flex justify-center gap-8"}>
+                        {bottomLeftPlayers?.map((player, index) => (
+                            <div className={""}>
+                                <BottomPlayers key={index} player={player} hand={bottomLeftPlayers[index].hand}/>
+                            </div>
+                        ))}
 
+                    </div>
+                    <div className={"flex justify-center gap-8"}>
+                        {currentPlayer && <div className={""}>
+                                <BottomPlayers key={0} player={currentPlayer} hand={currentPlayer?.hand}/>
+                            </div>}
+
+                    </div>
+
+                    <div className={"flex justify-center gap-8"}>
+                        {bottomRightPlayers?.map((player, index) => (
+                            <div className={""}>
+                                <BottomPlayers key={index} player={player} hand={bottomRightPlayers[index].hand}/>
+                            </div>
+                        ))}
+
+                    </div>
                 </div>
 
 
-                <div className={""}>
-                    <GameControls gameId={Number(gameId)}
-                                  handleStart={handleStart}
-                                  handleDraw={handleDraw}
-                                  handleDiscard={handleDiscard}
-                                  handleSwap={handleSwap}
-                                  handleCambio={handleCambio}
-                                  handleStick={handleStick}/>
-                </div>
+                <div className={""}><GameControls gameId={Number(gameId)} handleStart={handleStart}/></div>
             </div>
 
         </div>

@@ -33,6 +33,8 @@ const BottomPlayers = ({player, hand} : BottomPlayersProp) => {
     }, [player]);
 
 
+    console.log(player)
+
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-col items-center"}>
             <div className={"flex justify-center grid-flow-col grid-rows-1"}/>

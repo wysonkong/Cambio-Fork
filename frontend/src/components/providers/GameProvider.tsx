@@ -1,4 +1,4 @@
-import React, {createContext, use, useContext, useState} from 'react';
+import React, {createContext, use, useContext, useEffect, useState} from 'react';
 import type {GameState, Player} from "@/components/Interfaces.tsx";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
@@ -23,12 +23,13 @@ const GameProvider = ({children} : {children: React.ReactNode}) => {
     const {user} = useUser();
 
 
+    useEffect(() => {
+        if(!gameState) return;
 
-    const gameControl = (gameState: GameState) => {
         gameState.players.forEach((p: Player, index) => {
-          if(p.userId === user?.id) {
-              setMyIndex(index);
-          }
+            if(p.userId === user?.id) {
+                setMyIndex(index);
+            }
         })
         if(!gameState.gameStarted) {
             console.log("game has not started")
@@ -57,8 +58,9 @@ const GameProvider = ({children} : {children: React.ReactNode}) => {
                 }
             }
         }
+    }, [gameState]);
 
-    }
+
 
     return (
         <GameContext.Provider value={{gameControlArr, gameState, myIndex}}>{children}</GameContext.Provider>

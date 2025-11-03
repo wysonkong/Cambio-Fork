@@ -13,7 +13,7 @@ const TopPlayers = ({player, hand} : TopPlayersProp) => {
     useEffect(() => {
         async function fetchAvatar() {
             try {
-                const response = await fetch("/api/getUser" + player.userId, {
+                const response = await fetch("http://localhost:8080/api/getUser" + player.userId, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
@@ -34,7 +34,7 @@ const TopPlayers = ({player, hand} : TopPlayersProp) => {
     }, [player]);
 
     return (
-        <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-col items-center"}>
+        <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
             <div className={"flex justify-center grid-flow-col grid-rows-1"}/>
             <div id="${slotId}-username" className="text-center font-bold mb-2">
                 <img src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>{player.userName}</div>

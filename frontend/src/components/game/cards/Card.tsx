@@ -5,9 +5,10 @@ import {useUser} from "@/components/providers/UserProvider.tsx";
 
 interface CardProp {
     card: CardType | null,
+    isDiscard?: boolean
 }
 
-export const Card = ({card}: CardProp) => {
+export const Card = ({card, isDiscard}: CardProp) => {
     const [imgSrc, setImgSrc] = useState<string>("/images/svgtopng/card-back.png");
     const {user} = useUser();
 
@@ -19,10 +20,10 @@ export const Card = ({card}: CardProp) => {
         if (!user) return;
         console.log("useEffect of card")
 
-        if (card?.visible?.includes(me) && card.visible.length >= 2) {
-            setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}peek.png`)
-        } else if (card?.visible.includes(me) && card.visible.length === 1) {
+        if  ((card?.visible.includes(me) && card.visible.length === 1) || isDiscard) {
             setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}.png`);
+        } else if (card?.visible?.includes(me) && card.visible.length >= 2) {
+            setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}peek.png`)
         } else if (!card?.visible.includes(me) && card.visible.length >= 2) {
             setImgSrc("/images/svgtopng/card-back-peek.png")
         } else {

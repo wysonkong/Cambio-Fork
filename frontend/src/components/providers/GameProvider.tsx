@@ -1,32 +1,70 @@
-import React, {createContext, use, useState} from 'react';
-import type {GameState} from "@/components/Interfaces.tsx";
+import React, {createContext, use, useContext, useState} from 'react';
+import type {GameState, Player} from "@/components/Interfaces.tsx";
+import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
+import {useUser} from "@/components/providers/UserProvider.tsx";
 
 
 interface GameContextType {
     gameState: GameState | null,
-    gameControl: (gameState: GameState) => void,
+    gameControlArr: boolean[],
+    myIndex: number
 }
 
 const GameContext = createContext<GameContextType>({
     gameState: null,
-    gameControl: () => {},
+    gameControlArr: [],
+    myIndex: -1,
 })
 
 const GameProvider = ({children} : {children: React.ReactNode}) => {
-    const [startBtn, setStartBtn] = useState(true);
-    const [drawBtn, setDrawBtn] = useState(false);
-    const [discardBtn, setDiscardBtn] = useState(false);
-    const [swapBtn, setSwapBtn] = useState(false);
-    const [cambioBtn, setCambioBtn] = useState(false);
-    const [stickBtn, setStickBtn] = useState(false);
+    const {gameState} = useWebSocket()
+    const [gameControlArr, setGameControlArr] = useState<boolean[]> ([true, false, false, false ,false, false])
+    const [myIndex, setMyIndex] = useState<number>(-1);
+    const {user} = useUser();
+
+
 
     const gameControl = (gameState: GameState) => {
+        gameState.players.forEach((p: Player, index) => {
+          if(p.userId === user?.id) {
+              setMyIndex(index);
+          }
+        })
+        if(!gameState.gameStarted) {
+            console.log("game has not started")
+            setGameControlArr([true, false, false, false ,false, false])
+        }
+        // else {
+        //     if(gameState.currentTurn === myIndex ) {
+        //         if(!gameState.hasDrawn) {
+        //             setGameControlArr([false, true, false, false, true, true])
+        //         }
+        //         if(gameState.hasDrawn && gameState.players[myIndex].pending) {
+        //             setGameControlArr([false, false, true, true, false, false])
+        //         }
+        //         if(gameState.hasDrawn && !gameState.players[myIndex].pending) {
+        //             if(!gameState.lastCardStuck) {
+        //                 setGameControlArr([false, false, false, false, false, true])
+        //             }
+        //             else {
+        //                 setGameControlArr([false, false, false, false, false, false ])
+        //             }
+        //         }
+        //     }
+        //     else {
+        //         if(!gameState.lastCardStuck) {
+        //             setGameControlArr([false, false, false, false, false, true])
+        //         }
+        //     }
+        //}
 
     }
 
     return (
-        <GameContext.Provider value={{gameState, gameControl}}>{children}</GameContext.Provider>
+        <GameContext.Provider value={{gameControlArr, gameState, myIndex}}>{children}</GameContext.Provider>
     );
 };
 
 export default GameProvider;
+
+export const useGame = () => useContext(GameContext);

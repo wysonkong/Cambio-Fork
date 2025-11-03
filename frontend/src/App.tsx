@@ -13,6 +13,7 @@ import Game from "@/pages/Game.tsx";
 import Profile from "@/pages/Profile.tsx";
 import {UserProvider} from "@/components/providers/UserProvider.tsx";
 import {WebSocketProvider} from "@/components/providers/WebSocketProvider.tsx";
+import GameProvider from "@/components/providers/GameProvider.tsx";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
         <AuthProvider>
             <UserProvider>
                 <WebSocketProvider>
+                    <GameProvider>
                     <Router>
                         <Layout>
                             <Routes>
@@ -36,6 +38,7 @@ function App() {
                             </Routes>
                         </Layout>
                     </Router>
+                    </GameProvider>
                 </WebSocketProvider>
             </UserProvider>
         </AuthProvider>

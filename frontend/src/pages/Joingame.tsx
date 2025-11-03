@@ -87,6 +87,10 @@ const Joingame = () => {
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent>
+                                <form onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    await handleJoinGame(input);
+                                }}>
                                 <Label htmlFor="joinCode" className={"mb-2"}>Game code</Label>
                                 <Input
                                     id="joinCode"
@@ -98,13 +102,10 @@ const Joingame = () => {
                                 <Button
                                         className="mt-3 w-full rounded-md bg-accent py-2.5 text-center font-semibold hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 transition"
                                         id="join-submit"
-                                        onClick={ async () => {
-                                            console.log("clicked")
-                                            await handleJoinGame(input)}
-                                        }
                                 >
                                     Join
                                 </Button>
+                                </form>
                             </PopoverContent>
                         </Popover>
                     </div>

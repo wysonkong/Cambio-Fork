@@ -9,7 +9,7 @@ import {
     SheetTitle,
     SheetTrigger
 } from "@/components/ui/sheet.tsx";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import type {ChatMessage} from "@/components/Interfaces.tsx";
@@ -37,7 +37,8 @@ const Chat = ({gameId}: ChatProps) => {
     }, [chatMessages]);
 
     // Chat.tsx
-    const handleInput = () => {
+    const handleInput = (e:React.FormEvent) => {
+        e.preventDefault()
         if (!stompClient || !input.trim() || !gameId) return;
 
         sendMessage(gameId, input);
@@ -75,6 +76,7 @@ const Chat = ({gameId}: ChatProps) => {
                     </div>
                 </div>
                 <SheetFooter className={"flex"}>
+                    <form onSubmit={handleInput}>
                     <Input
                         type={"text"}
                         className={"bg-foreground"}
@@ -82,11 +84,12 @@ const Chat = ({gameId}: ChatProps) => {
                         onChange={(e) => setInput(e.target.value)}
                     ></Input>
                     <div className={"gap-4"}>
-                        <Button onClick={handleInput}>Submit</Button>
+                        <Button>Submit</Button>
                         <SheetClose asChild>
                             <Button className={"bg-accent"}>Cancel</Button>
                         </SheetClose>
                     </div>
+                    </form>
                 </SheetFooter>
             </SheetContent>
         </Sheet>

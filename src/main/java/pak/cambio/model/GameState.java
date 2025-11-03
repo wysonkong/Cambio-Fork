@@ -14,9 +14,11 @@ public class GameState {
     private final boolean tempTurn;
     private final boolean gameStarted;
     private final Player cambioPlayer;
+    private final boolean lastCardStuck;
+    private final boolean hasDrawn;
     private int seq;
 
-    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork, int specialMove, ArrayList<Player> winners, boolean tempTurn, boolean gameStarted, Player cambioPlayer, int seq) {
+    public GameState(List<PlayerView> players, Card prevCard, int currentTurn, boolean cambioCalled, boolean didStickWork, int specialMove, ArrayList<Player> winners, boolean tempTurn, boolean gameStarted, Player cambioPlayer, boolean lastCardStuck,boolean hasDrawn, int seq) {
         this.players = players;
         this.prevCard = prevCard;
         this.currentTurn = currentTurn;
@@ -27,7 +29,17 @@ public class GameState {
         this.tempTurn = tempTurn;
         this.gameStarted = gameStarted;
         this.cambioPlayer = cambioPlayer;
+        this.lastCardStuck = lastCardStuck;
+        this.hasDrawn = hasDrawn;
         this.seq = seq;
+    }
+
+    public boolean isHasDrawn() {
+        return hasDrawn;
+    }
+
+    public boolean isLastCardStuck() {
+        return lastCardStuck;
     }
 
     public int getSeq() {

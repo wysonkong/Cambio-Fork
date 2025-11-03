@@ -34,29 +34,29 @@ const GameProvider = ({children} : {children: React.ReactNode}) => {
             console.log("game has not started")
             setGameControlArr([true, false, false, false ,false, false])
         }
-        // else {
-        //     if(gameState.currentTurn === myIndex ) {
-        //         if(!gameState.hasDrawn) {
-        //             setGameControlArr([false, true, false, false, true, true])
-        //         }
-        //         if(gameState.hasDrawn && gameState.players[myIndex].pending) {
-        //             setGameControlArr([false, false, true, true, false, false])
-        //         }
-        //         if(gameState.hasDrawn && !gameState.players[myIndex].pending) {
-        //             if(!gameState.lastCardStuck) {
-        //                 setGameControlArr([false, false, false, false, false, true])
-        //             }
-        //             else {
-        //                 setGameControlArr([false, false, false, false, false, false ])
-        //             }
-        //         }
-        //     }
-        //     else {
-        //         if(!gameState.lastCardStuck) {
-        //             setGameControlArr([false, false, false, false, false, true])
-        //         }
-        //     }
-        //}
+        else {
+            if(gameState.currentTurn === myIndex ) {
+                if(!gameState.hasDrawn) {
+                    setGameControlArr([false, true, false, false, true, true])
+                }
+                if(gameState.hasDrawn && gameState.players[myIndex].pending) {
+                    setGameControlArr([false, false, true, true, false, false])
+                }
+                if(gameState.hasDrawn && !gameState.players[myIndex].pending) {
+                    if(!gameState.lastCardStuck) {
+                        setGameControlArr([false, false, false, false, false, true])
+                    }
+                    else {
+                        setGameControlArr([false, false, false, false, false, false ])
+                    }
+                }
+            }
+            else {
+                if(!gameState.lastCardStuck) {
+                    setGameControlArr([false, false, false, false, false, true])
+                }
+            }
+        }
 
     }
 

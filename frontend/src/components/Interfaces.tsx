@@ -34,6 +34,8 @@ export interface GameState {
     tempTurn: boolean,
     gameStarted: boolean,
     cambioPlayer: Player,
+    lastCardStuck: boolean,
+    hasDrawn: boolean,
     seq: number
 }
 

@@ -33,7 +33,7 @@ export const Card = ({card}: CardProp) => {
 
 
     return (
-        <div>
+        <div className={"flex items-center justify-center h-30 w-22 hover:bg-secondary transition-colors"}>
             <img src={imgSrc}
                  alt={`${card?.rank} + ${card?.suit}`}
                  className={"h-28 w-20"}/>

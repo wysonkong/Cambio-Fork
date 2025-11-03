@@ -101,6 +101,32 @@ const Game = () => {
         handleAction("START", payload);
     }
 
+    const handleDraw = () => {
+        console.log("Drew from deck");
+        const payload = new Map<string, Object>();
+        handleAction("DRAW_DECK", payload);
+    }
+
+    const handleDiscard = () => {
+        console.log("discarded");
+        const payload = new Map<string, Object>();
+        handleAction("DISCARD_PENDING", payload);
+    }
+
+    const handleSwap = () => {
+
+    }
+
+    const handleCambio = () => {
+        console.log("called Cambio");
+        const payload = new Map<string, Object>();
+        handleAction("CALL_CAMBIO", payload);
+    }
+
+    const handleStick = () => {
+
+    }
+
 
 
 
@@ -145,7 +171,13 @@ const Game = () => {
                 </div>
 
 
-                <div className={""}><GameControls gameId={Number(gameId)} handleStart={handleStart}/></div>
+                <div className={""}><GameControls gameId={Number(gameId)}
+                                                  handleStart={handleStart}
+                                                  handleDraw={handleDraw}
+                                                  handleDiscard={handleDiscard}
+                                                  handleSwap={handleSwap}
+                                                  handleCambio={handleCambio}
+                                                  handleStick={handleStick}/></div>
             </div>
 
         </div>

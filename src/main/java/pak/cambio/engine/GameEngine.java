@@ -18,6 +18,8 @@ public class GameEngine {
     private boolean tempTurn = false;
     private int lastTurn;
     private Player cambioPlayer;
+    private boolean lastCardStuck = false;
+    private boolean hasDrawn = false;
 
     public GameEngine(List<Player> initialPlayers) {
         this.players.addAll(initialPlayers);
@@ -81,6 +83,7 @@ public class GameEngine {
                 Card drawn = deck.removeFirst();
                 player.setPending(drawn);
                 pending = true;
+                hasDrawn = true;
             }
             case DRAW_DISCARD -> {
                 player.getHand().add(discard.removeFirst());
@@ -118,6 +121,7 @@ public class GameEngine {
                     player.getHand().set(idx, newCard);
                     discard.addFirst(old);
                     player.setPending(null);
+                    lastCardStuck = false;
                 } catch(Exception e) {
                     pending = true;
                     break;
@@ -146,6 +150,7 @@ public class GameEngine {
                 if(player.getHand().isEmpty()) {
                     pending = false;
                 }
+                lastCardStuck = false;
             }
             case SWAP -> {
                 try {
@@ -204,6 +209,7 @@ public class GameEngine {
                         originPlayer.getHand().remove(origin);
                         discard.addFirst(card);
                         didStickWork = true;
+                        lastCardStuck = true;
                         if (originUserId != action.getUserId()) {
                             tempTurn = true;
                             nextTurn = players.indexOf(findPlayer(action.getUserId()));
@@ -250,6 +256,7 @@ public class GameEngine {
 
     public void advanceTurn() {
         currentTurn = (currentTurn + 1) % players.size();
+        hasDrawn = false;
         if(cambioCalled) {
             cambioCountDown--;
         }
@@ -309,7 +316,7 @@ public class GameEngine {
             ));
         }
 
-        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winners, tempTurn, true, cambioPlayer, 0);
+        return new GameState(views, discard.peekFirst(), currentTurn, cambioCalled, didStickWork, specialMove, winners, tempTurn, true, cambioPlayer, lastCardStuck, hasDrawn, 0);
     }
 
 }

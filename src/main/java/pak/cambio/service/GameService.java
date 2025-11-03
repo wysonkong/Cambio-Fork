@@ -66,7 +66,7 @@ public class GameService {
         GameState state = new GameState(playersByGame.get(gameId).stream()
                 .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                         List.of(), -1, null)).toList(),
-                null, 0, false, false, 0, null, false, false, null, 0);
+                null, 0, false, false, 0, null, false, false, null, false, false, 0);
 
         messagingTemplate.convertAndSend("/topic/game." + gameId + ".state", state);
         return state;
@@ -104,7 +104,7 @@ public class GameService {
             return new GameState(playersByGame.get(gameId).stream()
                     .map(pp -> new GameState.PlayerView(pp.getId(), pp.getUser(), pp.getIndex(),
                             List.of(), -1, null)).toList(),
-                    null, 0, false, false, 0, null, false, false, null, 0);
+                    null, 0, false, false, 0, null, false, false, null, false,false, 0);
         }
         GameEngine engine = activeEngines.get(gameId);
         if (engine == null && action.getType() == ActionType.START) {

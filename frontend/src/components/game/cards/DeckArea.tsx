@@ -12,6 +12,7 @@ interface DeckAreaProps {
 const DeckArea = ({discard, gameId} : DeckAreaProps) => {
     // const [showDiscard, setShowDiscard] = useState(false);
     const [showDiscard, setShowDiscard] = useState<CardType | null>(discard)
+    const [isDiscard, setIsDiscard] = useState(false);
     const {user} = useUser();
 
     useEffect(() => {
@@ -21,6 +22,7 @@ const DeckArea = ({discard, gameId} : DeckAreaProps) => {
                 ...discard,
                 visible: [...(discard.visible ?? []), user?.id ?? -1]
             };
+            setIsDiscard(true);
             setShowDiscard(updatedDiscard);
         } else {
             setShowDiscard(null);
@@ -33,7 +35,7 @@ const DeckArea = ({discard, gameId} : DeckAreaProps) => {
             <span>Game Code: {gameId}</span>
             <div className={"grid grid-cols-2 gap-4 p-4"}>
                 <Card card={null}/>
-                <Card card={showDiscard}/>
+                <Card card={showDiscard} isDiscard={isDiscard}/>
             </div>
         </div>
     );

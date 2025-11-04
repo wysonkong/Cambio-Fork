@@ -10,6 +10,7 @@ import {Button} from "@/components/ui/button.tsx";
 import React, {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/providers/AuthProvider.tsx";
+import {toast} from "sonner";
 
 const Signup = () => {
     const {login} = useAuth();
@@ -67,6 +68,7 @@ const Signup = () => {
             }
 
             console.log("Successfully signed up");
+            toast("Successfully signed up", {className: "bg-card text-card-foreground border-border"})
             setUsername("");
             setPassword("");
             setFeedback("Sign up successful!");

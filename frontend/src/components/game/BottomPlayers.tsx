@@ -1,8 +1,11 @@
 import CardHand from "@/components/game/cards/CardHand.tsx";
-import type {Player, CardType} from "@/components/Interfaces.tsx";
+import type {Player, CardType, ChatMessage} from "@/components/Interfaces.tsx";
 import {useEffect, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import {motion, AnimatePresence} from "framer-motion";
+import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
+import {useUser} from "@/components/providers/UserProvider.tsx";
+import {toast} from "sonner";
 
 interface BottomPlayersProp {
     player: Player,
@@ -14,6 +17,10 @@ interface BottomPlayersProp {
 const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
+    const {chatMessages} = useWebSocket();
+    const [chatMessage, setChatMessage] = useState<ChatMessage | null>(null)
+    const {user} = useUser();
+
 
     useEffect(() => {
         async function fetchAvatar() {
@@ -38,7 +45,8 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
 
         fetchAvatar();
         setPending(player.pending);
-    }, [player]);
+        setChatMessage(chatMessages[chatMessages.length - 1])
+    }, [player, chatMessages]);
 
 
     console.log(player)
@@ -56,6 +64,7 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
             <div id="${slotId}-username" className="text-center font-bold mb-2 flex flex-col">
                 <img src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
                 {player.userName}
+                {(chatMessage?.sender !== user?.username) && toast(`${chatMessage?.content}`, {className: "bg-card text-card-foreground border-border"})}
                 {player.pending &&
                     <div id={"${slotId}-draw"} className="flex justify-center">
                         <AnimatePresence>

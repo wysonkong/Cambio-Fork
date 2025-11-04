@@ -3,6 +3,9 @@ import type {CardType, Player} from "@/components/Interfaces.tsx";
 import {useEffect, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import {motion, AnimatePresence} from "framer-motion";
+import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
+import {useUser} from "@/components/providers/UserProvider.tsx";
+import {toast} from "sonner";
 
 interface TopPlayersProp {
     player: Player,
@@ -14,6 +17,8 @@ interface TopPlayersProp {
 const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
+    const {chatMessages} = useWebSocket();
+    const {user} = useUser()
 
 
     useEffect(() => {
@@ -47,6 +52,7 @@ const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) =
             <div id="${slotId}-username" className="text-center font-bold mb-2">
                 <img src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
                 {player.userName}
+                {(chatMessages[chatMessages.length-1].sender !== user?.username) && toast(`${chatMessages[chatMessages.length-1].content}`, {className: "bg-card text-card-foreground border-border"})}
                 {player.pending &&
                     <div id="${slotId}-draw" className="flex justify-center">
                         <AnimatePresence>

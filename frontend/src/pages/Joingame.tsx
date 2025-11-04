@@ -6,6 +6,7 @@ import {useUser} from "@/components/providers/UserProvider.tsx";
 import {useNavigate} from "react-router-dom";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
 import {useState} from "react";
+import {toast} from "sonner";
 
 const Joingame = () => {
     const {user} = useUser();
@@ -90,6 +91,7 @@ const Joingame = () => {
                                 <form onSubmit={async (e) => {
                                     e.preventDefault();
                                     await handleJoinGame(input);
+                                    toast(`Successfully joined game: ${input}`, {className: "bg-card text-card-foreground border-border"})
                                 }}>
                                 <Label htmlFor="joinCode" className={"mb-2"}>Game code</Label>
                                 <Input

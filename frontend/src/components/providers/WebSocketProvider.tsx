@@ -2,7 +2,7 @@ import React, {createContext, useContext, useEffect, useRef, useState} from "rea
 import { Client, type Frame } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import { useUser } from "@/components/providers/UserProvider.tsx";
-import type {GameState, ChatMessage, ActionLog} from "@/components/Interfaces.tsx";
+import type {GameState, ChatMessage, ActionLogType} from "@/components/Interfaces.tsx";
 
 interface WebSocketContextType {
     connect: (gameId: number) => void;
@@ -12,7 +12,7 @@ interface WebSocketContextType {
     isConnected: boolean;
     gameState: GameState | null; // 👈 Added this
     chatMessages: ChatMessage[];
-    actionLogs: ActionLog[];
+    actionLogs: ActionLogType[];
 }
 
 const WebSocketContext = createContext<WebSocketContextType>({
@@ -34,7 +34,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
     const { user } = useUser();
     const stompClientRef = useRef<Client | null>(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [actionLogs, setActionLogs] = useState<ActionLog[]>([]);
+    const [actionLogs, setActionLogs] = useState<ActionLogType[]>([]);
 
     useEffect(() => {
         if (client) {
@@ -63,7 +63,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
                 });
                 const actionSub = client.subscribe(`/topic/game.${gameId}.action`, (message) => {
                     try{
-                        const actionLog: ActionLog = JSON.parse(message.body);
+                        const actionLog: ActionLogType = JSON.parse(message.body);
                         console.log("Action Log updated")
                         if (actionLog) setActionLogs((prev) => [...prev, actionLog]);
                     } catch (err) {

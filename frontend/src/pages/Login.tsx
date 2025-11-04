@@ -4,6 +4,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/providers/AuthProvider.tsx";
 import React, {useState} from "react";
+import {toast} from "sonner";
 
 const Login = () => {
     const {login} = useAuth();
@@ -26,6 +27,7 @@ const Login = () => {
 
         const data = await res.json();
         login(data.sessionId, data.userId);
+        toast("Successfully logged in", {className: "bg-card text-card-foreground border-border"})
         console.log("Successfully logged in " + data.userId);
         navigate("/");
     }

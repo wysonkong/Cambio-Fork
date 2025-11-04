@@ -6,7 +6,7 @@ import {useUser} from "@/components/providers/UserProvider.tsx";
 
 interface DeckAreaProps {
     discard: CardType | null,
-    gameId: number
+    gameId: number,
 }
 
 const DeckArea = ({discard, gameId} : DeckAreaProps) => {
@@ -29,13 +29,19 @@ const DeckArea = ({discard, gameId} : DeckAreaProps) => {
         }
     },[discard])
 
+    const deckCard: CardType = {
+        rank: "back",
+        suit: "back",
+        visible: []
+    };
+
 
     return (
         <div className={"bg-accent rounded-lg"}>
             <span>Game Code: {gameId}</span>
             <div className={"grid grid-cols-2 gap-4 p-4"}>
-                <Card card={null}/>
-                <Card card={showDiscard} isDiscard={isDiscard}/>
+                <Card card={deckCard} cardIndex={-1} thisPlayerId={-1}/>
+                <Card card={showDiscard} isDiscard={isDiscard} cardIndex={-2} thisPlayerId={-2}/>
             </div>
         </div>
     );

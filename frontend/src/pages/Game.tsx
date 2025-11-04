@@ -16,6 +16,7 @@ const Game = () => {
     const [bottomRightPlayers, setBottomRightPlayers] = useState<Player[]> ();
     const [bottomLeftPlayers, setBottomLeftPlayers] = useState<Player[]> ();
     const [currentPlayer, setCurrentPlayer] = useState<Player> ();
+    const [selectedCard, setSelectedCard] = useState<{userId: number, index: number} | null>(null);
 
     const {user} = useUser();
 
@@ -135,6 +136,7 @@ const Game = () => {
             if (swapModeActive && !stickModeActive && !peekPlusActive) {
                 if (swapState.originIndex === null) {
                     setSwapState({ ...swapState, originUserId: userId, originIndex: index });
+                    setSelectedCard({userId, index})
                     console.log("Origin card:", index, "User:", userId);
                     return;
                 }
@@ -145,6 +147,7 @@ const Game = () => {
                         destination: index,
                         destinationUserId: userId
                     });
+                    setSelectedCard(null);
                 }
             } else if (stickModeActive) {
                 if (swapState.originIndex === null) {
@@ -205,6 +208,7 @@ const Game = () => {
 
         // End turn if not retrying
         if (!retry) {
+            setSelectedCard(null)
             endTurn();
         } else {
             setInstructions("Illegal move, try again.");
@@ -263,7 +267,11 @@ const Game = () => {
                 <div className={"flex justify-center gap-8"}>
                     {topPlayers?.map((player, index) => (
                         <div className={""}>
-                            <TopPlayers key={index} player={player} hand={topPlayers[index].hand} handleClick={handleCardClick}/>
+                            <TopPlayers key={index} player={player}
+                                        hand={topPlayers[index].hand}
+                                        handleClick={handleCardClick}
+                                        selectedCard={selectedCard}
+                            />
                         </div>
                     ))}
                 </div>
@@ -275,14 +283,22 @@ const Game = () => {
                     <div className={"flex justify-center gap-8"}>
                         {bottomLeftPlayers?.map((player, index) => (
                             <div className={""}>
-                                <BottomPlayers key={index} player={player} hand={bottomLeftPlayers[index].hand} handleClick={handleCardClick}/>
+                                <BottomPlayers key={index} player={player}
+                                               hand={bottomLeftPlayers[index].hand}
+                                               handleClick={handleCardClick}
+                                               selectedCard={selectedCard}
+                                />
                             </div>
                         ))}
 
                     </div>
                     <div className={"flex justify-center gap-8"}>
                         {currentPlayer && <div className={""}>
-                                <BottomPlayers key={0} player={currentPlayer} hand={currentPlayer?.hand} handleClick={handleCardClick}/>
+                                <BottomPlayers key={0} player={currentPlayer}
+                                               hand={currentPlayer?.hand}
+                                               handleClick={handleCardClick}
+                                               selectedCard={selectedCard}
+                                />
                             </div>}
 
                     </div>
@@ -290,7 +306,11 @@ const Game = () => {
                     <div className={"flex justify-center gap-8"}>
                         {bottomRightPlayers?.map((player, index) => (
                             <div className={""}>
-                                <BottomPlayers key={index} player={player} hand={bottomRightPlayers[index].hand} handleClick={handleCardClick}/>
+                                <BottomPlayers key={index} player={player}
+                                               hand={bottomRightPlayers[index].hand}
+                                               handleClick={handleCardClick}
+                                               selectedCard={selectedCard}
+                                />
                             </div>
                         ))}
 
@@ -305,7 +325,8 @@ const Game = () => {
                                                   handleDiscard={handleDiscard}
                                                   handleSwap={handleSwap}
                                                   handleCambio={handleCambio}
-                                                  handleStick={handleStick}/></div>
+                                                  handleStick={handleStick} />
+                </div>
             </div>
 
         </div>

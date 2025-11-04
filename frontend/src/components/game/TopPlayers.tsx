@@ -2,14 +2,16 @@ import CardHand from "@/components/game/cards/CardHand.tsx";
 import type {CardType, Player} from "@/components/Interfaces.tsx";
 import {useEffect, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
+import {motion, AnimatePresence} from "framer-motion";
 
 interface TopPlayersProp {
     player: Player,
     hand: CardType[],
     handleClick: (userId: number, index: number) => void,
+    selectedCard: { userId: number, index: number } | null;
 }
 
-const TopPlayers = ({player, hand, handleClick} : TopPlayersProp) => {
+const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
 
@@ -34,6 +36,7 @@ const TopPlayers = ({player, hand, handleClick} : TopPlayersProp) => {
                 console.error("Error fetching avatar:", err);
             }
         }
+
         fetchAvatar();
         setPending(player.pending);
 
@@ -45,12 +48,27 @@ const TopPlayers = ({player, hand, handleClick} : TopPlayersProp) => {
             <div id="${slotId}-username" className="text-center font-bold mb-2">
                 <img src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
                 {player.userName}
-                {player.pending && <div id="${slotId}-draw" className="flex justify-center"><Card card={pending}/></div>}
+                {player.pending &&
+                    <div id="${slotId}-draw" className="flex justify-center">
+                        <motion.div
+                            initial={{x: -200, opacity: 0, scale: 0.5}}
+                            animate={{x: 0, opacity: 1, scale: 1}}
+                            exit={{x: 200, opacity: 0, scale: 0.5}}
+                            transition={{duration: 0.5, type: "spring"}}
+                        >
+                            <Card card={pending}/>
+                        </motion.div>
+                    </div>}
 
             </div>
 
             <div className="flex justify-center grid-flow-col grid-rows-1">
-                <div id="${slotId}-cards"><CardHand initcards={[...hand].reverse()} handleClick={handleClick} thisPlayer={player}/></div>
+                <div id="${slotId}-cards">
+                    <AnimatePresence>
+                        <CardHand initcards={[...hand].reverse()} handleClick={handleClick} thisPlayer={player}
+                                  selectedCard={selectedCard}/>
+                    </AnimatePresence>
+                </div>
             </div>
 
         </div>

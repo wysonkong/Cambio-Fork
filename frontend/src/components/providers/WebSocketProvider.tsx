@@ -2,7 +2,7 @@ import React, {createContext, useContext, useEffect, useRef, useState} from "rea
 import { Client, type Frame } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import { useUser } from "@/components/providers/UserProvider.tsx";
-import type {GameState, ChatMessage} from "@/components/Interfaces.tsx";
+import type {GameState, ChatMessage, ActionLog} from "@/components/Interfaces.tsx";
 
 interface WebSocketContextType {
     connect: (gameId: number) => void;
@@ -12,6 +12,7 @@ interface WebSocketContextType {
     isConnected: boolean;
     gameState: GameState | null; // 👈 Added this
     chatMessages: ChatMessage[];
+    actionLogs: ActionLog[];
 }
 
 const WebSocketContext = createContext<WebSocketContextType>({
@@ -21,7 +22,8 @@ const WebSocketContext = createContext<WebSocketContextType>({
     stompClient: null,
     isConnected: false,
     gameState: null, // 👈 Added this
-    chatMessages: []
+    chatMessages: [],
+    actionLogs: [],
 });
 
 export const WebSocketProvider = ({ children }: { children: React.ReactNode }) => {
@@ -32,6 +34,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
     const { user } = useUser();
     const stompClientRef = useRef<Client | null>(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [actionLogs, setActionLogs] = useState<ActionLog[]>([]);
 
     useEffect(() => {
         if (client) {
@@ -58,6 +61,15 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
                         console.error("Invalid chat message", err);
                     }
                 });
+                const actionSub = client.subscribe(`/topic/game.${gameId}.action`, (message) => {
+                    try{
+                        const actionLog: ActionLog = JSON.parse(message.body);
+                        console.log("Action Log updated")
+                        if (actionLog) setActionLogs((prev) => [...prev, actionLog]);
+                    } catch (err) {
+                        console.error("Invalid action log", err);
+                    }
+                })
 
                 // Automatically send JOIN when connected
                 if (gameId) {
@@ -147,7 +159,8 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
                 isConnected,
                 gameState,
                 sendMessage,
-                chatMessages// 👈 Added this
+                chatMessages,
+                actionLogs// 👈 Added this
             }}
         >
             {children}

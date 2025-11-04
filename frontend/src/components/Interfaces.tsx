@@ -45,6 +45,13 @@ export interface ChatMessage {
     timestamp?: Date;
 }
 
+export interface ActionLog {
+    userId: number
+    username: string;
+    type: string;
+    payload: Map<string, Object>;
+}
+
 export interface SwapState {
     originUserId : number | null;
     originIndex : number | null;

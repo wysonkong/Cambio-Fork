@@ -41,7 +41,6 @@ const BottomPlayers = ({player, hand, handleClick} : BottomPlayersProp) => {
 
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
-            <div className={"flex justify-center grid-flow-col grid-rows-1"}/>
             <div className="flex justify-center grid-flow-col grid-rows-1">
                 <div id={"${slotId}-cards"}><CardHand initcards={hand} thisPlayer={player} handleClick={handleClick}/></div>
             </div>

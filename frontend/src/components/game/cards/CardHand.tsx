@@ -31,7 +31,6 @@ const CardHand = ({initcards, thisPlayer, handleClick} : CardHandProp) => {
 
     return (
         <div className={"flex justify-center grid-flow-col grid-rows-2"}>
-                <>
                     <div className={"border-2 border-white hover:ring-accent"}>
                         {topCards?.map((card, index) => (
                         <Card key={index} card={card} cardIndex={index} thisPlayerId={thisPlayer.userId} handleClick={handleClick}/>
@@ -42,7 +41,6 @@ const CardHand = ({initcards, thisPlayer, handleClick} : CardHandProp) => {
                             <Card key={`${user?.id}-${index}`} card={card} cardIndex={index + middleIndex} thisPlayerId={thisPlayer.userId} handleClick={handleClick}/>
                         ))}
                     </div>
-                </>
         </div>
     );
 };

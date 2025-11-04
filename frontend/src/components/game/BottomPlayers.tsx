@@ -1,6 +1,6 @@
 import CardHand from "@/components/game/cards/CardHand.tsx";
-import type {Player, CardType, ChatMessage} from "@/components/Interfaces.tsx";
-import {useEffect, useState} from "react";
+import type {Player, CardType} from "@/components/Interfaces.tsx";
+import {useEffect, useRef, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import {motion, AnimatePresence} from "framer-motion";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
@@ -18,8 +18,9 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
     const {chatMessages} = useWebSocket();
-    const [chatMessage, setChatMessage] = useState<ChatMessage | null>(null)
     const {user} = useUser();
+    const avatarRef = useRef<HTMLImageElement>(null);
+    const [lastMessageId, setLastMessageId] = useState<string | null>(null);
 
 
     useEffect(() => {
@@ -45,8 +46,65 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
 
         fetchAvatar();
         setPending(player.pending);
-        setChatMessage(chatMessages[chatMessages.length - 1])
     }, [player, chatMessages]);
+
+    useEffect(() => {
+        if (chatMessages.length === 0) return;
+
+        const latestMessage = chatMessages[chatMessages.length - 1]
+
+        const messageId = `${latestMessage.timestamp}-${latestMessage.sender}-${latestMessage.content}`;
+
+        // Skip if we already showed this message
+        if (messageId === lastMessageId) {
+            return;
+        }
+
+        const isFromThisPlayer = latestMessage.sender === player.userName;
+        const isFromCurrentUser = latestMessage.sender === user?.username;
+
+        if (!isFromCurrentUser && isFromThisPlayer) {
+            setLastMessageId(messageId)
+            const avatarPos = avatarRef.current?.getBoundingClientRect();
+
+            if (avatarPos) {
+                toast.custom(
+                    (t) => (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.9 }}
+                            className="bg-card text-card-foreground border border-border rounded-lg shadow-lg p-3 max-w-xs"
+                        >
+                            <div className="flex items-start gap-2">
+                                <img
+                                    src={`/images/avatars/${avatar}.png`}
+                                    alt={latestMessage.sender}
+                                    className="w-8 h-8 rounded-full"
+                                />
+                                <div className="flex-1">
+                                    <p className="font-semibold text-sm">{latestMessage.sender}</p>
+                                    <p className="text-sm text-muted-foreground">{latestMessage.content}</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ),
+                    {
+                        duration: 1000,
+                        position: 'bottom-right',
+                        style: {
+                            position: 'fixed',
+                            left: `${avatarPos.right + 10}px`,
+                            top: `${avatarPos.top}px`,
+                        }
+                    }
+                );
+            } else {
+                return;
+            }
+        }
+
+    }, [chatMessages, user?.username, avatar, lastMessageId, player.userName]);
 
 
     console.log(player)
@@ -62,9 +120,8 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
                     </AnimatePresence></div>
             </div>
             <div id="${slotId}-username" className="text-center font-bold mb-2 flex flex-col">
-                <img src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
+                <img ref={avatarRef} src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
                 {player.userName}
-                {(chatMessage?.sender !== user?.username) && toast(`${chatMessage?.content}`, {className: "bg-card text-card-foreground border-border"})}
                 {player.pending &&
                     <div id={"${slotId}-draw"} className="flex justify-center">
                         <AnimatePresence>

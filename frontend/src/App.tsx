@@ -22,22 +22,22 @@ function App() {
             <UserProvider>
                 <WebSocketProvider>
                     <GameProvider>
-                    <Router>
-                        <Layout>
-                            <Routes>
-                                <Route path={"/"} element={<Home/>}/>
-                                <Route path={"/Login"} element={<Login/>}/>
-                                <Route path={"/Signup"} element={<Signup/>}/>
-                                <Route path={"/Rules"} element={<Rule/>}/>
-                                <Route path={"/Standings"} element={<Standings/>}/>
-                                <Route path={"/JoinGame"} element={<Joingame/>}/>
-                                <Route path={"/Game"} element={<Game/>}/>
-                                <Route path={"/Profile"} element={<Profile/>}/>
+                            <Router>
+                                <Layout>
+                                    <Routes>
+                                        <Route path={"/"} element={<Home/>}/>
+                                        <Route path={"/Login"} element={<Login/>}/>
+                                        <Route path={"/Signup"} element={<Signup/>}/>
+                                        <Route path={"/Rules"} element={<Rule/>}/>
+                                        <Route path={"/Standings"} element={<Standings/>}/>
+                                        <Route path={"/JoinGame"} element={<Joingame/>}/>
+                                        <Route path={"/Game"} element={<Game/>}/>
+                                        <Route path={"/Profile"} element={<Profile/>}/>
 
-                                <Route path={"*"} element={<Error/>}/>
-                            </Routes>
-                        </Layout>
-                    </Router>
+                                        <Route path={"*"} element={<Error/>}/>
+                                    </Routes>
+                                </Layout>
+                            </Router>
                     </GameProvider>
                 </WebSocketProvider>
             </UserProvider>

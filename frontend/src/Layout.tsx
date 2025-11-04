@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar.tsx";
 import type {PropsWithChildren} from "react";
+import {Toaster} from "sonner";
 
 const Layout = ({ children } : PropsWithChildren) => {
     return (
@@ -8,6 +9,7 @@ const Layout = ({ children } : PropsWithChildren) => {
         }}>
             <Navbar />
             <main className={"pt-16"}>{children}</main>
+            <Toaster/>
         </div>
     );
 };

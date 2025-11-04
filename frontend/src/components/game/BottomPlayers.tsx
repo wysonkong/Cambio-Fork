@@ -6,8 +6,9 @@ import {Card} from "@/components/game/cards/Card.tsx";
 interface BottomPlayersProp {
     player: Player,
     hand: CardType[] | undefined,
+    handleClick: (userId: number, index: number) => void;
 }
-const BottomPlayers = ({player, hand} : BottomPlayersProp) => {
+const BottomPlayers = ({player, hand, handleClick} : BottomPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
 
@@ -42,7 +43,7 @@ const BottomPlayers = ({player, hand} : BottomPlayersProp) => {
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
             <div className={"flex justify-center grid-flow-col grid-rows-1"}/>
             <div className="flex justify-center grid-flow-col grid-rows-1">
-                <div id={"${slotId}-cards"}><CardHand initcards={hand}/></div>
+                <div id={"${slotId}-cards"}><CardHand initcards={hand} thisPlayer={player} handleClick={handleClick}/></div>
             </div>
             <div id="${slotId}-username" className="text-center font-bold mb-2 flex flex-col">
                 <img src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>

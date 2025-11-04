@@ -5,14 +5,17 @@ import {useUser} from "@/components/providers/UserProvider.tsx";
 
 interface CardProp {
     card: CardType | null,
+    cardIndex?: number,
     isDiscard?: boolean,
-    isSelected?: boolean,
-    onClick?: () => void,
+    handleClick?: (userId: number, index: number) => void;
+    thisPlayerId?: number,
+
 }
 
-export const Card = ({card, isDiscard, isSelected, onClick}: CardProp) => {
+export const Card = ({card, cardIndex, isDiscard, handleClick, thisPlayerId}: CardProp) => {
     const [imgSrc, setImgSrc] = useState<string>("/images/svgtopng/card-back.png");
     const {user} = useUser();
+    const [isSelected, setIsSelected] = useState(false);
 
     const me = Number(user?.id);
 
@@ -35,9 +38,17 @@ export const Card = ({card, isDiscard, isSelected, onClick}: CardProp) => {
     }, [card]);
 
 
+
+
     return (
         <div className={`flex items-center justify-center h-30 w-22 hover:bg-secondary transition-colors ${isSelected ? 'bg-chart-1' : ''}`}
-             onClick={onClick}
+             onClick={() => {
+                 if (handleClick && thisPlayerId && cardIndex) {
+                     handleClick( thisPlayerId, cardIndex)
+                 }
+                 setIsSelected(isSelected);
+             }
+                 }
         >
             <img src={imgSrc}
                  alt={`${card?.rank} + ${card?.suit}`}

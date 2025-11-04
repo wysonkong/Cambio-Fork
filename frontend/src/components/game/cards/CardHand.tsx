@@ -1,23 +1,27 @@
 import {Card} from "@/components/game/cards/Card.tsx";
 import {useEffect, useState} from 'react';
-import type {CardType} from "@/components/Interfaces.tsx";
+import type {CardType, Player} from "@/components/Interfaces.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
+
 
 
 interface CardHandProp {
     initcards: CardType[] | undefined,
+    thisPlayer: Player,
+    handleClick: (userId: number, index: number) => void;
 }
-const CardHand = ({initcards} : CardHandProp) => {
+const CardHand = ({initcards, thisPlayer, handleClick} : CardHandProp) => {
     const [topCards, setTopCards] = useState<CardType[]>();
     const [bottomCards, setBottomCards] = useState<CardType[]>();
+    const [middleIndex, setMiddleIndex] = useState<number> (Math.ceil(initcards ? initcards.length / 2 : 2))
     const {user} = useUser();
 
 
 
     useEffect(() => {
+        setMiddleIndex(Math.ceil(initcards ? initcards.length / 2 : 2))
         console.log("useeffect of card hand")
         console.log(initcards)
-        const middleIndex = Math.ceil(initcards ? initcards.length / 2 : 2);
         setTopCards(initcards?.slice(0, middleIndex));
         setBottomCards(initcards?.slice(middleIndex));
         console.log(topCards);
@@ -30,12 +34,12 @@ const CardHand = ({initcards} : CardHandProp) => {
                 <>
                     <div className={"border-2 border-white hover:ring-accent"}>
                         {topCards?.map((card, index) => (
-                        <Card key={index} card={card}/>
+                        <Card key={index} card={card} cardIndex={index} thisPlayerId={thisPlayer.userId} handleClick={handleClick}/>
                             ))}
                     </div>
                     <div className={"border-2 border-white hover:ring-accent"}>
                         {bottomCards?.map((card, index) => (
-                            <Card key={`${user?.id}-${index}`} card={card}/>
+                            <Card key={`${user?.id}-${index}`} card={card} cardIndex={index + middleIndex} thisPlayerId={thisPlayer.userId} handleClick={handleClick}/>
                         ))}
                     </div>
                 </>

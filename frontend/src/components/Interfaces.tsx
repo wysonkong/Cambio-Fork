@@ -44,3 +44,10 @@ export interface ChatMessage {
     content: string;
     timestamp?: Date;
 }
+
+export interface SwapState {
+    originUserId : number | null;
+    originIndex : number | null;
+    destinationUserId: number | null;
+    destinationIndex: number | null;
+}

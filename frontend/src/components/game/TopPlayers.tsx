@@ -6,9 +6,10 @@ import {Card} from "@/components/game/cards/Card.tsx";
 interface TopPlayersProp {
     player: Player,
     hand: CardType[],
+    handleClick: (userId: number, index: number) => void,
 }
 
-const TopPlayers = ({player, hand} : TopPlayersProp) => {
+const TopPlayers = ({player, hand, handleClick} : TopPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
 
@@ -49,7 +50,7 @@ const TopPlayers = ({player, hand} : TopPlayersProp) => {
             </div>
 
             <div className="flex justify-center grid-flow-col grid-rows-1">
-                <div id="${slotId}-cards"><CardHand initcards={[...hand].reverse()}/></div>
+                <div id="${slotId}-cards"><CardHand initcards={[...hand].reverse()} handleClick={handleClick} thisPlayer={player}/></div>
             </div>
 
         </div>

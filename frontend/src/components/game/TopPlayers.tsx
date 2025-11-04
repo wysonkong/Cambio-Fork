@@ -93,7 +93,7 @@ const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) =
                         </motion.div>
                     ),
                     {
-                        duration: 3000,
+                        duration: 1000,
                         position: 'bottom-right',
                         style: {
                             position: 'fixed',
@@ -107,7 +107,7 @@ const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) =
             }
         }
 
-    }, [chatMessages, user?.username, avatar, lastMessageId]);
+    }, [chatMessages, user?.username, avatar, lastMessageId, player.userName]);
 
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>

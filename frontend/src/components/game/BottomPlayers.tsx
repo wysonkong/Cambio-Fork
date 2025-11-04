@@ -90,7 +90,7 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
                         </motion.div>
                     ),
                     {
-                        duration: 3000,
+                        duration: 1000,
                         position: 'bottom-right',
                         style: {
                             position: 'fixed',
@@ -104,7 +104,7 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
             }
         }
 
-    }, [chatMessages, user?.username, avatar]);
+    }, [chatMessages, user?.username, avatar, lastMessageId, player.userName]);
 
 
     console.log(player)

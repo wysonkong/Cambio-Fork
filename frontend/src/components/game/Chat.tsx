@@ -23,7 +23,7 @@ const Chat = ({gameId}: ChatProps) => {
     const [chatOpen, setChatOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState("");
-    const {stompClient} = useWebSocket();
+    const {stompClient, chatMessages, sendMessage} = useWebSocket();
     const {user} = useUser();
       const {chatMessages, sendMessage} = useWebSocket();
 

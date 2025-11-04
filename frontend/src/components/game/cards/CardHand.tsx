@@ -9,8 +9,9 @@ interface CardHandProp {
     initcards: CardType[] | undefined,
     thisPlayer: Player,
     handleClick: (userId: number, index: number) => void;
+    selectedCard: {userId: number, index: number} | null;
 }
-const CardHand = ({initcards, thisPlayer, handleClick} : CardHandProp) => {
+const CardHand = ({initcards, thisPlayer, handleClick, selectedCard} : CardHandProp) => {
     const [topCards, setTopCards] = useState<CardType[]>();
     const [bottomCards, setBottomCards] = useState<CardType[]>();
     const middleIndex = Math.ceil(initcards?.length ? initcards.length / 2 : 2);
@@ -35,12 +36,20 @@ const CardHand = ({initcards, thisPlayer, handleClick} : CardHandProp) => {
         <div className={"flex justify-center grid-flow-col grid-rows-2"}>
                     <div className={"border-2 border-white hover:ring-accent"}>
                         {topCards?.map((card, index) => (
-                        <Card key={index} card={card} cardIndex={index} thisPlayerId={thisPlayer.userId} handleClick={handleClick}/>
+                        <Card key={index} card={card} cardIndex={index} thisPlayerId={thisPlayer.userId} handleClick={handleClick}
+                              isSelected={
+                                  selectedCard?.userId === thisPlayer.userId &&
+                                  selectedCard?.index === index
+                              }/>
                             ))}
                     </div>
                     <div className={"border-2 border-white hover:ring-accent"}>
                         {bottomCards?.map((card, index) => (
-                            <Card key={`${user?.id}-${index}`} card={card} cardIndex={index + middleIndex} thisPlayerId={thisPlayer.userId} handleClick={handleClick}/>
+                            <Card key={`${user?.id}-${index}`} card={card} cardIndex={index + middleIndex} thisPlayerId={thisPlayer.userId} handleClick={handleClick}
+                                  isSelected={
+                                      selectedCard?.userId === thisPlayer.userId &&
+                                      selectedCard?.index === (index + middleIndex)
+                                  }/>
                         ))}
                     </div>
         </div>

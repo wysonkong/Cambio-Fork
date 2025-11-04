@@ -5,10 +5,12 @@ import {useUser} from "@/components/providers/UserProvider.tsx";
 
 interface CardProp {
     card: CardType | null,
-    isDiscard?: boolean
+    isDiscard?: boolean,
+    isSelected?: boolean,
+    onClick?: () => void,
 }
 
-export const Card = ({card, isDiscard}: CardProp) => {
+export const Card = ({card, isDiscard, isSelected, onClick}: CardProp) => {
     const [imgSrc, setImgSrc] = useState<string>("/images/svgtopng/card-back.png");
     const {user} = useUser();
 
@@ -34,7 +36,9 @@ export const Card = ({card, isDiscard}: CardProp) => {
 
 
     return (
-        <div className={"flex items-center justify-center h-30 w-22 hover:bg-secondary transition-colors"}>
+        <div className={`flex items-center justify-center h-30 w-22 hover:bg-secondary transition-colors ${isSelected ? 'bg-chart-1' : ''}`}
+             onClick={onClick}
+        >
             <img src={imgSrc}
                  alt={`${card?.rank} + ${card?.suit}`}
                  className={"h-28 w-20"}/>

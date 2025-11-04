@@ -45,7 +45,6 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
 
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
-            <div className={"flex justify-center grid-flow-col grid-rows-1"}/>
             <div className="flex justify-center grid-flow-col grid-rows-1">
                 <div id={"${slotId}-cards"}>
                     <AnimatePresence>

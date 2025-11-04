@@ -14,17 +14,19 @@ interface CardHandProp {
 const CardHand = ({initcards, thisPlayer, handleClick, selectedCard} : CardHandProp) => {
     const [topCards, setTopCards] = useState<CardType[]>();
     const [bottomCards, setBottomCards] = useState<CardType[]>();
-    const [middleIndex, setMiddleIndex] = useState<number> (Math.ceil(initcards ? initcards.length / 2 : 2))
+    const middleIndex = Math.ceil(initcards?.length ? initcards.length / 2 : 2);
     const {user} = useUser();
 
 
 
     useEffect(() => {
-        setMiddleIndex(Math.ceil(initcards ? initcards.length / 2 : 2))
+        if(!initcards) return;
+
+        const mid = Math.ceil(initcards.length / 2);
         console.log("useeffect of card hand")
         console.log(initcards)
-        setTopCards(initcards?.slice(0, middleIndex));
-        setBottomCards(initcards?.slice(middleIndex));
+        setTopCards(initcards?.slice(0, mid));
+        setBottomCards(initcards?.slice(mid));
         console.log(topCards);
         console.log(bottomCards);
 
@@ -32,7 +34,6 @@ const CardHand = ({initcards, thisPlayer, handleClick, selectedCard} : CardHandP
 
     return (
         <div className={"flex justify-center grid-flow-col grid-rows-2"}>
-                <>
                     <div className={"border-2 border-white hover:ring-accent"}>
                         {topCards?.map((card, index) => (
                         <Card key={index} card={card} cardIndex={index} thisPlayerId={thisPlayer.userId} handleClick={handleClick}
@@ -51,7 +52,6 @@ const CardHand = ({initcards, thisPlayer, handleClick, selectedCard} : CardHandP
                                   }/>
                         ))}
                     </div>
-                </>
         </div>
     );
 };

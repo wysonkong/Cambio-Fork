@@ -44,7 +44,6 @@ const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) =
 
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
-            <div className={"flex justify-center grid-flow-col grid-rows-1"}/>
             <div id="${slotId}-username" className="text-center font-bold mb-2">
                 <img src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
                 {player.userName}

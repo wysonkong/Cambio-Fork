@@ -13,17 +13,19 @@ interface CardHandProp {
 const CardHand = ({initcards, thisPlayer, handleClick} : CardHandProp) => {
     const [topCards, setTopCards] = useState<CardType[]>();
     const [bottomCards, setBottomCards] = useState<CardType[]>();
-    const [middleIndex, setMiddleIndex] = useState<number> (Math.ceil(initcards ? initcards.length / 2 : 2))
+    const middleIndex = Math.ceil(initcards?.length ? initcards.length / 2 : 2);
     const {user} = useUser();
 
 
 
     useEffect(() => {
-        setMiddleIndex(Math.ceil(initcards ? initcards.length / 2 : 2))
+        if(!initcards) return;
+
+        const mid = Math.ceil(initcards.length / 2);
         console.log("useeffect of card hand")
         console.log(initcards)
-        setTopCards(initcards?.slice(0, middleIndex));
-        setBottomCards(initcards?.slice(middleIndex));
+        setTopCards(initcards?.slice(0, mid));
+        setBottomCards(initcards?.slice(mid));
         console.log(topCards);
         console.log(bottomCards);
 

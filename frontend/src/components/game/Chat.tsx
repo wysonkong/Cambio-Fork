@@ -25,7 +25,6 @@ const Chat = ({gameId}: ChatProps) => {
     const [input, setInput] = useState("");
     const {stompClient, chatMessages, sendMessage} = useWebSocket();
     const {user} = useUser();
-      const {chatMessages, sendMessage} = useWebSocket();
 
     useEffect(() => {
         if (!stompClient) return;

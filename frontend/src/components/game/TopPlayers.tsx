@@ -49,14 +49,16 @@ const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) =
                 {player.userName}
                 {player.pending &&
                     <div id="${slotId}-draw" className="flex justify-center">
-                        <motion.div
-                            initial={{x: -200, opacity: 0, scale: 0.5}}
-                            animate={{x: 0, opacity: 1, scale: 1}}
-                            exit={{x: 200, opacity: 0, scale: 0.5}}
-                            transition={{duration: 0.5, type: "spring"}}
-                        >
-                            <Card card={pending}/>
-                        </motion.div>
+                        <AnimatePresence>
+                            <motion.div
+                                initial={{x: -200, opacity: 0, scale: 0.5}}
+                                animate={{x: 0, opacity: 1, scale: 1}}
+                                exit={{x: 200, opacity: 0, scale: 0.5}}
+                                transition={{duration: 0.5, type: "spring"}}
+                            >
+                                <Card card={pending} cardIndex={999} thisPlayerId={player.userId}/>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>}
 
             </div>

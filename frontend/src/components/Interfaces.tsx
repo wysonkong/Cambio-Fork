@@ -45,7 +45,7 @@ export interface ChatMessage {
     timestamp?: Date;
 }
 
-export interface ActionLog {
+export interface ActionLogType {
     userId: number
     username: string;
     type: string;

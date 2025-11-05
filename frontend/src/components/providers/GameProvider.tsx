@@ -40,10 +40,10 @@ const GameProvider = ({children} : {children: React.ReactNode}) => {
                 if(!gameState.hasDrawn) {
                     setGameControlArr([false, true, false, false, true, true])
                 }
-                if(gameState.hasDrawn && gameState.players[myIndex].pending) {
+                if(gameState.hasDrawn && gameState.players[myIndex].pending !== null) {
                     setGameControlArr([false, false, true, true, false, false])
                 }
-                if(gameState.hasDrawn && !gameState.players[myIndex].pending) {
+                if(gameState.hasDrawn && gameState.players[myIndex].pending === null) {
                     if(!gameState.lastCardStuck) {
                         setGameControlArr([false, false, false, false, false, true])
                     }
@@ -55,6 +55,9 @@ const GameProvider = ({children} : {children: React.ReactNode}) => {
             else {
                 if(!gameState.lastCardStuck) {
                     setGameControlArr([false, false, false, false, false, true])
+                }
+                else {
+                    setGameControlArr([false, false, false, false, false, false ])
                 }
             }
         }

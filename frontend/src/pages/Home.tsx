@@ -1,6 +1,7 @@
 import {Button} from "@/components/ui/button.tsx";
 import {useAuth} from "@/components/providers/AuthProvider.tsx";
 import {useNavigate} from "react-router-dom";
+import Issues from "@/components/Issues.tsx";
 
 
 const Home = () => {
@@ -8,7 +9,6 @@ const Home = () => {
     const navigate = useNavigate();
 
     return (
-
         <div className={"bg-no-repeat bg-center bg-cover h-screen flex items-center justify-center"}>
             <div className={"rounded-lg text-center text-white opacity-75"}>
                 <div className="sm:mb-8 sm:flex sm:justify-center">
@@ -25,8 +25,10 @@ const Home = () => {
                         <span>Play a Game</span>
                     </Button>
                 </div>
+                <div className={"justify-end"}>
+                    <Issues/>
+                </div>
             </div>
-
         </div>
 
     );

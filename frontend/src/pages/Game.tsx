@@ -2,25 +2,40 @@ import DeckArea from "@/components/game/cards/DeckArea.tsx";
 import BottomPlayers from "@/components/game/BottomPlayers.tsx";
 import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import type {GameState, Player, SwapState} from "@/components/Interfaces.tsx";
-import { useWebSocket } from '@/components/providers/WebSocketProvider';
+import {useWebSocket} from '@/components/providers/WebSocketProvider';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import ConfettiPos from "@/components/Confetti.tsx";
+import {Field, FieldGroup, FieldLabel, FieldSeparator, FieldSet} from "@/components/ui/field.tsx";
+import {Dialog, DialogContent, DialogHeader, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select.tsx";
+import {Textarea} from "@/components/ui/textarea.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 const Game = () => {
 
-    const { gameState, sendAction} = useWebSocket();
+    const {gameState, sendAction} = useWebSocket();
     const gameId = Number(sessionStorage.getItem("currentGame"));
     const [topPlayers, setTopPlayers] = useState<Player[]>();
-    const [bottomRightPlayers, setBottomRightPlayers] = useState<Player[]> ();
-    const [bottomLeftPlayers, setBottomLeftPlayers] = useState<Player[]> ();
-    const [currentPlayer, setCurrentPlayer] = useState<Player> ();
-    const [selectedCard, setSelectedCard] = useState<{userId: number, index: number} | null>(null);
+    const [bottomRightPlayers, setBottomRightPlayers] = useState<Player[]>();
+    const [bottomLeftPlayers, setBottomLeftPlayers] = useState<Player[]>();
+    const [currentPlayer, setCurrentPlayer] = useState<Player>();
+    const [selectedCard, setSelectedCard] = useState<{ userId: number, index: number } | null>(null);
     const [instructions, setInstructions] = useState<string | null>(null)
 
 
+    const navigate = useNavigate();
     const {user} = useUser();
 
     const [swapModeActive, setSwapModeActive] = useState(false);
@@ -31,7 +46,7 @@ const Game = () => {
     const [peekMeActive, setPeekMeActive] = useState(false);
     const [peekAnyActive, setPeekAnyActive] = useState(false);
     const [lastStickPlayer, setLastStickPlayer] = useState<number | null>(null);
-    const [cambioPlayer, setCambioPlayer] = useState<Player| null> (null);
+    const [cambioPlayer, setCambioPlayer] = useState<Player | null>(null);
     const drawRef = useRef<HTMLImageElement>(null);
 
     const [swapState, setSwapState] = useState<SwapState>({
@@ -40,7 +55,6 @@ const Game = () => {
         destinationIndex: null,
         destinationUserId: null
     });
-
 
 
     useEffect(() => {
@@ -56,6 +70,14 @@ const Game = () => {
         sendAction(Number(gameId), actionType, payload);
     };
 
+    const ids: number[] = [];
+
+    if (gameState?.winners) {
+        gameState?.winners.forEach((winner) => {
+            ids.push(winner.userId);
+        });
+    }
+
 
     const render = (gameState: GameState) => {
         let players = gameState.players;
@@ -65,27 +87,27 @@ const Game = () => {
         let tPlayers = [];
         let me = null;
         let myIndex = 0;
-        players.forEach((p : Player, index ) => {
-            if(p.userId === user?.id) {
+        players.forEach((p: Player, index) => {
+            if (p.userId === user?.id) {
                 myIndex = index
             }
         })
-        players.forEach((p : Player, index) => {
-            if(index >= myIndex) {
+        players.forEach((p: Player, index) => {
+            if (index >= myIndex) {
                 playersSorted.push(p);
             }
         })
-        players.forEach((p : Player, index ) => {
-           if(index < myIndex) {
-               playersSorted.push(p)
-           }
+        players.forEach((p: Player, index) => {
+            if (index < myIndex) {
+                playersSorted.push(p)
+            }
         });
 
         me = playersSorted[0];
         playersSorted.splice(0, 1);
         console.log(me);
         console.log(playersSorted);
-        switch(playersSorted.length) {
+        switch (playersSorted.length) {
             case 1:
                 tPlayers.push(playersSorted[0]);
                 break;
@@ -122,17 +144,17 @@ const Game = () => {
 
     const setModes = (gameState: GameState) => {
         setCambioPlayer(gameState.cambioPlayer)
-        if(swapPendingModeActive) {
+        if (swapPendingModeActive) {
             console.log("swap pending active")
         }
         let myIndex = 0;
-        gameState.players.forEach((p : Player, index ) => {
-            if(p.userId === user?.id) {
+        gameState.players.forEach((p: Player, index) => {
+            if (p.userId === user?.id) {
                 myIndex = index
             }
         })
-        if(myIndex === gameState.currentTurn) {
-            switch(gameState.specialMove) {
+        if (myIndex === gameState.currentTurn) {
+            switch (gameState.specialMove) {
                 case 1:
                     setInstructions("Played a 7 or 8, choose one of your cards to peek");
                     setPeekMeActive(true);
@@ -150,13 +172,12 @@ const Game = () => {
                     setPeekPlusActive(true);
                     break;
             }
-            if(gameState.tempTurn) {
+            if (gameState.tempTurn) {
                 setInstructions("Good stick! Pick one of your cards to gice!");
                 setGiveModeActive(true);
             }
         }
     }
-
 
 
     const handleCardClick = (userId: number, index: number) => {
@@ -170,7 +191,7 @@ const Game = () => {
         if (!retry) {
             if (swapModeActive && !stickModeActive && !peekPlusActive) {
                 if (swapState.originIndex === null) {
-                    setSwapState({ ...swapState, originUserId: userId, originIndex: index });
+                    setSwapState({...swapState, originUserId: userId, originIndex: index});
                     setSelectedCard({userId, index})
                     console.log("Origin card:", index, "User:", userId);
                     return;
@@ -186,10 +207,10 @@ const Game = () => {
                 }
             } else if (stickModeActive) {
                 if (swapState.originIndex === null) {
-                    setSwapState({ ...swapState, originUserId: userId, originIndex: index });
+                    setSwapState({...swapState, originUserId: userId, originIndex: index});
                     console.log("Stick card:", index, "User:", userId);
                     setLastStickPlayer(userId);
-                    sendAction(gameId, "STICK", { origin: index, originUserId: userId });
+                    sendAction(gameId, "STICK", {origin: index, originUserId: userId});
                 }
             } else if (giveModeActive) {
                 if (swapState.originIndex === null) {
@@ -221,15 +242,15 @@ const Game = () => {
                 }
             } else if (peekMeActive) {
                 if (userId === user?.id) {
-                    sendAction(gameId, "PEEK", { id: userId, idx: index });
+                    sendAction(gameId, "PEEK", {id: userId, idx: index});
                     console.log("Peeked card", index, "for userId", userId);
                 } else {
                     setInstructions("You can only peek your own cards.");
                 }
             } else if (peekAnyActive) {
-                sendAction(gameId, "PEEK", { id: userId, idx: index });
+                sendAction(gameId, "PEEK", {id: userId, idx: index});
             } else if (peekPlusActive) {
-                sendAction(gameId, "PEEK_PLUS", { id: userId, idx: index });
+                sendAction(gameId, "PEEK_PLUS", {id: userId, idx: index});
             }
         }
 
@@ -243,11 +264,10 @@ const Game = () => {
 
         // End turn if not retrying
         if (!retry) {
-            if(!peekPlusActive) {
+            if (!peekPlusActive) {
                 endTurn();
                 setInstructions("")
-            }
-            else {
+            } else {
                 endTurn();
                 setSwapModeActive(true);
                 setInstructions("Choose a card to swap");
@@ -301,40 +321,61 @@ const Game = () => {
     }
 
 
-
-
     return (
         <>
-        {gameState?.winners && <ConfettiPos/>}
-        <div className="w-screen h-screen flex items-center justify-center">
-            <div className={"flex-1 flex flex-col items-center justify-start overflow-y-auto relative"}>
-                <div className={"flex justify-center gap-8"}>
-                    {topPlayers?.map((player, index) => (
+            {(gameState?.winners) && (
+                <>
+                {ids.includes(user?.id as number) && <ConfettiPos/>}
+                    <Dialog>
+                        <FieldGroup>
+                            <DialogTrigger>
+                                <Button>Issues</Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>{ids.includes(user?.id as number) ? "You Won!" : "You Lost"}</DialogHeader>
+                                <FieldSet>
+                                    <span>{`You are now at ${user?.wins} wins`}</span>
+                                    <span>{`You are now at ${user?.loses} losses`}</span>
+                                </FieldSet>
+                                <FieldSeparator/>
+                                <Field orientation="horizontal">
+                                    <Button onClick={() => navigate("/JoinGame")}>Play Again</Button>
+                                </Field>
+                            </DialogContent>
+                        </FieldGroup>
+                    </Dialog>
+                </>
+            )}
+            <div className="w-screen h-screen flex items-center justify-center">
+                <div className={"flex-1 flex flex-col items-center justify-start overflow-y-auto relative"}>
+                    <div className={"flex justify-center gap-8"}>
+                        {topPlayers?.map((player, index) => (
                             <TopPlayers key={index} player={player}
                                         hand={topPlayers[index].hand}
                                         handleClick={handleCardClick}
                                         selectedCard={selectedCard}
                             />
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                <div className={"relative flex justify-center items-center flex-1 m-8"}>
-                    <DeckArea drawRef={drawRef} discard={gameState?.gameStarted ? gameState?.prevCard : null} gameId={Number(gameId)}/>
-                </div>
-                <div className={"flex justify-center gap-8"}>
+                    <div className={"relative flex justify-center items-center flex-1 m-8"}>
+                        <DeckArea drawRef={drawRef} discard={gameState?.gameStarted ? gameState?.prevCard : null}
+                                  gameId={Number(gameId)}/>
+                    </div>
                     <div className={"flex justify-center gap-8"}>
-                        {bottomLeftPlayers?.map((player, index) => (
+                        <div className={"flex justify-center gap-8"}>
+                            {bottomLeftPlayers?.map((player, index) => (
                                 <BottomPlayers key={index} player={player}
                                                hand={bottomLeftPlayers[index].hand}
                                                handleClick={handleCardClick}
                                                selectedCard={selectedCard}
                                                drawRef={d}
                                 />
-                        ))}
+                            ))}
 
-                    </div>
-                    <div className={"flex justify-center gap-8"}>
-                        {currentPlayer && <div className={""}>
+                        </div>
+                        <div className={"flex justify-center gap-8"}>
+                            {currentPlayer && <div className={""}>
                                 <BottomPlayers key={0} player={currentPlayer}
                                                hand={currentPlayer?.hand}
                                                handleClick={handleCardClick}
@@ -342,36 +383,36 @@ const Game = () => {
                                 />
                             </div>}
 
+                        </div>
+
+                        <div className={"flex justify-center gap-8"}>
+                            {bottomRightPlayers?.map((player, index) => (
+                                <div className={""}>
+                                    <BottomPlayers key={index} player={player}
+                                                   hand={bottomRightPlayers[index].hand}
+                                                   handleClick={handleCardClick}
+                                                   selectedCard={selectedCard}
+                                    />
+                                </div>
+                            ))}
+
+                        </div>
                     </div>
+                    <span className={"bg-foreground"}>{instructions}</span>
 
-                    <div className={"flex justify-center gap-8"}>
-                        {bottomRightPlayers?.map((player, index) => (
-                            <div className={""}>
-                                <BottomPlayers key={index} player={player}
-                                               hand={bottomRightPlayers[index].hand}
-                                               handleClick={handleCardClick}
-                                               selectedCard={selectedCard}
-                                />
-                            </div>
-                        ))}
 
+                    <div className={""}><GameControls gameId={Number(gameId)}
+                                                      handleStart={handleStart}
+                                                      handleDraw={handleDraw}
+                                                      handleDiscard={handleDiscard}
+                                                      handleSwap={handleSwap}
+                                                      handleCambio={handleCambio}
+                                                      handleStick={handleStick}/>
                     </div>
                 </div>
-                <span className={"bg-foreground"}>{instructions}</span>
 
-
-                <div className={""}><GameControls gameId={Number(gameId)}
-                                                  handleStart={handleStart}
-                                                  handleDraw={handleDraw}
-                                                  handleDiscard={handleDiscard}
-                                                  handleSwap={handleSwap}
-                                                  handleCambio={handleCambio}
-                                                  handleStick={handleStick}/>
-                </div>
             </div>
-
-        </div>
-            </>
+        </>
     );
 };
 

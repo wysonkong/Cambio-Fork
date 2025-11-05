@@ -1,6 +1,6 @@
 import CardHand from "@/components/game/cards/CardHand.tsx";
 import type {Player, CardType} from "@/components/Interfaces.tsx";
-import {useEffect, useRef, useState} from "react";
+import {type RefObject, useEffect, useRef, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import {motion, AnimatePresence} from "framer-motion";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
@@ -12,15 +12,19 @@ interface BottomPlayersProp {
     hand: CardType[] | undefined,
     handleClick: (userId: number, index: number) => void;
     selectedCard: { userId: number, index: number } | null;
+    drawRef: RefObject<HTMLImageElement>;
 }
 
-const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersProp) => {
+const BottomPlayers = ({player, hand, handleClick, selectedCard, drawRef}: BottomPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
     const {chatMessages} = useWebSocket();
     const {user} = useUser();
     const avatarRef = useRef<HTMLImageElement>(null);
     const [lastMessageId, setLastMessageId] = useState<string | null>(null);
+    const [animationStart, setAnimationStart] = useState <{x: number, y: number} | null > (null)
+
+
 
 
     useEffect(() => {
@@ -47,6 +51,19 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
         fetchAvatar();
         setPending(player.pending);
     }, [player, chatMessages]);
+
+    useEffect(() => {
+        if (player.pending && drawRef?.current && avatarRef.current) {
+            const deckPos = drawRef.current.getBoundingClientRect();
+            const avatarPos = avatarRef.current.getBoundingClientRect();
+
+            // offset relative to avatar position
+            setAnimationStart({
+                x: deckPos.left - avatarPos.left,
+                y: deckPos.top - avatarPos.top,
+            });
+        }
+    }, [player.pending]);
 
     useEffect(() => {
         if (chatMessages.length === 0) return;
@@ -119,6 +136,7 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
                     <AnimatePresence>
                         <CardHand initcards={hand} thisPlayer={player} handleClick={handleClick}
                                   selectedCard={selectedCard}
+                                  topPlayer={false}
                         />
                     </AnimatePresence>
             </div>
@@ -128,14 +146,28 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
                 {player.pending &&
                     <div id={"${slotId}-draw"} className="flex justify-center">
                         <AnimatePresence>
-                        <motion.div
-                            initial={{x: -200, opacity: 0, scale: 0.5}}
-                            animate={{x: 0, opacity: 1, scale: 1}}
-                            exit={{x: 200, opacity: 0, scale: 0.5}}
-                            transition={{duration: 0.5, type: "spring"}}
-                        >
-                            <Card card={pending} cardIndex={999} thisPlayerId={player.userId}/>
-                        </motion.div>
+
+                                <motion.div
+                                    initial={{
+                                        x: animationStart?.x ?? 0,
+                                        y: animationStart?.y ?? 0,
+                                        opacity: 0,
+                                        scale: 0.5,
+                                    }}
+                                    animate={{
+                                        x: 0,
+                                        y: 0,
+                                        opacity: 1,
+                                        scale: 1,
+                                    }}
+                                    exit={{
+                                        opacity: 0,
+                                        scale: 0.5,
+                                    }}
+                                    transition={{ duration: 0.6, type: "spring" }}
+                                >
+                                    <Card card={pending} cardIndex={999} thisPlayerId={player.userId}/>
+                                </motion.div>
                         </AnimatePresence>
                     </div>}
             </div>

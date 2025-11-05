@@ -1,6 +1,6 @@
 import CardHand from "@/components/game/cards/CardHand.tsx";
 import type {CardType, Player} from "@/components/Interfaces.tsx";
-import {useEffect, useRef, useState} from "react";
+import {type Ref, useEffect, useRef, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import {motion, AnimatePresence} from "framer-motion";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
@@ -12,9 +12,10 @@ interface TopPlayersProp {
     hand: CardType[],
     handleClick: (userId: number, index: number) => void,
     selectedCard: { userId: number, index: number } | null;
+    drawRef: Ref<HTMLImageElement>
 }
 
-const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) => {
+const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef}: TopPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
     const {chatMessages} = useWebSocket();
@@ -138,7 +139,8 @@ const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) =
                 <div id="${slotId}-cards">
                     <AnimatePresence>
                         <CardHand initcards={[...hand].reverse()} handleClick={handleClick} thisPlayer={player}
-                                  selectedCard={selectedCard}/>
+                                  selectedCard={selectedCard}
+                                  topPlayer={true}  />
                     </AnimatePresence>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import Navbar from "./components/Navbar.tsx";
 import type {PropsWithChildren} from "react";
 import {Toaster} from "sonner";
+import Issues from "@/components/Issues.tsx";
 
 const Layout = ({ children } : PropsWithChildren) => {
     return (

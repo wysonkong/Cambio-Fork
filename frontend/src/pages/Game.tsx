@@ -2,7 +2,7 @@ import DeckArea from "@/components/game/cards/DeckArea.tsx";
 import BottomPlayers from "@/components/game/BottomPlayers.tsx";
 import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {GameState, Player, SwapState} from "@/components/Interfaces.tsx";
 import { useWebSocket } from '@/components/providers/WebSocketProvider';
 import {useUser} from "@/components/providers/UserProvider.tsx";
@@ -17,6 +17,8 @@ const Game = () => {
     const [bottomLeftPlayers, setBottomLeftPlayers] = useState<Player[]> ();
     const [currentPlayer, setCurrentPlayer] = useState<Player> ();
     const [selectedCard, setSelectedCard] = useState<{userId: number, index: number} | null>(null);
+    const [instructions, setInstructions] = useState<string | null>(null)
+
 
     const {user} = useUser();
 
@@ -29,6 +31,7 @@ const Game = () => {
     const [peekAnyActive, setPeekAnyActive] = useState(false);
     const [lastStickPlayer, setLastStickPlayer] = useState<number | null>(null);
     const [cambioPlayer, setCambioPlayer] = useState<Player| null> (null);
+    const drawRef = useRef<HTMLImageElement>(null);
 
     const [swapState, setSwapState] = useState<SwapState>({
         originIndex: null,
@@ -37,7 +40,6 @@ const Game = () => {
         destinationUserId: null
     });
 
-    const [instructions, setInstructions] = useState<string | null>(null)
 
 
     useEffect(() => {
@@ -122,7 +124,39 @@ const Game = () => {
         if(swapPendingModeActive) {
             console.log("swap pending active")
         }
+        let myIndex = 0;
+        gameState.players.forEach((p : Player, index ) => {
+            if(p.userId === user?.id) {
+                myIndex = index
+            }
+        })
+        if(myIndex === gameState.currentTurn) {
+            switch(gameState.specialMove) {
+                case 1:
+                    setInstructions("Played a 7 or 8, choose one of your cards to peek");
+                    setPeekMeActive(true);
+                    break;
+                case 2:
+                    setInstructions("Played a 9 or 10, choose someone else's card to peek");
+                    setPeekAnyActive(true);
+                    break;
+                case 3:
+                    setInstructions("Played a Jack or Queen, select card you want to swap");
+                    setSwapModeActive(true);
+                    break;
+                case 4:
+                    setInstructions("Played a King, first select a card to peek");
+                    setPeekPlusActive(true);
+                    break;
+            }
+            if(gameState.tempTurn) {
+                setInstructions("Good stick! Pick one of your cards to gice!");
+                setGiveModeActive(true);
+            }
+        }
     }
+
+
 
     const handleCardClick = (userId: number, index: number) => {
         let retry = false;
@@ -208,8 +242,15 @@ const Game = () => {
 
         // End turn if not retrying
         if (!retry) {
-            setSelectedCard(null)
-            endTurn();
+            if(!peekPlusActive) {
+                endTurn();
+                setInstructions("")
+            }
+            else {
+                endTurn();
+                setSwapModeActive(true);
+                setInstructions("Choose a card to swap");
+            }
         } else {
             setInstructions("Illegal move, try again.");
         }
@@ -275,7 +316,7 @@ const Game = () => {
                 </div>
 
                 <div className={"relative flex justify-center items-center flex-1 m-8"}>
-                    <DeckArea discard={gameState?.gameStarted ? gameState?.prevCard : null} gameId={Number(gameId)}/>
+                    <DeckArea drawRef={drawRef} discard={gameState?.gameStarted ? gameState?.prevCard : null} gameId={Number(gameId)}/>
                 </div>
                 <div className={"flex justify-center gap-8"}>
                     <div className={"flex justify-center gap-8"}>
@@ -284,6 +325,7 @@ const Game = () => {
                                                hand={bottomLeftPlayers[index].hand}
                                                handleClick={handleCardClick}
                                                selectedCard={selectedCard}
+                                               drawRef={d}
                                 />
                         ))}
 
@@ -312,7 +354,7 @@ const Game = () => {
 
                     </div>
                 </div>
-                <span>{instructions}</span>
+                <span className={"bg-foreground"}>{instructions}</span>
 
 
                 <div className={""}><GameControls gameId={Number(gameId)}

@@ -1,10 +1,11 @@
 import type {CardType} from "@/components/Interfaces.tsx";
-import {useEffect, useState} from 'react';
+import {type Ref, useEffect, useState} from 'react';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import {motion} from "framer-motion";
 
 
 interface CardProp {
+    ref?: Ref<HTMLImageElement>,
     card: CardType | null,
     cardIndex?: number,
     isDiscard?: boolean,
@@ -13,7 +14,7 @@ interface CardProp {
     isSelected?: boolean
 }
 
-export const Card = ({card, cardIndex, isDiscard, handleClick, thisPlayerId, isSelected}: CardProp) => {
+export const Card = ({ref, card, cardIndex, isDiscard, handleClick, thisPlayerId, isSelected}: CardProp) => {
     const [imgSrc, setImgSrc] = useState<string>("/images/svgtopng/card-back.png");
     const {user} = useUser();
     const [isFlipped, setIsFlipped] = useState(false);
@@ -34,7 +35,7 @@ export const Card = ({card, cardIndex, isDiscard, handleClick, thisPlayerId, isS
         } else if (card?.visible?.includes(me) && card.visible.length >= 2) {
             setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}peek.png`)
             shouldBeFlipped = true;
-        } else if (!card?.visible.includes(me) && card.visible.length >= 2) {
+        } else if (!card?.visible.includes(me) && card.visible.length >= 1 && thisPlayerId === user?.id) {
             setImgSrc("/images/svgtopng/card-back-peek.png")
             shouldBeFlipped = false;
         } else {
@@ -44,7 +45,7 @@ export const Card = ({card, cardIndex, isDiscard, handleClick, thisPlayerId, isS
 
         setIsFlipped(shouldBeFlipped);
 
-    }, [card]);
+    }, [card?.visible]);
 
     const layoutId = thisPlayerId && cardIndex !== undefined
         ? `card-${thisPlayerId}-${cardIndex}`
@@ -81,7 +82,8 @@ export const Card = ({card, cardIndex, isDiscard, handleClick, thisPlayerId, isS
             >
                 {/* Card Back */}
                 <motion.img
-                    src="/images/svgtopng/card-back.png"
+                    ref={ref}
+                    src={imgSrc}
                     alt="card back"
                     className="absolute h-28 w-20"
                     style={{
@@ -91,6 +93,7 @@ export const Card = ({card, cardIndex, isDiscard, handleClick, thisPlayerId, isS
 
                 {/* Card Front */}
                 <motion.img
+                    ref={ref}
                     src={imgSrc}
                     alt={`${card?.rank} of ${card?.suit}`}
                     className="absolute h-28 w-20"

@@ -14,11 +14,13 @@ import {
     SelectValue
 } from "@/components/ui/select.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
+import ConfettiPos from "@/components/Confetti.tsx";
 
 function Issues() {
     const [page, setPage] = useState<string | undefined>("");
     const [type, setType] = useState<string | undefined>("");
     const [issue, setIssue] = useState<string | undefined>("");
+    const [confetti, setConfetti] = useState(false);
     const {user} = useUser();
 
 
@@ -35,6 +37,7 @@ function Issues() {
 
         if (type === "positive") {
             toast.success("Thank you!")
+            setConfetti(true)
         }
 
         if (!res.ok) {
@@ -48,6 +51,8 @@ function Issues() {
     }
 
     return (
+        <>
+        {confetti && <ConfettiPos/>}
         <Dialog>
                 <FieldGroup>
                     <DialogTrigger>
@@ -120,6 +125,7 @@ function Issues() {
                     </DialogContent>
                 </FieldGroup>
         </Dialog>
+        </>
     );
 }
 

@@ -3,12 +3,12 @@ import BottomPlayers from "@/components/game/BottomPlayers.tsx";
 import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
 import React, {useEffect, useRef, useState} from 'react';
-import type {GameState, Player, SwapState} from "@/components/Interfaces.tsx";
+import type {endPlayer, GameState, Player, SwapState} from "@/components/Interfaces.tsx";
 import {useWebSocket} from '@/components/providers/WebSocketProvider';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import ConfettiPos from "@/components/Confetti.tsx";
 import {Field, FieldGroup, FieldLabel, FieldSeparator, FieldSet} from "@/components/ui/field.tsx";
-import {Dialog, DialogContent, DialogHeader, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {
     Select,
@@ -33,6 +33,9 @@ const Game = () => {
     const [currentPlayer, setCurrentPlayer] = useState<Player>();
     const [selectedCard, setSelectedCard] = useState<{ userId: number, index: number } | null>(null);
     const [instructions, setInstructions] = useState<string | null>(null)
+    const [winnerIds, setWinnerIds] = useState<number[]>([]);
+    const [showGameOverDialog, setShowGameOverDialog] = useState(false);
+
 
 
     const navigate = useNavigate();
@@ -63,21 +66,18 @@ const Game = () => {
             render(gameState);
             setModes(gameState)
         }
+
+        if (gameState?.winners && gameState.winners.length > 0) {
+            const ids = gameState.winners.map((winner: endPlayer) => winner.id);
+            setWinnerIds(ids);
+            setShowGameOverDialog(true);
+        }
     }, [gameState]);
 
 
     const handleAction = (actionType: string, payload: Map<string, Object>) => {
         sendAction(Number(gameId), actionType, payload);
     };
-
-    const ids: number[] = [];
-
-    if (gameState?.winners) {
-        gameState?.winners.forEach((winner) => {
-            ids.push(winner.userId);
-        });
-    }
-
 
     const render = (gameState: GameState) => {
         let players = gameState.players;
@@ -105,8 +105,6 @@ const Game = () => {
 
         me = playersSorted[0];
         playersSorted.splice(0, 1);
-        console.log(me);
-        console.log(playersSorted);
         switch (playersSorted.length) {
             case 1:
                 tPlayers.push(playersSorted[0]);
@@ -134,7 +132,6 @@ const Game = () => {
                 bRPlayers.push(playersSorted[4]);
                 break;
         }
-        console.log(me);
         setTopPlayers(tPlayers);
         setBottomRightPlayers(bRPlayers);
         setBottomLeftPlayers(bLPlayers);
@@ -182,7 +179,6 @@ const Game = () => {
 
     const handleCardClick = (userId: number, index: number) => {
         let retry = false;
-        console.log("handleCardClick")
 
         if (userId === cambioPlayer?.userId) {
             retry = true;
@@ -323,19 +319,21 @@ const Game = () => {
 
     return (
         <>
-            {(gameState?.winners) && (
+            {(gameState?.winners && winnerIds.length > 0) && (
                 <>
-                {ids.includes(user?.id as number) && <ConfettiPos/>}
-                    <Dialog>
+                    {winnerIds.includes(user?.id as number) && <ConfettiPos/>}
+                    <Dialog open={showGameOverDialog} onOpenChange={setShowGameOverDialog}>
                         <FieldGroup>
-                            <DialogTrigger>
-                                <Button>Issues</Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>{ids.includes(user?.id as number) ? "You Won!" : "You Lost"}</DialogHeader>
+                            <DialogTitle>End Game Dialog</DialogTitle>
+                            <DialogContent aria-describedby={"Game Ended"} onEscapeKeyDown={() => setShowGameOverDialog(false)}>
+                                <DialogHeader>{winnerIds.includes(user?.id as number) ? "You Won!" : "You Lost"}</DialogHeader>
                                 <FieldSet>
-                                    <span>{`You are now at ${user?.wins} wins`}</span>
-                                    <span>{`You are now at ${user?.loses} losses`}</span>
+                                    <FieldSeparator/>
+                                        <FieldSet>
+                                            <span>Your Stats:</span>
+                                            <span>{`Total Wins: ${user?.wins}`}</span>
+                                            <span>{`Total Losses: ${user?.loses}`}</span>
+                                        </FieldSet>
                                 </FieldSet>
                                 <FieldSeparator/>
                                 <Field orientation="horizontal">

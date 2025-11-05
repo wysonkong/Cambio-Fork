@@ -23,6 +23,12 @@ export interface Player {
     pending: CardType
 }
 
+export interface endPlayer {
+    id: number,
+    score: number,
+    user: string,
+}
+
 export interface GameState {
     players: Player[],
     prevCard: CardType,

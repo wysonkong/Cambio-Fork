@@ -127,9 +127,6 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard, drawRef}: Botto
             }
         }, [chatMessages, user?.username, avatar, lastMessageId, player.userName]);
 
-
-    console.log(player)
-
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
             <div className="flex justify-center grid-flow-col grid-rows-1" id={"${slotId}-cards"}>

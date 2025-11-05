@@ -266,13 +266,11 @@ const Game = () => {
             <div className={"flex-1 flex flex-col items-center justify-start overflow-y-auto relative"}>
                 <div className={"flex justify-center gap-8"}>
                     {topPlayers?.map((player, index) => (
-                        <div className={""}>
                             <TopPlayers key={index} player={player}
                                         hand={topPlayers[index].hand}
                                         handleClick={handleCardClick}
                                         selectedCard={selectedCard}
                             />
-                        </div>
                     ))}
                 </div>
 
@@ -282,13 +280,11 @@ const Game = () => {
                 <div className={"flex justify-center gap-8"}>
                     <div className={"flex justify-center gap-8"}>
                         {bottomLeftPlayers?.map((player, index) => (
-                            <div className={""}>
                                 <BottomPlayers key={index} player={player}
                                                hand={bottomLeftPlayers[index].hand}
                                                handleClick={handleCardClick}
                                                selectedCard={selectedCard}
                                 />
-                            </div>
                         ))}
 
                     </div>
@@ -325,7 +321,7 @@ const Game = () => {
                                                   handleDiscard={handleDiscard}
                                                   handleSwap={handleSwap}
                                                   handleCambio={handleCambio}
-                                                  handleStick={handleStick} />
+                                                  handleStick={handleStick}/>
                 </div>
             </div>
 

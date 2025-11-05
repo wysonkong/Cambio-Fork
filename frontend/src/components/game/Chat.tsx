@@ -7,7 +7,6 @@ import {
     SheetFooter,
     SheetHeader,
     SheetTitle,
-    SheetTrigger
 } from "@/components/ui/sheet.tsx";
 import React, {useEffect, useState} from "react";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
@@ -16,11 +15,12 @@ import type {ChatMessage} from "@/components/Interfaces.tsx";
 
 
 interface ChatProps {
-    gameId?: number | null
+    gameId?: number | null,
+    chatOpen: boolean,
+    handleChat: () => void,
 }
 
-const Chat = ({gameId}: ChatProps) => {
-    const [chatOpen, setChatOpen] = useState(false);
+const Chat = ({gameId, chatOpen, handleChat}: ChatProps) => {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState("");
     const {stompClient, chatMessages, sendMessage} = useWebSocket();
@@ -48,14 +48,7 @@ const Chat = ({gameId}: ChatProps) => {
 
 
     return (
-        <Sheet open={chatOpen} onOpenChange={setChatOpen}>
-            <SheetTrigger asChild>
-                <Button
-                    onClick={() => setChatOpen(prev => !prev)}
-                >
-                    Chat
-                </Button>
-            </SheetTrigger>
+        <Sheet open={chatOpen} onOpenChange={handleChat}>
             <SheetContent aria-describedby={"chat-description"}>
                 <SheetHeader>
                     <SheetTitle>Chat</SheetTitle>

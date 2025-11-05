@@ -7,7 +7,7 @@ import {
     SheetTrigger
 } from "@/components/ui/sheet.tsx";
 import {useEffect, useRef, useState} from "react";
-import type {ActionLog} from "@/components/Interfaces.tsx";
+import type {ActionLogType} from "@/components/Interfaces.tsx";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
@@ -24,7 +24,7 @@ const ActionLog = () => {
         logEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [actionLogs]);
 
-    const formatActionMessage = (log: ActionLog) => {
+    const formatActionMessage = (log: ActionLogType) => {
         const username = log.username === user?.username ? "You" : log.username;
 
         switch (log.type) {

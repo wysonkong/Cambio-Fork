@@ -70,14 +70,24 @@ const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) =
             setLastMessageId(messageId)
             const avatarPos = avatarRef.current?.getBoundingClientRect();
 
-            if (avatarPos) {
-                toast.custom(
-                    (t) => (
+            if (!avatarPos) return;
+            toast.custom(
+                () => (
+                    <div
+                        style={{
+                            position: "fixed",
+                            top: `${avatarPos.top - 50}px`,
+                            left: `${avatarPos.left - 350}px`,
+                            zIndex: 9999,
+                            pointerEvents: "none",
+                        }}
+                    >
                         <motion.div
-                            initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -10, scale: 0.9 }}
-                            className="bg-card text-card-foreground border border-border rounded-lg shadow-lg p-3 max-w-xs"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.2 }}
+                            className="bg-card text-card-foreground border border-border rounded-lg shadow-lg p-3 w-44 select-none"
                         >
                             <div className="flex items-start gap-2">
                                 <img
@@ -87,26 +97,20 @@ const TopPlayers = ({player, hand, handleClick, selectedCard}: TopPlayersProp) =
                                 />
                                 <div className="flex-1">
                                     <p className="font-semibold text-sm">{latestMessage.sender}</p>
-                                    <p className="text-sm text-muted-foreground">{latestMessage.content}</p>
+                                    <p className="text-sm text-muted-foreground break-words">
+                                        {latestMessage.content}
+                                    </p>
                                 </div>
                             </div>
                         </motion.div>
-                    ),
-                    {
-                        duration: 1000,
-                        position: 'bottom-right',
-                        style: {
-                            position: 'fixed',
-                            left: `${avatarPos.right + 10}px`,
-                            top: `${avatarPos.top}px`,
-                        }
-                    }
-                );
-            } else {
-               return;
-            }
+                    </div>
+                ),
+                {
+                    duration: 2000,
+                    position: "top-center",
+                }
+            );
         }
-
     }, [chatMessages, user?.username, avatar, lastMessageId, player.userName]);
 
     return (

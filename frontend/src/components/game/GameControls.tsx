@@ -2,7 +2,8 @@ import {Button} from "@/components/ui/button.tsx";
 import Chat from "@/components/game/Chat.tsx";
 import ActionLog from "@/components/game/ActionLog.tsx";
 import {useGame} from "@/components/providers/GameProvider.tsx";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+
 
 interface GameControlsProps {
     gameId?: number | null
@@ -22,9 +23,10 @@ const GameControls = ({
                           handleDiscard,
                           handleSwap,
                           handleCambio,
-                          handleStick
+                          handleStick,
                       }: GameControlsProps) => {
     const {gameControlArr} = useGame();
+    const [chatOpen, setChatOpen] = useState<boolean> (false);
 
     const keyBindings = [
         { key: " ", index: 1, handler: handleDraw },    // Draw
@@ -34,14 +36,30 @@ const GameControls = ({
         { key: "shift", index: 5, handler: handleStick },   // Stick
     ];
 
+    const handleChat =() => {
+        let chatStatus = chatOpen;
+        chatStatus = !chatStatus;
+        setChatOpen(chatStatus)
+    }
+
     useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent)=> {
-            const key = event.key.toLowerCase();
+        const handleKeyDown = (event: KeyboardEvent) => {
+            const key = event.key;
+
+            // Open chat if Enter pressed
+            if (!chatOpen && key === "Enter") {
+                event.preventDefault();
+                setChatOpen(true);
+                return;
+            }
+
+            if (chatOpen) return; // disable other keybinds when chat is open
+
             const binding = keyBindings.find(
-                (b) => b.key === key && gameControlArr[b.index]
+                (b) => b.key === key.toLowerCase() && gameControlArr[b.index]
             );
 
-            if( binding && binding.handler) {
+            if (binding?.handler) {
                 event.preventDefault();
                 binding.handler();
             }
@@ -50,7 +68,7 @@ const GameControls = ({
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
 
-    }, [gameControlArr, handleStart, handleDraw, handleDiscard, handleSwap, handleCambio, handleStick]);
+    }, [gameControlArr, handleStart, handleDraw, handleDiscard, handleSwap, handleCambio, handleStick, chatOpen]);
 
 
     return (
@@ -88,7 +106,10 @@ const GameControls = ({
                 Stick (Shfit)
             </Button>}
             <ActionLog/>
-            <Chat gameId={gameId}/>
+            <Button onClick={handleChat}>
+                Chat (Enter)
+            </Button>
+            <Chat gameId={gameId} chatOpen={chatOpen} handleChat={handleChat}/>
         </div>
     );
 };

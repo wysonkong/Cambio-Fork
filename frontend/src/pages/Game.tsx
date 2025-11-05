@@ -325,7 +325,7 @@ const Game = () => {
                                                   handleDiscard={handleDiscard}
                                                   handleSwap={handleSwap}
                                                   handleCambio={handleCambio}
-                                                  handleStick={handleStick} />
+                                                  handleStick={handleStick}/>
                 </div>
             </div>
 

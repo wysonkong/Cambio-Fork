@@ -115,13 +115,12 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard}: BottomPlayersP
 
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
-            <div className="flex justify-center grid-flow-col grid-rows-1">
-                <div id={"${slotId}-cards"}>
+            <div className="flex justify-center grid-flow-col grid-rows-1" id={"${slotId}-cards"}>
                     <AnimatePresence>
                         <CardHand initcards={hand} thisPlayer={player} handleClick={handleClick}
                                   selectedCard={selectedCard}
                         />
-                    </AnimatePresence></div>
+                    </AnimatePresence>
             </div>
             <div id="${slotId}-username" className="text-center font-bold mb-2 flex flex-col">
                 <img ref={avatarRef} src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>

@@ -6,6 +6,7 @@ import {useEffect, useRef, useState} from 'react';
 import type {GameState, Player, SwapState} from "@/components/Interfaces.tsx";
 import { useWebSocket } from '@/components/providers/WebSocketProvider';
 import {useUser} from "@/components/providers/UserProvider.tsx";
+import ConfettiPos from "@/components/Confetti.tsx";
 
 
 const Game = () => {
@@ -303,6 +304,8 @@ const Game = () => {
 
 
     return (
+        <>
+        {gameState?.winners && <ConfettiPos/>}
         <div className="w-screen h-screen flex items-center justify-center">
             <div className={"flex-1 flex flex-col items-center justify-start overflow-y-auto relative"}>
                 <div className={"flex justify-center gap-8"}>
@@ -368,6 +371,7 @@ const Game = () => {
             </div>
 
         </div>
+            </>
     );
 };
 

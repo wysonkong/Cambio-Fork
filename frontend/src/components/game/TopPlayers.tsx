@@ -1,6 +1,6 @@
 import CardHand from "@/components/game/cards/CardHand.tsx";
 import type {CardType, Player} from "@/components/Interfaces.tsx";
-import {type Ref, useEffect, useRef, useState} from "react";
+import {type Ref, type RefObject, useEffect, useRef, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import {motion, AnimatePresence} from "framer-motion";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
@@ -9,19 +9,21 @@ import {toast} from "sonner";
 
 interface TopPlayersProp {
     player: Player,
-    hand: CardType[],
-    handleClick: (userId: number, index: number) => void,
+    hand: CardType[] | undefined,
+    handleClick: (userId: number, index: number) => void;
     selectedCard: { userId: number, index: number } | null;
-    drawRef: Ref<HTMLImageElement>
+    cardRefs: RefObject<Map<string, HTMLDivElement>>;
+    drawRef: RefObject<HTMLDivElement | null>;
 }
 
-const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef}: TopPlayersProp) => {
+const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs}: TopPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
     const {chatMessages} = useWebSocket();
     const {user} = useUser();
-    const avatarRef = useRef<HTMLImageElement>(null);
+    const avatarRef = useRef<HTMLImageElement | null>(null);
     const [lastMessageId, setLastMessageId] = useState<string | null>(null);
+    const [animationStart, setAnimationStart] = useState <{x: number, y: number} | null > (null)
 
 
 
@@ -50,6 +52,29 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef}: TopPlaye
         setPending(player.pending);
 
     }, [player]);
+
+    useEffect(() => {
+        if (!player.pending) return;
+
+        // wait until next frame to ensure refs are ready
+        const id = requestAnimationFrame(() => {
+            console.log("drawRef: ", drawRef)
+            if (drawRef?.current && avatarRef.current) {
+                const deckPos = drawRef.current.getBoundingClientRect();
+                const avatarPos = avatarRef.current.getBoundingClientRect();
+                console.log("animation firing");
+
+                setAnimationStart({
+                    x: deckPos.left - avatarPos.left,
+                    y: deckPos.top - avatarPos.top,
+                });
+            } else {
+                console.warn("Refs not ready yet:", drawRef?.current, avatarRef.current);
+            }
+        });
+
+        return () => cancelAnimationFrame(id);
+    }, [player.pending]);
 
     useEffect(() => {
         if (chatMessages.length === 0) return;
@@ -123,10 +148,23 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef}: TopPlaye
                     <div id="${slotId}-draw" className="flex justify-center">
                         <AnimatePresence>
                             <motion.div
-                                initial={{x: -200, opacity: 0, scale: 0.5}}
-                                animate={{x: 0, opacity: 1, scale: 1}}
-                                exit={{x: 200, opacity: 0, scale: 0.5}}
-                                transition={{duration: 0.5, type: "spring"}}
+                                initial={{
+                                    x: animationStart?.x ?? 0,
+                                    y: animationStart?.y ?? 0,
+                                    opacity: 0,
+                                    scale: 0.5,
+                                }}
+                                animate={{
+                                    x: 0,
+                                    y: 0,
+                                    opacity: 1,
+                                    scale: 1,
+                                }}
+                                exit={{
+                                    opacity: 0,
+                                    scale: 0.5,
+                                }}
+                                transition={{ duration: 0.6, type: "spring" }}
                             >
                                 <Card card={pending} cardIndex={999} thisPlayerId={player.userId}/>
                             </motion.div>
@@ -138,9 +176,10 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef}: TopPlaye
             <div className="flex justify-center grid-flow-col grid-rows-1">
                 <div id="${slotId}-cards">
                     <AnimatePresence>
-                        <CardHand initcards={[...hand].reverse()} handleClick={handleClick} thisPlayer={player}
+                        <CardHand initcards={Array.isArray(hand) ?[...hand].reverse() : []} handleClick={handleClick} thisPlayer={player}
                                   selectedCard={selectedCard}
-                                  topPlayer={true}  />
+                                  topPlayer={true}
+                                  cardRefs={cardRefs}  />
                     </AnimatePresence>
                 </div>
             </div>

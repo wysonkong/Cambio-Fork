@@ -1,11 +1,10 @@
 import type {CardType} from "@/components/Interfaces.tsx";
-import {type Ref, useEffect, useState} from 'react';
+import {forwardRef, useEffect, useState} from 'react';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import {motion} from "framer-motion";
 
 
 interface CardProp {
-    ref?: Ref<HTMLImageElement>,
     card: CardType | null,
     cardIndex?: number,
     isDiscard?: boolean,
@@ -14,13 +13,21 @@ interface CardProp {
     isSelected?: boolean
 }
 
-export const Card = ({ref, card, cardIndex, isDiscard, handleClick, thisPlayerId, isSelected}: CardProp) => {
+export const Card = forwardRef<HTMLDivElement, CardProp>(({card, cardIndex, isDiscard, handleClick, thisPlayerId, isSelected}, ref) => {
     const [imgSrc, setImgSrc] = useState<string>("/images/svgtopng/card-back.png");
     const {user} = useUser();
     const [isFlipped, setIsFlipped] = useState(false);
 
 
     const me = Number(user?.id);
+
+
+    useEffect(() => {
+        if (ref && "current" in ref && ref.current) {
+            console.log("Card mounted with ref:", ref.current);
+        }
+    }, [ref]);
+
 
     useEffect(() => {
         if (!card) return;
@@ -47,17 +54,14 @@ export const Card = ({ref, card, cardIndex, isDiscard, handleClick, thisPlayerId
 
     }, [card?.visible]);
 
-    const layoutId = thisPlayerId && cardIndex !== undefined
-        ? `card-${thisPlayerId}-${cardIndex}`
-        : undefined;
 
 
     return (
         <motion.div
+            ref={ref}
             className={`flex items-center justify-center h-30 w-22 hover:bg-secondary transition-colors cursor-pointer ${
                 isSelected ? 'ring-4 ring-red-500 rounded-lg' : ''
             }`}
-            layoutId={layoutId} // 👈 Enables automatic position animations
             onClick={() => {
                 if (handleClick && thisPlayerId !== undefined && cardIndex !== undefined) {
                     handleClick(thisPlayerId, cardIndex);
@@ -82,7 +86,6 @@ export const Card = ({ref, card, cardIndex, isDiscard, handleClick, thisPlayerId
             >
                 {/* Card Back */}
                 <motion.img
-                    ref={ref}
                     src={imgSrc}
                     alt="card back"
                     className="absolute h-28 w-20"
@@ -93,7 +96,6 @@ export const Card = ({ref, card, cardIndex, isDiscard, handleClick, thisPlayerId
 
                 {/* Card Front */}
                 <motion.img
-                    ref={ref}
                     src={imgSrc}
                     alt={`${card?.rank} of ${card?.suit}`}
                     className="absolute h-28 w-20"
@@ -105,5 +107,11 @@ export const Card = ({ref, card, cardIndex, isDiscard, handleClick, thisPlayerId
             </motion.div>
         </motion.div>
     );
-};
+
+    }
+
+);
+
+
+
 

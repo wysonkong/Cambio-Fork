@@ -12,15 +12,16 @@ interface BottomPlayersProp {
     hand: CardType[] | undefined,
     handleClick: (userId: number, index: number) => void;
     selectedCard: { userId: number, index: number } | null;
-    drawRef: RefObject<HTMLImageElement>;
+    cardRefs: RefObject<Map<string, HTMLDivElement>>;
+    drawRef: RefObject<HTMLDivElement | null>;
 }
 
-const BottomPlayers = ({player, hand, handleClick, selectedCard, drawRef}: BottomPlayersProp) => {
+const BottomPlayers = ({player, hand, handleClick, selectedCard, cardRefs, drawRef}: BottomPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
     const {chatMessages} = useWebSocket();
     const {user} = useUser();
-    const avatarRef = useRef<HTMLImageElement>(null);
+    const avatarRef = useRef<HTMLImageElement | null>(null);
     const [lastMessageId, setLastMessageId] = useState<string | null>(null);
     const [animationStart, setAnimationStart] = useState <{x: number, y: number} | null > (null)
 
@@ -53,16 +54,26 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard, drawRef}: Botto
     }, [player, chatMessages]);
 
     useEffect(() => {
-        if (player.pending && drawRef?.current && avatarRef.current) {
-            const deckPos = drawRef.current.getBoundingClientRect();
-            const avatarPos = avatarRef.current.getBoundingClientRect();
+        if (!player.pending) return;
 
-            // offset relative to avatar position
-            setAnimationStart({
-                x: deckPos.left - avatarPos.left,
-                y: deckPos.top - avatarPos.top,
-            });
-        }
+        // wait until next frame to ensure refs are ready
+        const id = requestAnimationFrame(() => {
+            console.log("drawRef: ", drawRef)
+            if (drawRef?.current && avatarRef.current) {
+                const deckPos = drawRef.current.getBoundingClientRect();
+                const avatarPos = avatarRef.current.getBoundingClientRect();
+                console.log("animation firing");
+
+                setAnimationStart({
+                    x: deckPos.left - avatarPos.left,
+                    y: deckPos.top - avatarPos.top,
+                });
+            } else {
+                console.warn("Refs not ready yet:", drawRef?.current, avatarRef.current);
+            }
+        });
+
+        return () => cancelAnimationFrame(id);
     }, [player.pending]);
 
     useEffect(() => {
@@ -131,7 +142,7 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard, drawRef}: Botto
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
             <div className="flex justify-center grid-flow-col grid-rows-1" id={"${slotId}-cards"}>
                     <AnimatePresence>
-                        <CardHand initcards={hand} thisPlayer={player} handleClick={handleClick}
+                        <CardHand cardRefs={cardRefs} initcards={hand} thisPlayer={player} handleClick={handleClick}
                                   selectedCard={selectedCard}
                                   topPlayer={false}
                         />

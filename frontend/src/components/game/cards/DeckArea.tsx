@@ -1,11 +1,11 @@
 // import {useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import type {CardType} from "@/components/Interfaces.tsx";
-import {type Ref, useEffect, useState} from "react";
+import {type RefObject, useEffect, useState} from "react";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
 interface DeckAreaProps {
-    drawRef: Ref<HTMLImageElement>,
+    drawRef: RefObject<HTMLDivElement | null>,
     discard: CardType | null,
     gameId: number,
 }

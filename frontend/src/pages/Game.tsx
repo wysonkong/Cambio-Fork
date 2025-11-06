@@ -2,30 +2,20 @@ import DeckArea from "@/components/game/cards/DeckArea.tsx";
 import BottomPlayers from "@/components/game/BottomPlayers.tsx";
 import GameControls from "@/components/game/GameControls.tsx";
 import TopPlayers from "@/components/game/TopPlayers.tsx";
-import React, {useEffect, useRef, useState} from 'react';
-import type {endPlayer, GameState, Player, SwapState} from "@/components/Interfaces.tsx";
+import {useEffect, useRef, useState} from 'react';
+import type {ActionLogType, endPlayer, GameState, Player, SwapState} from "@/components/Interfaces.tsx";
 import {useWebSocket} from '@/components/providers/WebSocketProvider';
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import ConfettiPos from "@/components/Confetti.tsx";
-import {Field, FieldGroup, FieldLabel, FieldSeparator, FieldSet} from "@/components/ui/field.tsx";
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {Field, FieldGroup, FieldSeparator, FieldSet} from "@/components/ui/field.tsx";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select.tsx";
-import {Textarea} from "@/components/ui/textarea.tsx";
 import {useNavigate} from "react-router-dom";
 
 
 const Game = () => {
 
-    const {gameState, sendAction} = useWebSocket();
+    const {gameState, sendAction, actionLogs} = useWebSocket();
     const gameId = Number(sessionStorage.getItem("currentGame"));
     const [topPlayers, setTopPlayers] = useState<Player[]>();
     const [bottomRightPlayers, setBottomRightPlayers] = useState<Player[]>();
@@ -35,6 +25,8 @@ const Game = () => {
     const [instructions, setInstructions] = useState<string | null>(null)
     const [winnerIds, setWinnerIds] = useState<number[]>([]);
     const [showGameOverDialog, setShowGameOverDialog] = useState(false);
+    const [displayState, setDisplayState] = useState<GameState | null>(null);
+
 
 
 
@@ -50,7 +42,8 @@ const Game = () => {
     const [peekAnyActive, setPeekAnyActive] = useState(false);
     const [lastStickPlayer, setLastStickPlayer] = useState<number | null>(null);
     const [cambioPlayer, setCambioPlayer] = useState<Player | null>(null);
-    const drawRef = useRef<HTMLImageElement>(null);
+    const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+    const drawRef = useRef<HTMLDivElement | null>(null)
 
     const [swapState, setSwapState] = useState<SwapState>({
         originIndex: null,
@@ -61,18 +54,84 @@ const Game = () => {
 
 
     useEffect(() => {
-        if (gameState) {
-            console.log('Game state updated!', gameState);
-            render(gameState);
-            setModes(gameState)
-        }
+        const lastAction = actionLogs[actionLogs.length - 1];
+        if(!lastAction) return;
 
-        if (gameState?.winners && gameState.winners.length > 0) {
-            const ids = gameState.winners.map((winner: endPlayer) => winner.id);
+        handleAnimation(lastAction).then(() => {
+            if(!gameState) return;
+            setDisplayState(gameState);
+        });
+    }, [actionLogs, gameState]);
+
+    useEffect(() => {
+        if(!displayState) return;
+        console.log('Game state updated!', gameState);
+        render(displayState);
+        setModes(displayState)
+
+        if (displayState?.winners && displayState.winners.length > 0) {
+            const ids = displayState.winners.map((winner: endPlayer) => winner.id);
             setWinnerIds(ids);
             setShowGameOverDialog(true);
         }
-    }, [gameState]);
+    }, [displayState]);
+
+
+    const handleAnimation = async (action: ActionLogType)=> {
+        console.log(action)
+        let originEl = null;
+        let destEl = null
+        const payLoadMap = new Map(Object.entries(action.payload));
+        switch (action.type) {
+            case "SWAP":
+                const originUserId = payLoadMap.get('originUserId');
+                const originIndex = payLoadMap.get("origin");
+                const destinationUserId = payLoadMap.get("destinationUserId");
+                const destinationIndex = payLoadMap.get("destination");
+                const originKey = `${originUserId}-${originIndex}`;
+                const destKey = `${destinationUserId}-${destinationIndex}`;
+
+                originEl = cardRefs.current.get(originKey);
+                destEl = cardRefs.current.get(destKey);
+                break;
+        }
+        if (originEl && destEl) {
+            console.log("animating ", originEl, destEl)
+            await animate(destEl, originEl);
+        }
+    }
+
+
+    const animate = (elA: HTMLDivElement, elB: HTMLDivElement) => {
+        return new Promise<void>((resolve) => {
+            const rectA = elA.getBoundingClientRect();
+            const rectB = elB.getBoundingClientRect();
+            const dx = rectB.left - rectA.left;
+            const dy = rectB.top - rectA.top;
+
+            elA.style.transition = "transform 0.5s ease";
+            elB.style.transition = "transform 0.5s ease";
+
+            elA.style.transform = `translate(${dx}px, ${dy}px)`;
+            elB.style.transform = `translate(${-dx}px, ${-dy}px)`;
+
+            let done = 0;
+            const onEnd = () => {
+                done++;
+                if (done === 2) {
+                    // reset transforms
+                    elA.style.transition = "";
+                    elB.style.transition = "";
+                    elA.style.transform = "";
+                    elB.style.transform = "";
+                    resolve();
+                }
+            };
+
+            elA.addEventListener("transitionend", onEnd, {once: true});
+            elB.addEventListener("transitionend", onEnd, {once: true});
+        });
+    };
 
 
     const handleAction = (actionType: string, payload: Map<string, Object>) => {
@@ -352,6 +411,8 @@ const Game = () => {
                                         hand={topPlayers[index].hand}
                                         handleClick={handleCardClick}
                                         selectedCard={selectedCard}
+                                        drawRef={drawRef}
+                                        cardRefs={cardRefs}
                             />
                         ))}
                     </div>
@@ -367,7 +428,8 @@ const Game = () => {
                                                hand={bottomLeftPlayers[index].hand}
                                                handleClick={handleCardClick}
                                                selectedCard={selectedCard}
-                                               drawRef={d}
+                                               drawRef={drawRef}
+                                               cardRefs={cardRefs}
                                 />
                             ))}
 
@@ -378,6 +440,8 @@ const Game = () => {
                                                hand={currentPlayer?.hand}
                                                handleClick={handleCardClick}
                                                selectedCard={selectedCard}
+                                               drawRef={drawRef}
+                                               cardRefs={cardRefs}
                                 />
                             </div>}
 
@@ -390,6 +454,8 @@ const Game = () => {
                                                    hand={bottomRightPlayers[index].hand}
                                                    handleClick={handleCardClick}
                                                    selectedCard={selectedCard}
+                                                   drawRef={drawRef}
+                                                   cardRefs={cardRefs}
                                     />
                                 </div>
                             ))}

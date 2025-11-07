@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD card VARCHAR(255);

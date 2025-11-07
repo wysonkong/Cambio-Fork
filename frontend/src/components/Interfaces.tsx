@@ -5,6 +5,7 @@ export interface User {
     wins: number
     loses: number
     avatar: string;
+    card: string;
 }
 
 export interface CardType {

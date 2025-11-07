@@ -25,7 +25,10 @@ const Game = () => {
     const [instructions, setInstructions] = useState<string | null>(null)
     const [winnerIds, setWinnerIds] = useState<number[]>([]);
     const [showGameOverDialog, setShowGameOverDialog] = useState(false);
+
+
     const [displayState, setDisplayState] = useState<GameState | null>(null);
+    const [pendingActions, setPendingActions] = useState<ActionLogType[]>([]);
 
 
 
@@ -58,22 +61,32 @@ const Game = () => {
 
 
     useEffect(() => {
-        const lastAction = actionLogs[actionLogs.length - 1];
-        if(!lastAction) return;
-
-        const animateAndSet = async () => {
-            await handleAnimation(lastAction);
-            if(!gameState) return;
-            setDisplayState(gameState);
+        if(actionLogs.length === 0) return;
+        const newActions = actionLogs.slice(pendingActions.length);
+        if(newActions.length > 0) {
+            setPendingActions([...pendingActions, ...newActions]);
         }
-        animateAndSet();
+
     }, [actionLogs, gameState]);
 
     useEffect(() => {
+
+        const processNextAction = async () => {
+            if (pendingActions.length === 0) return;
+            const next = pendingActions[0];
+            await handleAnimation(next);
+            if(gameState) setDisplayState(gameState);
+            setPendingActions(pendingActions.slice(1))
+        }
+
+
+        processNextAction();
+    }, [pendingActions, gameState]);
+
+    useEffect(() => {
         if(!displayState) return;
-        console.log('Game state updated!', gameState);
         render(displayState);
-        setModes(displayState)
+        setModes(displayState);
 
         if (displayState?.winners && displayState.winners.length > 0) {
             const ids = displayState.winners.map((winner: endPlayer) => winner.id);

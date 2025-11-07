@@ -140,12 +140,10 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard, cardRefs, pendi
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
             <div className="flex justify-center grid-flow-col grid-rows-1" id={"${slotId}-cards"}>
-                    <AnimatePresence>
                         <CardHand cardRefs={cardRefs} initcards={hand} thisPlayer={player} handleClick={handleClick}
                                   selectedCard={selectedCard}
                                   topPlayer={false}
                         />
-                    </AnimatePresence>
             </div>
             <div ref={(el) => {
             if(el) avatarRefs.current.set(`${player.userId}-avatar`, el)
@@ -154,12 +152,10 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard, cardRefs, pendi
                 {player.userName}
                 {player.pending &&
                     <div id={"${slotId}-draw"} className="flex justify-center">
-                        <AnimatePresence>
                                     <Card ref={(el) => {
                                         if(el) pendingRefs.current.set(`${player.userId}-pending`, el);
                                         else pendingRefs.current.delete(`${player.userId}-pending`);
                                     }} card={pending} cardIndex={999} thisPlayerId={player.userId}/>
-                        </AnimatePresence>
                     </div>}
             </div>
 

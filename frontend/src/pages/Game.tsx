@@ -61,10 +61,12 @@ const Game = () => {
         const lastAction = actionLogs[actionLogs.length - 1];
         if(!lastAction) return;
 
-        handleAnimation(lastAction).then(() => {
+        const animateAndSet = async () => {
+            await handleAnimation(lastAction);
             if(!gameState) return;
             setDisplayState(gameState);
-        });
+        }
+        animateAndSet();
     }, [actionLogs, gameState]);
 
     useEffect(() => {

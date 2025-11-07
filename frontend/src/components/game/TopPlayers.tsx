@@ -147,44 +147,20 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs,
                 {player.userName}
                 {player.pending &&
                     <div id="${slotId}-draw" className="flex justify-center">
-                        <AnimatePresence>
-                            <motion.div
-                                initial={{
-                                    x: animationStart?.x ?? 0,
-                                    y: animationStart?.y ?? 0,
-                                    opacity: 0,
-                                    scale: 0.5,
-                                }}
-                                animate={{
-                                    x: 0,
-                                    y: 0,
-                                    opacity: 1,
-                                    scale: 1,
-                                }}
-                                exit={{
-                                    opacity: 0,
-                                    scale: 0.5,
-                                }}
-                                transition={{ duration: 0.6, type: "spring" }}
-                            >
                                 <Card ref={(el) => {
                                     if(el) pendingRefs.current.set(`${player.userId}-pending`, el);
                                     else pendingRefs.current.delete(`${player.userId}-pending`);
                                 }} card={pending} cardIndex={999} thisPlayerId={player.userId}/>
-                            </motion.div>
-                        </AnimatePresence>
                     </div>}
 
             </div>
 
             <div className="flex justify-center grid-flow-col grid-rows-1">
                 <div id="${slotId}-cards">
-                    <AnimatePresence>
                         <CardHand initcards={hand} handleClick={handleClick} thisPlayer={player}
                                   selectedCard={selectedCard}
                                   topPlayer={true}
                                   cardRefs={cardRefs}  />
-                    </AnimatePresence>
                 </div>
             </div>
 

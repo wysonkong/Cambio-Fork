@@ -43,7 +43,7 @@ export const Card = forwardRef<HTMLDivElement, CardProp>(({card, cardIndex, isDi
             setImgSrc(`/images/cardTheme/svgtopng/${card?.rank}-${card?.suit}peek.png`)
             shouldBeFlipped = true;
         } else if (!card?.visible.includes(me) && card.visible.length >= 1 && thisPlayerId === user?.id) {
-            setImgSrc(`/images/cardTheme/svgtopng/card-back-peek.png`)
+            setImgSrc(`/images/cardTheme/cardThemes/${user.card}-peek.png`)
             shouldBeFlipped = false;
         } else {
             setImgSrc(`/images/cardTheme/cardThemes/${user.card}.png`)

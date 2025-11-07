@@ -26,7 +26,7 @@ public class User {
         this.wins = wins;
         this.loses = loses;
         this.avatar = "dog";
-        this.card = "cards";
+        this.card = "default";
     }
 
     public String getCard() {

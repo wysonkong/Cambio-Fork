@@ -72,7 +72,7 @@ const Avatar = () => {
                                                 onClick={() => {
                                                     handleNewTheme(src);
                                                 }}
-                                                src={`/images/cardTheme/${src}/card-back.png`}
+                                                src={`/images/cardTheme/cardThemes/${src}.png`}
                                                 alt={`Card Theme ${index + 1}`}
                                                 className={`w-16 h-16 rounded-full cursor-pointer transition
                                                     hover:scale-105 border-2

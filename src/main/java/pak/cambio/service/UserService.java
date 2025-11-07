@@ -24,6 +24,9 @@ public class UserService {
         if(user.getAvatar() == null) {
             user.setAvatar("dog");
         }
+        if(user.getCard() == null) {
+            user.setCard("default");
+        }
         userRepository.save(user);
     }
 

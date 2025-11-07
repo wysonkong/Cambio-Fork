@@ -6,11 +6,12 @@ import {useUser} from "@/components/providers/UserProvider.tsx";
 
 interface DeckAreaProps {
     drawRef: RefObject<HTMLDivElement | null>,
+    discardRef: RefObject<HTMLDivElement | null>,
     discard: CardType | null,
     gameId: number,
 }
 
-const DeckArea = ({drawRef, discard, gameId} : DeckAreaProps) => {
+const DeckArea = ({drawRef, discardRef,  discard, gameId} : DeckAreaProps) => {
     // const [showDiscard, setShowDiscard] = useState(false);
     const [showDiscard, setShowDiscard] = useState<CardType | null>(discard)
     const [isDiscard, setIsDiscard] = useState(false);
@@ -42,7 +43,7 @@ const DeckArea = ({drawRef, discard, gameId} : DeckAreaProps) => {
             <span>Game Code: {gameId}</span>
             <div className={"grid grid-cols-2 gap-4 p-4"}>
                 <Card ref={drawRef} card={deckCard} cardIndex={-1} thisPlayerId={-1}/>
-                <Card card={showDiscard} isDiscard={isDiscard} cardIndex={-2} thisPlayerId={-2}/>
+                <Card ref={discardRef} card={showDiscard} isDiscard={isDiscard} cardIndex={-2} thisPlayerId={-2}/>
             </div>
         </div>
     );

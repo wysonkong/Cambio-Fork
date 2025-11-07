@@ -1,6 +1,6 @@
 import CardHand from "@/components/game/cards/CardHand.tsx";
 import type {Player, CardType} from "@/components/Interfaces.tsx";
-import {type RefObject, useEffect, useRef, useState} from "react";
+import {type RefObject, useEffect, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import {motion, AnimatePresence} from "framer-motion";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
@@ -13,17 +13,16 @@ interface BottomPlayersProp {
     handleClick: (userId: number, index: number) => void;
     selectedCard: { userId: number, index: number } | null;
     cardRefs: RefObject<Map<string, HTMLDivElement>>;
-    drawRef: RefObject<HTMLDivElement | null>;
+    pendingRefs: RefObject<Map<string, HTMLDivElement>>;
+    avatarRefs: RefObject<Map<string, HTMLDivElement>>
 }
 
-const BottomPlayers = ({player, hand, handleClick, selectedCard, cardRefs, drawRef}: BottomPlayersProp) => {
+const BottomPlayers = ({player, hand, handleClick, selectedCard, cardRefs, pendingRefs, avatarRefs}: BottomPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
     const {chatMessages} = useWebSocket();
     const {user} = useUser();
-    const avatarRef = useRef<HTMLImageElement | null>(null);
     const [lastMessageId, setLastMessageId] = useState<string | null>(null);
-    const [animationStart, setAnimationStart] = useState <{x: number, y: number} | null > (null)
 
 
 
@@ -53,28 +52,28 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard, cardRefs, drawR
         setPending(player.pending);
     }, [player, chatMessages]);
 
-    useEffect(() => {
-        if (!player.pending) return;
-
-        // wait until next frame to ensure refs are ready
-        const id = requestAnimationFrame(() => {
-            console.log("drawRef: ", drawRef)
-            if (drawRef?.current && avatarRef.current) {
-                const deckPos = drawRef.current.getBoundingClientRect();
-                const avatarPos = avatarRef.current.getBoundingClientRect();
-                console.log("animation firing");
-
-                setAnimationStart({
-                    x: deckPos.left - avatarPos.left,
-                    y: deckPos.top - avatarPos.top,
-                });
-            } else {
-                console.warn("Refs not ready yet:", drawRef?.current, avatarRef.current);
-            }
-        });
-
-        return () => cancelAnimationFrame(id);
-    }, [player.pending]);
+    // useEffect(() => {
+    //     if (!player.pending) return;
+    //
+    //     // wait until next frame to ensure refs are ready
+    //     const id = requestAnimationFrame(() => {
+    //         console.log("drawRef: ", drawRef)
+    //         if (drawRef?.current && avatarRef.current) {
+    //             const deckPos = drawRef.current.getBoundingClientRect();
+    //             const avatarPos = avatarRef.current.getBoundingClientRect();
+    //             console.log("animation firing");
+    //
+    //             setAnimationStart({
+    //                 x: deckPos.left - avatarPos.left,
+    //                 y: deckPos.top - avatarPos.top,
+    //             });
+    //         } else {
+    //             console.warn("Refs not ready yet:", drawRef?.current, avatarRef.current);
+    //         }
+    //     });
+    //
+    //     return () => cancelAnimationFrame(id);
+    // }, [player.pending]);
 
     useEffect(() => {
         if (chatMessages.length === 0) return;
@@ -93,7 +92,7 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard, cardRefs, drawR
 
         if (!isFromCurrentUser && isFromThisPlayer) {
             setLastMessageId(messageId)
-            const avatarPos = avatarRef.current?.getBoundingClientRect();
+            const avatarPos = avatarRefs.current.get(`${player.userId}-avatar`)?.getBoundingClientRect();
 
             if (!avatarPos) return;
                 toast.custom(
@@ -148,34 +147,18 @@ const BottomPlayers = ({player, hand, handleClick, selectedCard, cardRefs, drawR
                         />
                     </AnimatePresence>
             </div>
-            <div id="${slotId}-username" className="text-center font-bold mb-2 flex flex-col">
-                <img ref={avatarRef} src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
+            <div ref={(el) => {
+            if(el) avatarRefs.current.set(`${player.userId}-avatar`, el)
+            else avatarRefs.current.delete(`${player.userId}-avatar`)}} id="${slotId}-username" className="text-center font-bold mb-2 flex flex-col">
+                <img src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
                 {player.userName}
                 {player.pending &&
                     <div id={"${slotId}-draw"} className="flex justify-center">
                         <AnimatePresence>
-
-                                <motion.div
-                                    initial={{
-                                        x: animationStart?.x ?? 0,
-                                        y: animationStart?.y ?? 0,
-                                        opacity: 0,
-                                        scale: 0.5,
-                                    }}
-                                    animate={{
-                                        x: 0,
-                                        y: 0,
-                                        opacity: 1,
-                                        scale: 1,
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 0.5,
-                                    }}
-                                    transition={{ duration: 0.6, type: "spring" }}
-                                >
-                                    <Card card={pending} cardIndex={999} thisPlayerId={player.userId}/>
-                                </motion.div>
+                                    <Card ref={(el) => {
+                                        if(el) pendingRefs.current.set(`${player.userId}-pending`, el);
+                                        else pendingRefs.current.delete(`${player.userId}-pending`);
+                                    }} card={pending} cardIndex={999} thisPlayerId={player.userId}/>
                         </AnimatePresence>
                     </div>}
             </div>

@@ -1,6 +1,6 @@
 import CardHand from "@/components/game/cards/CardHand.tsx";
 import type {CardType, Player} from "@/components/Interfaces.tsx";
-import {type Ref, type RefObject, useEffect, useRef, useState} from "react";
+import { type RefObject, useEffect, useRef, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
 import {motion, AnimatePresence} from "framer-motion";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
@@ -14,9 +14,10 @@ interface TopPlayersProp {
     selectedCard: { userId: number, index: number } | null;
     cardRefs: RefObject<Map<string, HTMLDivElement>>;
     drawRef: RefObject<HTMLDivElement | null>;
+    pendingRefs: RefObject<Map<string, HTMLDivElement>>;
 }
 
-const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs}: TopPlayersProp) => {
+const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs, pendingRefs}: TopPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
     const {chatMessages} = useWebSocket();
@@ -166,7 +167,10 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs}
                                 }}
                                 transition={{ duration: 0.6, type: "spring" }}
                             >
-                                <Card card={pending} cardIndex={999} thisPlayerId={player.userId}/>
+                                <Card ref={(el) => {
+                                    if(el) pendingRefs.current.set(`${player.userId}-pending`, el);
+                                    else pendingRefs.current.delete(`${player.userId}-pending`);
+                                }} card={pending} cardIndex={999} thisPlayerId={player.userId}/>
                             </motion.div>
                         </AnimatePresence>
                     </div>}
@@ -176,7 +180,7 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs}
             <div className="flex justify-center grid-flow-col grid-rows-1">
                 <div id="${slotId}-cards">
                     <AnimatePresence>
-                        <CardHand initcards={Array.isArray(hand) ?[...hand].reverse() : []} handleClick={handleClick} thisPlayer={player}
+                        <CardHand initcards={hand} handleClick={handleClick} thisPlayer={player}
                                   selectedCard={selectedCard}
                                   topPlayer={true}
                                   cardRefs={cardRefs}  />

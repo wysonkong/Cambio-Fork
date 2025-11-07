@@ -44,6 +44,10 @@ const Game = () => {
     const [cambioPlayer, setCambioPlayer] = useState<Player | null>(null);
     const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
     const drawRef = useRef<HTMLDivElement | null>(null)
+    const discardRef = useRef<HTMLDivElement | null>(null);
+    const pendingRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+    const avatarRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
 
     const [swapState, setSwapState] = useState<SwapState>({
         originIndex: null,
@@ -81,6 +85,8 @@ const Game = () => {
         console.log(action)
         let originEl = null;
         let destEl = null
+        let originKey ="";
+        let destKey ="";
         const payLoadMap = new Map(Object.entries(action.payload));
         switch (action.type) {
             case "SWAP":
@@ -88,16 +94,29 @@ const Game = () => {
                 const originIndex = payLoadMap.get("origin");
                 const destinationUserId = payLoadMap.get("destinationUserId");
                 const destinationIndex = payLoadMap.get("destination");
-                const originKey = `${originUserId}-${originIndex}`;
-                const destKey = `${destinationUserId}-${destinationIndex}`;
+                originKey = `${originUserId}-${originIndex}`;
+                destKey = `${destinationUserId}-${destinationIndex}`;
 
                 originEl = cardRefs.current.get(originKey);
                 destEl = cardRefs.current.get(destKey);
+                break;
+            case "DISCARD_PENDING":
+                originKey = `${action.userId}-pending`
+                destEl = pendingRefs.current.get(originKey);
+                originEl = discardRef.current;
+                break;
+            case "DRAW_DECK":
+                originEl = drawRef.current;
+                originKey= `${action.userId}-avatar`;
+                destEl = avatarRefs.current.get(originKey);
                 break;
         }
         if (originEl && destEl) {
             console.log("animating ", originEl, destEl)
             await animate(destEl, originEl);
+        }
+        else {
+            console.log("not animating", originEl, destEl)
         }
     }
 
@@ -408,17 +427,18 @@ const Game = () => {
                     <div className={"flex justify-center gap-8"}>
                         {topPlayers?.map((player, index) => (
                             <TopPlayers key={index} player={player}
-                                        hand={topPlayers[index].hand}
+                                        hand={[...topPlayers[index].hand].reverse()}
                                         handleClick={handleCardClick}
                                         selectedCard={selectedCard}
                                         drawRef={drawRef}
                                         cardRefs={cardRefs}
+                                        pendingRefs={pendingRefs}
                             />
                         ))}
                     </div>
 
                     <div className={"relative flex justify-center items-center flex-1 m-8"}>
-                        <DeckArea drawRef={drawRef} discard={gameState?.gameStarted ? gameState?.prevCard : null}
+                        <DeckArea drawRef={drawRef} discardRef={discardRef} discard={gameState?.gameStarted ? gameState?.prevCard : null}
                                   gameId={Number(gameId)}/>
                     </div>
                     <div className={"flex justify-center gap-8"}>
@@ -428,8 +448,9 @@ const Game = () => {
                                                hand={bottomLeftPlayers[index].hand}
                                                handleClick={handleCardClick}
                                                selectedCard={selectedCard}
-                                               drawRef={drawRef}
                                                cardRefs={cardRefs}
+                                               pendingRefs={pendingRefs}
+                                               avatarRefs={avatarRefs}
                                 />
                             ))}
 
@@ -440,8 +461,9 @@ const Game = () => {
                                                hand={currentPlayer?.hand}
                                                handleClick={handleCardClick}
                                                selectedCard={selectedCard}
-                                               drawRef={drawRef}
                                                cardRefs={cardRefs}
+                                               pendingRefs={pendingRefs}
+                                               avatarRefs={avatarRefs}
                                 />
                             </div>}
 
@@ -454,8 +476,9 @@ const Game = () => {
                                                    hand={bottomRightPlayers[index].hand}
                                                    handleClick={handleCardClick}
                                                    selectedCard={selectedCard}
-                                                   drawRef={drawRef}
                                                    cardRefs={cardRefs}
+                                                   pendingRefs={pendingRefs}
+                                                   avatarRefs={avatarRefs}
                                     />
                                 </div>
                             ))}

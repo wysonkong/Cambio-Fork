@@ -18,12 +18,12 @@ const CardHand = ({cardRefs, initcards, thisPlayer, handleClick, selectedCard, t
 
     return (
         <div className="grid grid-rows-2 grid-flow-col gap-2 justify-center">
-             {allCards?.map((card, index, array) => (
+             {allCards?.map((card, index) => (
 
                 <Card ref={(el) => {
-                    if (el) cardRefs.current.set(`${thisPlayer.userId}-${topPlayer ? array.length - 1 - index : index}`, el);
-                    else cardRefs.current.delete(`${thisPlayer.userId}-${topPlayer ? array.length - 1 - index : index}`);
-                }} key={index} card={card} cardIndex={topPlayer ? array.length - 1 - index : index} thisPlayerId={thisPlayer.userId} handleClick={handleClick} isSelected={selectedCard?.userId === thisPlayer.userId && selectedCard?.index === (topPlayer ? array.length - 1 - index : index)} />
+                    if (el) cardRefs.current.set(`${thisPlayer.userId}-${topPlayer ? allCards?.length - 1 - index : index}`, el);
+                    else cardRefs.current.delete(`${thisPlayer.userId}-${topPlayer ? allCards?.length - 1 - index : index}`);
+                }} key={index} card={card} cardIndex={topPlayer ? allCards?.length - 1 - index : index} thisPlayerId={thisPlayer.userId} handleClick={handleClick} isSelected={selectedCard?.userId === thisPlayer.userId && selectedCard?.index === (topPlayer ? allCards?.length - 1 - index : index)} />
             ))}
         </div>
     );

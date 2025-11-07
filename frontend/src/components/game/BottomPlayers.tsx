@@ -2,7 +2,7 @@ import CardHand from "@/components/game/cards/CardHand.tsx";
 import type {Player, CardType} from "@/components/Interfaces.tsx";
 import {type RefObject, useEffect, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
-import {motion, AnimatePresence} from "framer-motion";
+import {motion} from "framer-motion";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import {toast} from "sonner";

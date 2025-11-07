@@ -1,8 +1,8 @@
 import CardHand from "@/components/game/cards/CardHand.tsx";
 import type {CardType, Player} from "@/components/Interfaces.tsx";
-import { type RefObject, useEffect, useRef, useState} from "react";
+import { type RefObject, useEffect, useState} from "react";
 import {Card} from "@/components/game/cards/Card.tsx";
-import {motion, AnimatePresence} from "framer-motion";
+import {motion} from "framer-motion";
 import {useWebSocket} from "@/components/providers/WebSocketProvider.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import {toast} from "sonner";
@@ -15,16 +15,16 @@ interface TopPlayersProp {
     cardRefs: RefObject<Map<string, HTMLDivElement>>;
     drawRef: RefObject<HTMLDivElement | null>;
     pendingRefs: RefObject<Map<string, HTMLDivElement>>;
+    avatarRefs: RefObject<Map<string, HTMLDivElement>>;
 }
 
-const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs, pendingRefs}: TopPlayersProp) => {
+const TopPlayers = ({player, hand, handleClick, selectedCard, cardRefs, pendingRefs, avatarRefs}: TopPlayersProp) => {
     const [avatar, setAvatar] = useState("dog")
     const [pending, setPending] = useState(player.pending);
     const {chatMessages} = useWebSocket();
     const {user} = useUser();
-    const avatarRef = useRef<HTMLImageElement | null>(null);
     const [lastMessageId, setLastMessageId] = useState<string | null>(null);
-    const [animationStart, setAnimationStart] = useState <{x: number, y: number} | null > (null)
+
 
 
 
@@ -54,28 +54,6 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs,
 
     }, [player]);
 
-    useEffect(() => {
-        if (!player.pending) return;
-
-        // wait until next frame to ensure refs are ready
-        const id = requestAnimationFrame(() => {
-            console.log("drawRef: ", drawRef)
-            if (drawRef?.current && avatarRef.current) {
-                const deckPos = drawRef.current.getBoundingClientRect();
-                const avatarPos = avatarRef.current.getBoundingClientRect();
-                console.log("animation firing");
-
-                setAnimationStart({
-                    x: deckPos.left - avatarPos.left,
-                    y: deckPos.top - avatarPos.top,
-                });
-            } else {
-                console.warn("Refs not ready yet:", drawRef?.current, avatarRef.current);
-            }
-        });
-
-        return () => cancelAnimationFrame(id);
-    }, [player.pending]);
 
     useEffect(() => {
         if (chatMessages.length === 0) return;
@@ -95,7 +73,7 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs,
 
         if (!isFromCurrentUser && isFromThisPlayer) {
             setLastMessageId(messageId)
-            const avatarPos = avatarRef.current?.getBoundingClientRect();
+            const avatarPos = avatarRefs.current.get(`${player.userId}-avatar`)?.getBoundingClientRect();
 
             if (!avatarPos) return;
             toast.custom(
@@ -143,7 +121,9 @@ const TopPlayers = ({player, hand, handleClick, selectedCard, drawRef, cardRefs,
     return (
         <div className={"bg-foreground rounded-lg p-2 border shadow flex flex-row items-center"}>
             <div id="${slotId}-username" className="text-center font-bold mb-2">
-                <img ref={avatarRef} src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
+                <img ref={(el) => {
+                    if(el) avatarRefs.current.set(`${player.userId}-avatar`, el)
+                    else avatarRefs.current.delete(`${player.userId}-avatar`)}} src={`/images/avatars/${avatar}.png`} alt={`${player.userName}'s avatar`} className={"h-14 w-14"}/>
                 {player.userName}
                 {player.pending &&
                     <div id="${slotId}-draw" className="flex justify-center">

@@ -88,40 +88,65 @@ const Game = () => {
         let originKey ="";
         let destKey ="";
         const payLoadMap = new Map(Object.entries(action.payload));
+        let twoWay : boolean = false;
+        let originUserId = null;
+        let originIndex = null;
+        let destinationUserId = null;
+        let destinationIndex = null;
+        let didStickWork : boolean = false;
+
         switch (action.type) {
             case "SWAP":
-                const originUserId = payLoadMap.get('originUserId');
-                const originIndex = payLoadMap.get("origin");
-                const destinationUserId = payLoadMap.get("destinationUserId");
-                const destinationIndex = payLoadMap.get("destination");
+                originUserId = payLoadMap.get('originUserId');
+                originIndex = payLoadMap.get("origin");
+                destinationUserId = payLoadMap.get("destinationUserId");
+                destinationIndex = payLoadMap.get("destination");
                 originKey = `${originUserId}-${originIndex}`;
                 destKey = `${destinationUserId}-${destinationIndex}`;
 
                 originEl = cardRefs.current.get(originKey);
                 destEl = cardRefs.current.get(destKey);
+                twoWay = true;
                 break;
             case "DISCARD_PENDING":
-                originKey = `${action.userId}-pending`
+                originKey = `${action.userId}-pending`;
                 destEl = pendingRefs.current.get(originKey);
                 originEl = discardRef.current;
                 break;
             case "DRAW_DECK":
                 originEl = drawRef.current;
-                originKey= `${action.userId}-avatar`;
-                destEl = avatarRefs.current.get(originKey);
+                destKey= `${action.userId}-avatar`;
+                destEl = avatarRefs.current.get(destKey);
+                break;
+
+            case "STICK":
+                originUserId = payLoadMap.get('originUserId');
+                originIndex = payLoadMap.get("origin");
+                didStickWork = payLoadMap.get("didStickWork");
+                if(didStickWork) {
+                    originKey = `${originUserId}-${originIndex}`;
+                    originEl = cardRefs.current.get(originKey);
+                    destEl = discardRef.current;
+                }
+                else {
+                    originEl = drawRef.current;
+                    destKey =`${action.userId}-avatar`;
+                    destEl = avatarRefs.current.get(originKey);
+                }
+
                 break;
         }
         if (originEl && destEl) {
-            console.log("animating ", originEl, destEl)
-            await animate(destEl, originEl);
+            console.log("animated ", originEl, destEl)
+            await animate(originEl, destEl, twoWay);
         }
         else {
-            console.log("not animating", originEl, destEl)
+            console.log("not animated", originEl, destEl)
         }
     }
 
 
-    const animate = (elA: HTMLDivElement, elB: HTMLDivElement) => {
+    const animate = (elA: HTMLDivElement, elB: HTMLDivElement, twoWay: boolean) => {
         return new Promise<void>((resolve) => {
             const rectA = elA.getBoundingClientRect();
             const rectB = elB.getBoundingClientRect();
@@ -129,20 +154,25 @@ const Game = () => {
             const dy = rectB.top - rectA.top;
 
             elA.style.transition = "transform 0.5s ease";
-            elB.style.transition = "transform 0.5s ease";
+            if(twoWay) elB.style.transition = "transform 0.5s ease";
 
             elA.style.transform = `translate(${dx}px, ${dy}px)`;
-            elB.style.transform = `translate(${-dx}px, ${-dy}px)`;
+            if(twoWay) elB.style.transform = `translate(${-dx}px, ${-dy}px)`;
 
             let done = 0;
             const onEnd = () => {
                 done++;
-                if (done === 2) {
+                if (done === 2 && twoWay) {
                     // reset transforms
                     elA.style.transition = "";
                     elB.style.transition = "";
                     elA.style.transform = "";
                     elB.style.transform = "";
+                    resolve();
+                }
+                else if(done === 1 && !twoWay) {
+                    elA.style.transition = "";
+                    elA.style.transform = "";
                     resolve();
                 }
             };
@@ -433,6 +463,7 @@ const Game = () => {
                                         drawRef={drawRef}
                                         cardRefs={cardRefs}
                                         pendingRefs={pendingRefs}
+                                        avatarRefs={avatarRefs}
                             />
                         ))}
                     </div>

@@ -37,16 +37,16 @@ export const Card = forwardRef<HTMLDivElement, CardProp>(({card, cardIndex, isDi
         let shouldBeFlipped = false;
 
         if  ((card?.visible.includes(me) && card.visible.length === 1) || isDiscard) {
-            setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}.png`);
+            setImgSrc(`/images/cardTheme/${user.card}/${card?.rank}-${card?.suit}.png`);
             shouldBeFlipped = true;
         } else if (card?.visible?.includes(me) && card.visible.length >= 2) {
-            setImgSrc(`/images/svgtopng/${card?.rank}-${card?.suit}peek.png`)
+            setImgSrc(`/images/cardTheme/${user.card}/${card?.rank}-${card?.suit}peek.png`)
             shouldBeFlipped = true;
         } else if (!card?.visible.includes(me) && card.visible.length >= 1 && thisPlayerId === user?.id) {
-            setImgSrc("/images/svgtopng/card-back-peek.png")
+            setImgSrc(`/images/cardTheme/${user.card}/card-back-peek.png`)
             shouldBeFlipped = false;
         } else {
-            setImgSrc("/images/svgtopng/card-back.png")
+            setImgSrc(`/images/cardTheme/${user.card}/card-back.png`)
             shouldBeFlipped = false;
         }
 

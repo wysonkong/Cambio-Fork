@@ -14,6 +14,7 @@ public class User {
     int wins;
     int loses;
     private String avatar;
+    private String card;
 
     public User() {
 
@@ -25,6 +26,15 @@ public class User {
         this.wins = wins;
         this.loses = loses;
         this.avatar = "dog";
+        this.card = "cards";
+    }
+
+    public String getCard() {
+        return card;
+    }
+
+    public void setCard(String card) {
+        this.card = card;
     }
 
     public String getAvatar() {

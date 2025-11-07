@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table"
 import Avatar from "@/components/player/avatar.tsx";
 import { useUser} from "@/components/providers/UserProvider.tsx";
+import CardThemes from "@/components/player/CardThemes.tsx";
 
 export default function Profile() {
     const {user} = useUser();
@@ -57,6 +58,7 @@ export default function Profile() {
                     </CardContent>
                     <CardAction>
                         <Avatar/>
+                        <CardThemes/>
                     </CardAction>
                 </Card>}
             </div>

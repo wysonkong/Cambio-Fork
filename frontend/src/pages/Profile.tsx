@@ -3,6 +3,7 @@ import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Table
 import Avatar from "@/components/player/avatar.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import CardThemes from "@/components/player/CardThemes.tsx";
+import PurchaseAvatar from "@/components/player/PurchaseAvatar.tsx";
 
 export default function Profile() {
     const {user} = useUser();
@@ -38,14 +39,20 @@ export default function Profile() {
                             </TableRow>
                         </TableBody>
                     </Table>
-                    <span className={"text-bold justify-center"}>Balance: <span className={"text-green-700"}>{user.balance}</span></span>
+                    <span className={"text-bold justify-center"}>Balance: <span
+                        className={"text-green-700"}>{user.balance}</span></span>
 
                 </CardContent>
                 <CardAction>
-                    <div className={"flex flex-col"}>
-                        <div className={"flex gap-2"}>
-                        <Avatar/>
-                        <CardThemes/>
+                    <div className={"p-4"}>
+                        <div className={"flex flex-col mb-2"}>
+                            <div className={"flex gap-2"}>
+                                <Avatar/>
+                                <CardThemes/>
+                            </div>
+                        </div>
+                        <div className={"flex flex-col"}>
+                            <PurchaseAvatar/>
                         </div>
                     </div>
                 </CardAction>

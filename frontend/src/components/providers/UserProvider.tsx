@@ -1,21 +1,40 @@
 import type {User} from "@/components/Interfaces.tsx";
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
 import {useAuth} from "@/components/providers/AuthProvider.tsx";
 
 interface UserContextType {
     user: User | null;
     setUser: (user: User) => void;
+    refreshUser: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
     user: null,
     setUser: () => {},
+    refreshUser: async () => {},
 });
 
 export const UserProvider = ({children}:{children: React.ReactNode}) => {
     const {userId} = useAuth()
     const [user, setUser] = useState<User | null>(null);
 
+    const fetchUser = useCallback(async () => {
+        if (!userId) {
+            console.log("User ID not ready yet:", userId);
+            return;
+        }
+
+        try {
+            const res = await fetch(`http://localhost:8080/api/getUser${userId}`, {
+                method: "GET",
+            });
+            if (!res.ok) throw new Error("Failed to fetch user");
+            const data: User = await res.json();
+            setUser(data);
+        } catch (err) {
+            console.error("Error fetching user:", err);
+        }
+    }, [userId]);
 
     useEffect(() => {
 
@@ -24,22 +43,15 @@ export const UserProvider = ({children}:{children: React.ReactNode}) => {
             return;
         }
 
-        async function fetchUser(userId: number): Promise<User | null> {
-            try {
-                const res = await fetch("http://localhost:8080/api/getUser" + userId, {
-                    method: "GET",
-                });
-                const data: User = await res.json();
-                return data;
-            } catch (err) {
-                console.error("Error fetching items:", err);
-                return null;
-            }
-        }
-        fetchUser(Number(userId)).then((data) => setUser(data))
-    }, [userId]);
+        fetchUser();
+    }, [userId, fetchUser]);
 
-    return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
+    const refreshUser = useCallback(async () => {
+        await fetchUser();
+    }, [fetchUser])
+
+
+    return <UserContext.Provider value={{ user, setUser, refreshUser }}>{children}</UserContext.Provider>;
 }
 
 export const useUser = () => {

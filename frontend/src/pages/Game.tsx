@@ -16,6 +16,7 @@ import {useNavigate} from "react-router-dom";
 const Game = () => {
 
     const {gameState, sendAction, actionLogs} = useWebSocket();
+    const {refreshUser} = useUser();
     const gameId = Number(sessionStorage.getItem("currentGame"));
     const [topPlayers, setTopPlayers] = useState<Player[]>();
     const [bottomRightPlayers, setBottomRightPlayers] = useState<Player[]>();
@@ -76,6 +77,7 @@ const Game = () => {
         if (displayState?.winners && displayState.winners.length > 0) {
             const ids = displayState.winners.map((winner: endPlayer) => winner.id);
             setWinnerIds(ids);
+            refreshUser();
             setShowGameOverDialog(true);
         }
     }, [displayState]);

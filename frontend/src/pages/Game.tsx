@@ -85,7 +85,7 @@ const Game = () => {
             await new Promise(res => setTimeout(res, 50));
 
             // Update displayState AFTER animation finishes
-            if (gameState) setDisplayState(gameState);
+            if (gameState) setDisplayState({...gameState});
 
             // Remove processed action from queue
             setActionQueue(prev => prev.slice(1));

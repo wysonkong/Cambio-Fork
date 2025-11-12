@@ -30,7 +30,7 @@ public class UserService {
         put("meerkat", 100);
         put("gorilla", 200);
         put("ninja", 1000);
-        put("puffer-fish", 500);
+        put("pufferfish", 500);
         put("sloth", 600);
     }};
 

@@ -30,7 +30,6 @@ const Game = () => {
 
     const [displayState, setDisplayState] = useState<GameState | null>(null);
     const isAnimating = useRef(false);
-    const [lastProcessedSeq, setLastProcessedSeq] = useState<number> (0);
     const [actionQueue, setActionQueue] = useState<ActionLogType[]>([]);
 
 
@@ -91,7 +90,6 @@ const Game = () => {
             setActionQueue(prev => prev.slice(1));
 
             // Update last processed sequence
-            setLastProcessedSeq(nextAction.seq);
 
             isAnimating.current = false;
         };
@@ -107,6 +105,7 @@ const Game = () => {
         setModes(displayState);
 
         if (displayState?.winners && displayState.winners.length > 0) {
+            // @ts-ignore
             const ids = displayState.winners.map((winner: endPlayer) => winner.id);
             setWinnerIds(ids);
             refreshUser();

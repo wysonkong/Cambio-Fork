@@ -15,6 +15,7 @@ public class User {
     int loses;
     private String avatar;
     private String card;
+    private int balance;
 
     public User() {
 
@@ -27,6 +28,14 @@ public class User {
         this.loses = loses;
         this.avatar = "dog";
         this.card = "default";
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public String getCard() {

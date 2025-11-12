@@ -85,6 +85,7 @@ public class GameWsController {
                 List<User> lossUsers = userRepository.findAllById(lossIds);
                 for (User u : winUsers) {
                     u.setWins(u.getWins() + 1);
+                    u.setBalance(u.getBalance() + 100);
                     userRepository.save(u);
                 }
                 for (User u : lossUsers) {

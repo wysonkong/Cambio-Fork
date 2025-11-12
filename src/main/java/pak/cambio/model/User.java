@@ -14,7 +14,11 @@ public class User {
     int wins;
     int loses;
     private String avatar;
+
+    private String ownedAvatars;
     private String card;
+
+    private String ownedCards;
     private int balance;
 
 
@@ -28,7 +32,9 @@ public class User {
         this.wins = wins;
         this.loses = loses;
         this.avatar = "dog";
+        this.ownedAvatars = "dog";
         this.card = "default";
+        this.ownedCards = "default";
     }
 
     public int getBalance() {
@@ -41,6 +47,22 @@ public class User {
 
     public String getCard() {
         return card;
+    }
+
+    public String getOwnedAvatars() {
+        return ownedAvatars;
+    }
+
+    public void setOwnedAvatars(String ownedAvatars) {
+        this.ownedAvatars = ownedAvatars;
+    }
+
+    public String getOwnedCards() {
+        return ownedCards;
+    }
+
+    public void setOwnedCards(String ownedCards) {
+        this.ownedCards = ownedCards;
     }
 
     public void setCard(String card) {

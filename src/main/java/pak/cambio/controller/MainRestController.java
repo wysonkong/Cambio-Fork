@@ -47,6 +47,16 @@ public class MainRestController {
         return Map.of("exists", exists);
     }
 
+    @GetMapping("/purchaseAvatar{avatar}")
+    public ResponseEntity<Boolean> purchaseAvatar(@PathVariable String avatar, @RequestBody User user) {
+        return ResponseEntity.ok(userService.purchaseAvatar(avatar, user));
+    }
+
+    @GetMapping("/purchaseCards{cardTheme}")
+    public ResponseEntity<Boolean> purchaseCards(@PathVariable String cardTheme, @RequestBody User user) {
+        return ResponseEntity.ok(userService.purchaseCards(cardTheme, user));
+    }
+
     @GetMapping("/getUser{userId}")
     public User getUser(@PathVariable("userId") Long userId) {
         return userService.getUserById(userId);

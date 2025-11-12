@@ -11,12 +11,10 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {Label} from "@/components/ui/label.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
-import {useCardThemes} from "@/components/player/CardList.tsx";
 import type {User} from "@/components/Interfaces.tsx";
 import {toast} from "sonner";
 
 const Avatar = () => {
-    const [newTheme] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const {user, refreshUser} = useUser();
     const [cardSale, setCardSale] = useState<string[]>([])
@@ -43,8 +41,10 @@ const Avatar = () => {
         if (!user) return null;
 
         const ownedCards = user.ownedCards.split('-');
-        const allThemes = Array.from(themes.keys());
-        setCardSale(allThemes.filter(theme => !ownedCards.includes(theme)))
+        if (themes) {
+            const allThemes = Array.from(themes.keys());
+            setCardSale(allThemes.filter(theme => !ownedCards.includes(theme)))
+        }
     }
 
     async function handlePurchaseCard(selectedCard: string, user: User) {
@@ -106,11 +106,12 @@ const Avatar = () => {
                                                     }}
                                                     src={`/images/cardTheme/cardThemes/${src}.png`}
                                                     alt={`Card Theme ${index + 1}`}
-                                                    className={`w-16 h-16 rounded-full cursor-pointer transition
-                                                    hover:scale-105 ${user?.balance > (themes.get(src) ?? 0) ? "" : "grayscale-100"}`}
+                                                    className={user && themes ? `w-16 h-16 rounded-full cursor-pointer transition
+                                                    hover:scale-105 ${user?.balance > (themes.get(src) ?? 0) ? "" : "grayscale-100"}` : `w-16 h-16 rounded-full cursor-pointer transition
+                                                    hover:scale-105`}
 
                                                 />
-                                                <h3 className={`flex justify-center ${user?.balance > (themes.get(src) ?? 0) ? "" : "text-red-500"}`}>{themes.get(src)}</h3>
+                                                <h3 className={user && themes ? `flex justify-center ${user?.balance > (themes.get(src) ?? 0) ? "" : "text-red-500"}` : `flex justify-center`}>{themes ? themes.get(src) : ""}</h3>
                                             </div>
 
                                         ))}

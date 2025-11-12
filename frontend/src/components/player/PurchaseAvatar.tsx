@@ -16,7 +16,6 @@ import {toast} from "sonner";
 
 const PurchaseAvatar = () => {
     const [avatars, setAvatars] = useState<Map<string, number> | null>(null);
-    const [newAvatar] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const {user, refreshUser} = useUser();
     const [avatarSale, setAvatarSale] = useState<string[]>([]);
@@ -39,8 +38,11 @@ const PurchaseAvatar = () => {
     const unOwnedAvatars = () => {
         if (!user) return null;
         const ownedAvatars = user.ownedAvatars.split('-');
-        const allAvatars = Array.from(avatars.keys());
-        setAvatarSale(allAvatars.filter(avatar => !ownedAvatars.includes(avatar)))
+
+        if (avatars) {
+            const allAvatars = Array.from(avatars.keys());
+            setAvatarSale(allAvatars.filter(avatar => !ownedAvatars.includes(avatar)))
+        }
     }
 
 
@@ -103,10 +105,10 @@ const PurchaseAvatar = () => {
                                                     }}
                                                     src={`/images/avatars/${src}.png`}
                                                     alt={`Avatar ${index + 1}`}
-                                                    className={`w-16 h-16 rounded-full cursor-pointer transition
-                                                    hover:scale-105 ${user?.balance > (avatars.get(src) ?? 0) ? "" : "grayscale-100"}` }
+                                                    className={user && avatars ? `w-16 h-16 rounded-full cursor-pointer transition
+                                                    hover:scale-105 ${user?.balance > (avatars.get(src) ?? 0) ? "" : "grayscale-100"}` :  "w-16 h-16 rounded-full cursor-pointer transition hover:scale-105 grayscale-100"}
                                                 />
-                                                <h3 className={`flex justify-center ${user?.balance > (avatars.get(src) ?? 0) ? "" : "text-red-500"}`}>{avatars.get(src)}</h3>
+                                                <h3 className={user && avatars ? `flex justify-center ${user?.balance > (avatars.get(src) ?? 0) ? "" : "text-red-500"}` : `flex justify-center`} >{ avatars ? avatars.get(src) : ""})</h3>
                                             </div>
 
                                         ))}

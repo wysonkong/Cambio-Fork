@@ -6,6 +6,7 @@ export interface User {
     loses: number
     avatar: string;
     card: string;
+    balance: number;
 }
 
 export interface CardType {

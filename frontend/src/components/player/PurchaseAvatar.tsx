@@ -9,54 +9,64 @@ import {
     DialogTitle
 } from "@/components/ui/dialog.tsx";
 import {Label} from "@/components/ui/label.tsx";
-import {useAvatarList} from "@/components/player/avatarList.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import {ShoppingCart} from "lucide-react";
 import type {User} from "@/components/Interfaces.tsx";
 import {toast} from "sonner";
 
 const PurchaseAvatar = () => {
-    const avatars = useAvatarList();
+    const [avatars, setAvatars] = useState<Map<string, number> | null>(null);
     const [newAvatar] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const {user, refreshUser} = useUser();
     const [avatarSale, setAvatarSale] = useState<string[]>([]);
 
     useEffect(() => {
+        if (!avatars) {
+            fetch("http://localhost:8080/api/getAvatarPrices")
+                .then((res) => res.json())
+                .then((data: Record<string, number>) => {
+                    // Convert object to Map
+                    const map = new Map(Object.entries(data));
+                    setAvatars(map);
+                })
+                .catch((err) => console.error("Error loading avatars:", err));
+        }
+        if (!avatars) return;
         unOwnedAvatars();
-    }, [user]);
+    }, [avatars]);
 
     const unOwnedAvatars = () => {
         if (!user) return null;
-
         const ownedAvatars = user.ownedAvatars.split('-');
-        setAvatarSale(avatars.filter(avatar => !ownedAvatars.includes(avatar)))
+        const allAvatars = Array.from(avatars.keys());
+        setAvatarSale(allAvatars.filter(avatar => !ownedAvatars.includes(avatar)))
     }
 
 
-    async function handlePurchaseAvatar(selectedAvatar: string, user: User){
+    async function handlePurchaseAvatar(selectedAvatar: string, user: User) {
         if (!user) return null;
 
-            try {
-                const res = await fetch(`http://localhost:8080/api/purchaseAvatar${selectedAvatar}`, {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(user)
-                })
-                if (!res.ok) throw new Error("Failed to purchase")
-                const data = await res.json();
-                if (data) {
-                    toast.success("Purchased avatar");
-                }
-
-            } catch (err) {
-                console.error(err)
+        try {
+            const res = await fetch(`http://localhost:8080/api/purchaseAvatar${selectedAvatar}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(user)
+            })
+            if (!res.ok) throw new Error("Failed to purchase")
+            const data = await res.json();
+            if (data) {
+                toast.success("Purchased avatar");
+            } else {
+                toast.error("Not enough funds");
             }
-            setEditDialogOpen(false);
-            await refreshUser();
+
+        } catch (err) {
+            console.error(err)
+        }
+        setEditDialogOpen(false);
+        await refreshUser();
     }
-
-
 
 
     return (
@@ -85,18 +95,19 @@ const PurchaseAvatar = () => {
                                     <Label htmlFor="avatar">Avatar Shop</Label>
                                     <div className="grid grid-cols-4 gap-4">
                                         {avatarSale.map((src, index) => (
-                                            <img
-                                                key={index}
-                                                onClick={() => {
-                                                    if (user) handlePurchaseAvatar(src, user);
-                                                }}
-                                                src={`/images/avatars/${src}.png`}
-                                                alt={`Avatar ${index + 1}`}
-                                                className={`w-16 h-16 rounded-full cursor-pointer transition
-                                                    hover:scale-105 border-2
-                                                    ${newAvatar === src ? "border-blue-500 ring-2 ring-blue-300" 
-                                                    : "border-transparent"}`}
-                                            />
+                                            <div className={"grid grid-row"} key={src}>
+                                                <img
+                                                    key={index}
+                                                    onClick={() => {
+                                                        if (user) handlePurchaseAvatar(src, user);
+                                                    }}
+                                                    src={`/images/avatars/${src}.png`}
+                                                    alt={`Avatar ${index + 1}`}
+                                                    className={`w-16 h-16 rounded-full cursor-pointer transition
+                                                    hover:scale-105 ${user?.balance > (avatars.get(src) ?? 0) ? "" : "grayscale-100"}` }
+                                                />
+                                                <h3 className={`flex justify-center ${user?.balance > (avatars.get(src) ?? 0) ? "" : "text-red-500"}`}>{avatars.get(src)}</h3>
+                                            </div>
 
                                         ))}
                                     </div>

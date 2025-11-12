@@ -16,27 +16,42 @@ import type {User} from "@/components/Interfaces.tsx";
 import {toast} from "sonner";
 
 const Avatar = () => {
-    const themes = useCardThemes();
     const [newTheme] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const {user, refreshUser} = useUser();
     const [cardSale, setCardSale] = useState<string[]>([])
+    const [themes, setThemes] = useState<Map<string, number> | null>(null);
+
 
     useEffect(() => {
+        if (!themes) {
+
+            fetch("http://localhost:8080/api/getCardThemePrices")
+                .then((res) => res.json())
+                .then((data: Record<string, number>) => {
+                    // Convert object to Map
+                    const map = new Map(Object.entries(data));
+                    setThemes(map);
+                })
+                .catch((err) => console.error("Error loading cards:", err));
+        }
+        if (!themes) return;
         unOwnedCards();
-    }, [user]);
+    }, [themes]);
 
     const unOwnedCards = () => {
         if (!user) return null;
 
         const ownedCards = user.ownedCards.split('-');
-        setCardSale(themes.filter(theme => !ownedCards.includes(theme)))
+        const allThemes = Array.from(themes.keys());
+        setCardSale(allThemes.filter(theme => !ownedCards.includes(theme)))
     }
-    async function handlePurchaseCard(selectedCard: string, user: User){
+
+    async function handlePurchaseCard(selectedCard: string, user: User) {
         if (!user) return null;
 
         try {
-            const res = await fetch(`http://localhost:8080/api/purchaseCard${selectedCard}`, {
+            const res = await fetch(`http://localhost:8080/api/purchaseCards${selectedCard}`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(user)
@@ -45,6 +60,8 @@ const Avatar = () => {
             const data = await res.json();
             if (data) {
                 toast.success("Purchased cards");
+            } else {
+                toast.error("Not enough funds");
             }
 
         } catch (err) {
@@ -53,8 +70,6 @@ const Avatar = () => {
         setEditDialogOpen(false);
         await refreshUser();
     }
-
-
 
 
     return (
@@ -83,18 +98,20 @@ const Avatar = () => {
                                     <Label htmlFor="cardTheme">Themes</Label>
                                     <div className="grid grid-cols-4 gap-4">
                                         {cardSale.map((src, index) => (
-                                            <img
-                                                key={index}
-                                                onClick={() => {
-                                                    if (user) handlePurchaseCard(src, user);
-                                                }}
-                                                src={`/images/cardTheme/cardThemes/${src}.png`}
-                                                alt={`Card Theme ${index + 1}`}
-                                                className={`w-16 h-16 rounded-full cursor-pointer transition
-                                                    hover:scale-105 border-2
-                                                    ${newTheme === src ? "border-blue-500 ring-2 ring-blue-300" 
-                                                    : "border-transparent"}`}
-                                            />
+                                            <div className={"grid grid-row"} key={src}>
+                                                <img
+                                                    key={index}
+                                                    onClick={() => {
+                                                        if (user) handlePurchaseCard(src, user);
+                                                    }}
+                                                    src={`/images/cardTheme/cardThemes/${src}.png`}
+                                                    alt={`Card Theme ${index + 1}`}
+                                                    className={`w-16 h-16 rounded-full cursor-pointer transition
+                                                    hover:scale-105 ${user?.balance > (themes.get(src) ?? 0) ? "" : "grayscale-100"}`}
+
+                                                />
+                                                <h3 className={`flex justify-center ${user?.balance > (themes.get(src) ?? 0) ? "" : "text-red-500"}`}>{themes.get(src)}</h3>
+                                            </div>
 
                                         ))}
                                     </div>

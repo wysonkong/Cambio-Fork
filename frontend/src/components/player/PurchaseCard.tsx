@@ -68,13 +68,13 @@ const Avatar = () => {
                 className="gap-2"
             >
                 <ShoppingCart size={16}/>
-                Edit Cards
+                Purchase Cards
             </Button>
             <div>
                 <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Edit Card Theme</DialogTitle>
+                            <DialogTitle>Card Shop</DialogTitle>
                             <DialogDescription/>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">

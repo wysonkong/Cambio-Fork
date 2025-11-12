@@ -15,7 +15,7 @@ export default function Profile() {
                 className="overflow-hidden rounded-md border bg-foreground text-background w-1/3 mx-auto margin flex items-center">
                 <CardHeader className={"flex justify-center"}><CardTitle>{user.username}</CardTitle>
                 </CardHeader>
-                <img src={`/images/avatars/${user.avatar}.png`} height={200} width={200}/>
+                <img src={`/images/avatars/${user.avatar}.png`} height={200} width={200} alt={`${user.avatar}`}/>
                 <CardContent>
                     <Table className={"bg-foreground text-background"}>
                         <TableCaption>Player Record</TableCaption>
@@ -38,11 +38,15 @@ export default function Profile() {
                             </TableRow>
                         </TableBody>
                     </Table>
+                    <span className={"text-bold justify-center"}>Balance: <span className={"text-green-700"}>{user.balance}</span></span>
+
                 </CardContent>
                 <CardAction>
-                    <div className={"flex flex-col justify-between"}>
+                    <div className={"flex flex-col"}>
+                        <div className={"flex gap-2"}>
                         <Avatar/>
                         <CardThemes/>
+                        </div>
                     </div>
                 </CardAction>
             </Card>}

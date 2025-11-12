@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import { Client, type Frame } from "@stomp/stompjs";
+// @ts-ignore
 import SockJS from "sockjs-client/dist/sockjs";
 import { useUser } from "@/components/providers/UserProvider.tsx";
 import type {GameState, ChatMessage, ActionLogType} from "@/components/Interfaces.tsx";
@@ -47,7 +48,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
                 stompClientRef.current = client;
 
                 // Subscribe to game-specific updates
-                const stateSub = client.subscribe(`/topic/game.${gameId}.state`, (message) => {
+                client.subscribe(`/topic/game.${gameId}.state`, (message) => {
                     try {
                         const newState: GameState = JSON.parse(message.body);
                         console.log("🆕 Received new game state:", newState);
@@ -56,7 +57,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
                         console.error("Invalid game state message", err);
                     }
                 });
-                const chatSub = client.subscribe(`/topic/game.${gameId}.chat`, (message) => {
+                client.subscribe(`/topic/game.${gameId}.chat`, (message) => {
                     try {
                         const chatMsg: ChatMessage = JSON.parse(message.body);
                         if(chatMsg)setChatMessages((prev) => [...prev, chatMsg]);
@@ -64,7 +65,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
                         console.error("Invalid chat message", err);
                     }
                 });
-                const actionSub = client.subscribe(`/topic/game.${gameId}.action`, (message) => {
+                client.subscribe(`/topic/game.${gameId}.action`, (message) => {
                     try{
                         const actionLog: ActionLogType = JSON.parse(message.body);
                         console.log("Action Log updated")
@@ -77,7 +78,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
 
                 // Automatically send JOIN when connected
                 if (gameId) {
-                    sendAction(gameId, "JOIN", {});
+                    sendAction(gameId, "JOIN", new Map());
                 }
             };
 

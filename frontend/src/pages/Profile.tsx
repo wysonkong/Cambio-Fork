@@ -1,21 +1,5 @@
-import type {User} from "@/components/Interfaces.tsx"
-import {useEffect, useState} from "react";
-import {
-    Card,
-    CardAction,
-    CardContent,
-    CardHeader,
-    CardTitle
-} from "@/components/ui/card"
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
+import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import Avatar from "@/components/player/avatar.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import CardThemes from "@/components/player/CardThemes.tsx";

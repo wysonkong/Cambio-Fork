@@ -5,7 +5,9 @@ import pak.cambio.model.User;
 import pak.cambio.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -19,6 +21,29 @@ public class UserService {
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
+
+    public Map<String, Integer> avatarList = new HashMap<String, Integer>() {{
+        put("astronaut", 500);
+        put("bear", 200);
+        put("ghost", 350);
+        put("giraffe", 50);
+        put("meerkat", 100);
+        put("gorilla", 200);
+        put("ninja", 1000);
+        put("puffer-fish", 500);
+        put("sloth", 600);
+    }};
+
+    public Map<String, Integer> cardThemeList = new HashMap<String, Integer>() {{
+        put("Blue", 500);
+        put("BlueGreen", 200);
+        put("Green", 50);
+        put("Purple", 100);
+        put("Yellow", 200);
+        put("Ana", 1000);
+        put("Sydney", 600);
+    }};
+
 
     public void saveNewUser(User user) {
         if(user.getAvatar() == null) {
@@ -40,6 +65,26 @@ public class UserService {
 
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    public Boolean purchaseAvatar(String avatar, User user) {
+        if(user.getBalance() >= avatarList.get(avatar)) {
+            user.setBalance(user.getBalance() - avatarList.get(avatar));
+            user.setOwnedAvatars(user.getOwnedAvatars() + "-" + avatar);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean purchaseCards(String cardTheme, User user) {
+        if(user.getBalance() >= cardThemeList.get(cardTheme)) {
+            user.setBalance(user.getBalance() - cardThemeList.get(cardTheme));
+            user.setOwnedCards(user.getOwnedCards() + "-" + cardTheme);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     public void updateScores(List<Long> winnerIds, List<Long> loserIds) {

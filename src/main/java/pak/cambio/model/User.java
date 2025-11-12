@@ -17,6 +17,7 @@ public class User {
     private String card;
     private int balance;
 
+
     public User() {
 
     }

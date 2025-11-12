@@ -13,6 +13,7 @@ interface WebSocketContextType {
     gameState: GameState | null; // 👈 Added this
     chatMessages: ChatMessage[];
     actionLogs: ActionLogType[];
+    currentAction: ActionLogType | null;
 }
 
 const WebSocketContext = createContext<WebSocketContextType>({
@@ -24,6 +25,7 @@ const WebSocketContext = createContext<WebSocketContextType>({
     gameState: null, // 👈 Added this
     chatMessages: [],
     actionLogs: [],
+    currentAction: null
 });
 
 export const WebSocketProvider = ({ children }: { children: React.ReactNode }) => {
@@ -35,6 +37,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
     const stompClientRef = useRef<Client | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [actionLogs, setActionLogs] = useState<ActionLogType[]>([]);
+    const [currentAction, setCurrentAction] = useState<ActionLogType | null>(null)
 
     useEffect(() => {
         if (client) {
@@ -66,6 +69,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
                         const actionLog: ActionLogType = JSON.parse(message.body);
                         console.log("Action Log updated")
                         if (actionLog) setActionLogs((prev) => [...prev, actionLog]);
+                        if(actionLog) setCurrentAction(actionLog);
                     } catch (err) {
                         console.error("Invalid action log", err);
                     }
@@ -160,7 +164,8 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
                 gameState,
                 sendMessage,
                 chatMessages,
-                actionLogs// 👈 Added this
+                actionLogs, // 👈 Added this
+                currentAction
             }}
         >
             {children}

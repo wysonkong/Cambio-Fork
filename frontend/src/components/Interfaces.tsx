@@ -58,6 +58,7 @@ export interface ActionLogType {
     username: string;
     type: string;
     payload: Map<string, Object>;
+    seq: number;
 }
 
 export interface SwapState {

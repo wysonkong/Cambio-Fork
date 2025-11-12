@@ -15,7 +15,7 @@ import {useNavigate} from "react-router-dom";
 
 const Game = () => {
 
-    const {gameState, sendAction, actionLogs} = useWebSocket();
+    const {gameState, sendAction, currentAction} = useWebSocket();
     const {refreshUser} = useUser();
     const gameId = Number(sessionStorage.getItem("currentGame"));
     const [topPlayers, setTopPlayers] = useState<Player[]>();
@@ -29,7 +29,10 @@ const Game = () => {
 
 
     const [displayState, setDisplayState] = useState<GameState | null>(null);
-    const [pendingActions, setPendingActions] = useState<ActionLogType[]>([]);
+    const isAnimating = useRef(false);
+    const [lastProcessedSeq, setLastProcessedSeq] = useState<number> (0);
+    const [actionQueue, setActionQueue] = useState<ActionLogType[]>([]);
+
 
 
 
@@ -62,27 +65,41 @@ const Game = () => {
 
 
     useEffect(() => {
-        if(actionLogs.length === 0) return;
-        const newActions = actionLogs.slice(pendingActions.length);
-        if(newActions.length > 0) {
-            setPendingActions([...pendingActions, ...newActions]);
-        }
+        if(!currentAction) return;
+        setActionQueue(prev => [...prev, currentAction]);
+    }, [currentAction]);
 
-    }, [actionLogs, gameState]);
 
     useEffect(() => {
+        if (actionQueue.length === 0 || isAnimating.current) return;
 
-        const processNextAction = async () => {
-            if (pendingActions.length === 0) return;
-            const next = pendingActions[0];
-            await handleAnimation(next);
-            if(gameState) setDisplayState(gameState);
-            setPendingActions(pendingActions.slice(1))
-        }
+        const nextAction = actionQueue[0];
+
+        const runAnimation = async () => {
+            isAnimating.current = true;
+
+            console.log("Animating action: ", nextAction);
+            await handleAnimation(nextAction);
+
+            // small delay to avoid race conditions
+            await new Promise(res => setTimeout(res, 50));
+
+            // Update displayState AFTER animation finishes
+            if (gameState) setDisplayState(gameState);
+
+            // Remove processed action from queue
+            setActionQueue(prev => prev.slice(1));
+
+            // Update last processed sequence
+            setLastProcessedSeq(nextAction.seq);
+
+            isAnimating.current = false;
+        };
+
+        runAnimation();
+    }, [actionQueue, gameState]);
 
 
-        processNextAction();
-    }, [pendingActions, gameState]);
 
     useEffect(() => {
         if(!displayState) return;
@@ -127,8 +144,8 @@ const Game = () => {
                 break;
             case "DISCARD_PENDING":
                 originKey = `${action.userId}-pending`;
-                destEl = pendingRefs.current.get(originKey);
-                originEl = discardRef.current;
+                originEl = pendingRefs.current.get(originKey);
+                destEl = discardRef.current;
                 break;
             case "DRAW_DECK":
                 originEl = drawRef.current;

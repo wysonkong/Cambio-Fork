@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Edit2} from "lucide-react";
+import {ShoppingCart} from "lucide-react";
 import {Button} from "@/components/ui/button.tsx";
 import {
     Dialog,
@@ -11,33 +11,47 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {Label} from "@/components/ui/label.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
+import {useCardThemes} from "@/components/player/CardList.tsx";
+import type {User} from "@/components/Interfaces.tsx";
+import {toast} from "sonner";
 
 const Avatar = () => {
+    const themes = useCardThemes();
     const [newTheme] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
-    const {user, setUser, refreshUser} = useUser();
-    const [ownedCards, setOwnedCards] = useState<string[]>([]);
+    const {user, refreshUser} = useUser();
+    const [cardSale, setCardSale] = useState<string[]>([])
 
     useEffect(() => {
-        if (!user) return;
-        setOwnedCards(user?.ownedCards?.split('-'))
-    }, [refreshUser]);
-    async function handleNewTheme(selectedCardTheme: string){
+        unOwnedCards();
+    }, [user]);
+
+    const unOwnedCards = () => {
         if (!user) return null;
 
-            try {
-                const updatedUser = {...user, card: selectedCardTheme}
-                setUser(updatedUser)
-                await fetch("http://localhost:8080/api/new_user", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(updatedUser)
-                })
-            } catch (err) {
-                console.error(err)
-            }
-            setEditDialogOpen(false);
+        const ownedCards = user.ownedCards.split('-');
+        setCardSale(themes.filter(theme => !ownedCards.includes(theme)))
+    }
+    async function handlePurchaseCard(selectedCard: string, user: User){
+        if (!user) return null;
 
+        try {
+            const res = await fetch(`http://localhost:8080/api/purchaseCard${selectedCard}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(user)
+            })
+            if (!res.ok) throw new Error("Failed to purchase")
+            const data = await res.json();
+            if (data) {
+                toast.success("Purchased cards");
+            }
+
+        } catch (err) {
+            console.error(err)
+        }
+        setEditDialogOpen(false);
+        await refreshUser();
     }
 
 
@@ -53,14 +67,14 @@ const Avatar = () => {
                 }}
                 className="gap-2"
             >
-                <Edit2 size={16}/>
-                Edit Cards
+                <ShoppingCart size={16}/>
+                Purchase Cards
             </Button>
             <div>
                 <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Edit Card Theme</DialogTitle>
+                            <DialogTitle>Card Shop</DialogTitle>
                             <DialogDescription/>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
@@ -68,11 +82,11 @@ const Avatar = () => {
                                 <div className="flex flex-col items-center gap-2">
                                     <Label htmlFor="cardTheme">Themes</Label>
                                     <div className="grid grid-cols-4 gap-4">
-                                        {ownedCards.map((src, index) => (
+                                        {cardSale.map((src, index) => (
                                             <img
                                                 key={index}
                                                 onClick={() => {
-                                                    handleNewTheme(src);
+                                                    if (user) handlePurchaseCard(src, user);
                                                 }}
                                                 src={`/images/cardTheme/cardThemes/${src}.png`}
                                                 alt={`Card Theme ${index + 1}`}

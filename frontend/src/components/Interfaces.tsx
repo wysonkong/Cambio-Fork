@@ -7,6 +7,8 @@ export interface User {
     avatar: string;
     card: string;
     balance: number;
+    ownedAvatars: string;
+    ownedCards: string;
 }
 
 export interface CardType {

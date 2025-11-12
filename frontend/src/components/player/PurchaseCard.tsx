@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {ShoppingCart} from "lucide-react";
 import {Button} from "@/components/ui/button.tsx";
 import {
     Dialog,
@@ -9,51 +10,48 @@ import {
     DialogTitle
 } from "@/components/ui/dialog.tsx";
 import {Label} from "@/components/ui/label.tsx";
-import {useAvatarList} from "@/components/player/avatarList.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
-import {ShoppingCart} from "lucide-react";
+import {useCardThemes} from "@/components/player/CardList.tsx";
 import type {User} from "@/components/Interfaces.tsx";
 import {toast} from "sonner";
 
-const PurchaseAvatar = () => {
-    const avatars = useAvatarList();
-    const [newAvatar] = useState<string | null>(null);
+const Avatar = () => {
+    const themes = useCardThemes();
+    const [newTheme] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const {user, refreshUser} = useUser();
-    const [avatarSale, setAvatarSale] = useState<string[]>([]);
+    const [cardSale, setCardSale] = useState<string[]>([])
 
     useEffect(() => {
-        unOwnedAvatars();
+        unOwnedCards();
     }, [user]);
 
-    const unOwnedAvatars = () => {
+    const unOwnedCards = () => {
         if (!user) return null;
 
-        const ownedAvatars = user.ownedAvatars.split('-');
-        setAvatarSale(avatars.filter(avatar => !ownedAvatars.includes(avatar)))
+        const ownedCards = user.ownedCards.split('-');
+        setCardSale(themes.filter(theme => !ownedCards.includes(theme)))
     }
-
-
-    async function handlePurchaseAvatar(selectedAvatar: string, user: User){
+    async function handlePurchaseCard(selectedCard: string, user: User){
         if (!user) return null;
 
-            try {
-                const res = await fetch(`http://localhost:8080/api/purchaseAvatar${selectedAvatar}`, {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(user)
-                })
-                if (!res.ok) throw new Error("Failed to purchase")
-                const data = await res.json();
-                if (data) {
-                    toast.success("Purchased avatar");
-                }
-
-            } catch (err) {
-                console.error(err)
+        try {
+            const res = await fetch(`http://localhost:8080/api/purchaseCard${selectedCard}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(user)
+            })
+            if (!res.ok) throw new Error("Failed to purchase")
+            const data = await res.json();
+            if (data) {
+                toast.success("Purchased cards");
             }
-            setEditDialogOpen(false);
-            await refreshUser();
+
+        } catch (err) {
+            console.error(err)
+        }
+        setEditDialogOpen(false);
+        await refreshUser();
     }
 
 
@@ -70,31 +68,31 @@ const PurchaseAvatar = () => {
                 className="gap-2"
             >
                 <ShoppingCart size={16}/>
-                Purchase New Avatar
+                Edit Cards
             </Button>
             <div>
                 <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Buy a new Avatar</DialogTitle>
+                            <DialogTitle>Edit Card Theme</DialogTitle>
                             <DialogDescription/>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="flex items-center justify-center gap-4">
                                 <div className="flex flex-col items-center gap-2">
-                                    <Label htmlFor="avatar">Avatar Shop</Label>
+                                    <Label htmlFor="cardTheme">Themes</Label>
                                     <div className="grid grid-cols-4 gap-4">
-                                        {avatarSale.map((src, index) => (
+                                        {cardSale.map((src, index) => (
                                             <img
                                                 key={index}
                                                 onClick={() => {
-                                                    if (user) handlePurchaseAvatar(src, user);
+                                                    if (user) handlePurchaseCard(src, user);
                                                 }}
-                                                src={`/images/avatars/${src}.png`}
-                                                alt={`Avatar ${index + 1}`}
+                                                src={`/images/cardTheme/cardThemes/${src}.png`}
+                                                alt={`Card Theme ${index + 1}`}
                                                 className={`w-16 h-16 rounded-full cursor-pointer transition
                                                     hover:scale-105 border-2
-                                                    ${newAvatar === src ? "border-blue-500 ring-2 ring-blue-300" 
+                                                    ${newTheme === src ? "border-blue-500 ring-2 ring-blue-300" 
                                                     : "border-transparent"}`}
                                             />
 
@@ -115,4 +113,4 @@ const PurchaseAvatar = () => {
     );
 };
 
-export default PurchaseAvatar;
+export default Avatar;

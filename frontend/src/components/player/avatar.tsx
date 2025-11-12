@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Edit2} from "lucide-react";
 import {Button} from "@/components/ui/button.tsx";
 import {
@@ -10,15 +10,19 @@ import {
     DialogTitle
 } from "@/components/ui/dialog.tsx";
 import {Label} from "@/components/ui/label.tsx";
-import {useAvatarList} from "@/components/player/avatarList.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 
 const Avatar = () => {
-    const avatars = useAvatarList();
     const [newAvatar] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
-    const {user, setUser} = useUser();
+    const {user, setUser, refreshUser} = useUser();
+    const [ownedAvatars, setOwnedAvatars] = useState<string[]>([]);
 
+
+    useEffect(() => {
+        if (!user) return;
+        setOwnedAvatars(user?.ownedAvatars?.split('-'))
+    }, [refreshUser]);
 
     async function handleNewAvatar(selectedAvatar: string){
         if (!user) return null;
@@ -66,7 +70,7 @@ const Avatar = () => {
                                 <div className="flex flex-col items-center gap-2">
                                     <Label htmlFor="avatar">Avatar</Label>
                                     <div className="grid grid-cols-4 gap-4">
-                                        {avatars.map((src, index) => (
+                                        {ownedAvatars.map((src, index) => (
                                             <img
                                                 key={index}
                                                 onClick={() => {

@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Edit2} from "lucide-react";
 import {Button} from "@/components/ui/button.tsx";
 import {
@@ -11,15 +11,17 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {Label} from "@/components/ui/label.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
-import {useCardThemes} from "@/components/player/CardList.tsx";
 
 const Avatar = () => {
-    const themes = useCardThemes();
     const [newTheme] = useState<string | null>(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
-    const {user, setUser} = useUser();
+    const {user, setUser, refreshUser} = useUser();
+    const [ownedCards, setOwnedCards] = useState<string[]>([]);
 
-
+    useEffect(() => {
+        if (!user) return;
+        setOwnedCards(user?.ownedCards?.split('-'))
+    }, [refreshUser]);
     async function handleNewTheme(selectedCardTheme: string){
         if (!user) return null;
 
@@ -66,7 +68,7 @@ const Avatar = () => {
                                 <div className="flex flex-col items-center gap-2">
                                     <Label htmlFor="cardTheme">Themes</Label>
                                     <div className="grid grid-cols-4 gap-4">
-                                        {themes.map((src, index) => (
+                                        {ownedCards.map((src, index) => (
                                             <img
                                                 key={index}
                                                 onClick={() => {

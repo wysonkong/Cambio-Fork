@@ -4,6 +4,7 @@ import Avatar from "@/components/player/avatar.tsx";
 import {useUser} from "@/components/providers/UserProvider.tsx";
 import CardThemes from "@/components/player/CardThemes.tsx";
 import PurchaseAvatar from "@/components/player/PurchaseAvatar.tsx";
+import PurchaseCard from "@/components/player/PurchaseCard.tsx";
 
 export default function Profile() {
     const {user} = useUser();
@@ -52,7 +53,10 @@ export default function Profile() {
                             </div>
                         </div>
                         <div className={"flex flex-col"}>
+                            <div className={"flex gap-2"}>
                             <PurchaseAvatar/>
+                            <PurchaseCard/>
+                            </div>
                         </div>
                     </div>
                 </CardAction>

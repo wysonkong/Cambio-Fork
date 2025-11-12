@@ -47,6 +47,16 @@ public class MainRestController {
         return Map.of("exists", exists);
     }
 
+    @GetMapping("/getAvatarPrices")
+    public ResponseEntity<Map<String, Integer>> getAvatarPrices() {
+        return ResponseEntity.ok(userService.getAvatarPrices());
+    }
+
+    @GetMapping("/getCardThemePrices")
+    public ResponseEntity<Map<String, Integer>> getCardThemePrices(){
+        return ResponseEntity.ok(userService.getCardThemePrices());
+    }
+
     @PostMapping("/purchaseAvatar{avatar}")
     public ResponseEntity<Boolean> purchaseAvatar(@PathVariable String avatar, @RequestBody User user) {
         return ResponseEntity.ok(userService.purchaseAvatar(avatar, user));

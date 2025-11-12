@@ -55,6 +55,14 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public Map<String, Integer> getAvatarPrices() {
+        return avatarList;
+    }
+
+    public Map<String, Integer> getCardThemePrices() {
+        return cardThemeList;
+    }
+
     public User findUserByName(String username) {
         return userRepository.findUserByUsername(username).orElse(null);
     }

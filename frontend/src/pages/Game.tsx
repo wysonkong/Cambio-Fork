@@ -165,9 +165,19 @@ const Game = () => {
                 else {
                     originEl = drawRef.current;
                     destKey =`${action.userId}-avatar`;
-                    destEl = avatarRefs.current.get(originKey);
+                    destEl = avatarRefs.current.get(destKey);
                 }
 
+                break;
+
+            case "GIVE":
+                originIndex = payLoadMap.get("origin");
+                originUserId = payLoadMap.get("originUserId");
+                destinationUserId = payLoadMap.get("destinationUserId");
+                originKey = `${originUserId}-${originIndex}`;
+                destKey = `${destinationUserId}-avatar`;
+                originEl = cardRefs.current.get(originKey);
+                destEl = avatarRefs.current.get(destKey);
                 break;
         }
         if (originEl && destEl) {

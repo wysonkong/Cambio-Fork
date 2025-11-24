@@ -11,6 +11,7 @@ import {Field, FieldGroup, FieldSeparator, FieldSet} from "@/components/ui/field
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {useNavigate} from "react-router-dom";
+import {toast} from "sonner";
 
 
 const Game = () => {
@@ -93,6 +94,8 @@ const Game = () => {
 
             isAnimating.current = false;
         };
+
+        if (gameState?.cambioCalled == true) toast.warning("CAMBIO!")
 
         runAnimation();
     }, [actionQueue, gameState]);
